@@ -179,9 +179,13 @@ sudo ./install-system.sh
 ```
 
 En Tycho también instala el perfil de LACT para la RTX 5080. El perfil `Gaming`
-se activa cuando GameMode está en uso, selecciona el modo de máximo rendimiento
-de NVIDIA y mantiene el límite oficial de 360 W sin overclock, voltajes ni
-curva de ventilación personalizada.
+se activa cuando GameMode está en uso y el escritorio vuelve a los valores de
+NVIDIA al terminar. Selecciona el modo de máximo rendimiento, mantiene el
+límite oficial de 360 W y aplica un undervolt: la curva sube 442 MHz hasta
+925 mV (2917 MHz) y se aplana por encima, con la memoria a +1000 MHz y los
+ventiladores de serie. La interfaz de LACT reescribe `/etc/lact/config.yaml` y
+pierde los comentarios: los cambios hechos desde ella hay que traerlos al
+repositorio a mano.
 
 La conexión Bluetooth del mando Xbox emparejado con Tycho abre Steam en Big
 Picture. La regla está limitada al identificador del mando y no requiere un

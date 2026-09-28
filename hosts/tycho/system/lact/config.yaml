@@ -11,12 +11,17 @@ profiles:
   Gaming:
     gpus:
       10DE:2C02-1462:5310-0000:01:00.0:
+        # Stock fan curve (MSI zero-RPM at idle).
+        fan_control_enabled: false
         power_mizer_mode: PreferMaximumPerformance
+        # The undervolt already bounds power draw; keep the full 360 W board
+        # limit for transient loads instead of clipping heavy 4K/RT scenes.
         power_cap: 360.0
-        # Performance undervolt: 2917 MHz at 925 mV, flattened above that
-        # voltage. Keep the full board limit available for transient loads.
+        # Conservative GDDR7 offset; untested above +1000.
         mem_clock_offsets:
           0: 1000
+        # Performance undervolt: +442 MHz up to 925 mV (2917 MHz), flattened
+        # above that voltage so the GPU never boosts past 2917 MHz.
         nvidia_gpu_vf_curve:
           44:
             clockspeed_offset: 442
@@ -269,6 +274,7 @@ profiles:
             voltage: 1240
     rule:
       type: gamemode
+      filter: null
 
 current_profile: null
 auto_switch_profiles: true
