@@ -16,7 +16,9 @@ cursor-style-blink = true
 # Window
 resize-overlay = never
 minimum-contrast = 1.1
-window-save-state = always
+# La ventana abre siempre a 100x29 y deja la colocación al gestor de ventanas,
+# igual que `remember_window_size no` en la configuración de Kitty en Arch.
+window-save-state = never
 window-padding-x = 10
 window-padding-y = 8
 window-width = 100
@@ -27,7 +29,8 @@ tab-inherit-working-directory = true
 split-inherit-working-directory = true
 
 # Comportamiento
-copy-on-select = false
+# Equivale a `copy_on_select clipboard` en Kitty.
+copy-on-select = true
 confirm-close-surface = true
 clipboard-read = ask
 clipboard-write = allow

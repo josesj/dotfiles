@@ -1,9 +1,8 @@
 [global]
 # Evaluate project environments predictably and prevent an .envrc from reading
 # passwords or other interactive input. Projects still require `direnv allow`.
+# Las demás opciones de direnv ya traen por defecto el valor que queremos:
+# load_dotenv=false, warn_timeout=5s y hide_env_diff=false.
 strict_env = true
 disable_stdin = true
-load_dotenv = false
-warn_timeout = "5s"
-hide_env_diff = false
 

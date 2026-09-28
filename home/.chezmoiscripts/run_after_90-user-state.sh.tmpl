@@ -21,6 +21,22 @@ if command -v jbang >/dev/null && [[ ! -s "$completion" ]]; then
 fi
 
 {{ if eq .chezmoi.os "linux" -}}
+# El paquete nvm de Arch deja sus scripts en /usr/share/nvm, pero el plugin de
+# Oh My Zsh sale sin hacer nada si no encuentra $NVM_DIR/nvm.sh, y NVM_DIR debe
+# ser escribible porque ahí instala nvm las versiones de Node. Se copian cuando
+# difieren, de modo que una actualización de pacman se propaga sola.
+nvm_dir="${XDG_CONFIG_HOME:-$HOME/.config}/nvm"
+if [[ -d /usr/share/nvm ]]; then
+  mkdir -p "$nvm_dir"
+  for nvm_file in nvm.sh nvm-exec bash_completion; do
+    if [[ -r "/usr/share/nvm/$nvm_file" ]] &&
+       ! cmp -s -- "/usr/share/nvm/$nvm_file" "$nvm_dir/$nvm_file"; then
+      install -m644 -- "/usr/share/nvm/$nvm_file" "$nvm_dir/$nvm_file"
+    fi
+  done
+  [[ -e "$nvm_dir/nvm-exec" ]] && chmod 755 "$nvm_dir/nvm-exec"
+fi
+
 command -v systemctl >/dev/null && systemctl --user daemon-reload || true
 
 # Xresources lo genera chezmoi con el sabor Catppuccin activo; cargarlo en la

@@ -3,7 +3,17 @@
 " paquetes nativos en ~/.vim/pack/dotfiles/start, gestionados por chezmoi como
 " repositorios externos: no hay gestor de plugins dentro de Vim.
 set nocompatible
-
+{{ if $darwin }}
+" fzf.vim necesita el plugin base que trae el propio fzf. El paquete de Arch lo
+" deja en /usr/share/vim/vimfiles y Vim lo encuentra solo; Homebrew no, así que
+" en macOS hay que añadir su prefijo al runtimepath a mano.
+for s:fzf_prefix in ['/opt/homebrew/opt/fzf', '/usr/local/opt/fzf']
+  if isdirectory(s:fzf_prefix)
+    execute 'set runtimepath+=' . fnameescape(s:fzf_prefix)
+    break
+  endif
+endfor
+{{ end }}
 " pack/*/start se carga después de vimrc; adelantarlo deja disponibles
 " Catppuccin y lightline al elegir el tema más abajo.
 packloadall

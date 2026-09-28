@@ -8,7 +8,7 @@
 .zprofile
 .config/ghostty
 .config/dotfiles/Brewfile
-.local/share/dotfiles/profiles
+.local/share/dotfiles
 {{- end }}
 
 {{- if ne .chezmoi.os "linux" }}
@@ -26,7 +26,6 @@
 .config/wireplumber
 .config/xdg-terminals.list
 .local/bin/desktop-unlock
-.local/bin/libreoffice-kf6-x11
 .local/share/applications
 .local/share/color-schemes
 .local/share/kio

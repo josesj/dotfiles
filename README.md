@@ -183,11 +183,28 @@ bloques y `bfq` para discos rotacionales. Los cambios por equipo en mkinitcpio,
 modprobe o modules-load regeneran las imágenes de arranque. El perfil se elige
 por hostname o con `DOTFILES_HOST=deimos|tycho`.
 
+### Paquetes que la configuración da por instalados
+
+En macOS los cubre el `Brewfile`. En Arch hay que instalarlos con pacman; esta
+es la lista mínima de la que dependen los archivos de este repositorio:
+
+```bash
+sudo pacman -S --needed zsh vim git git-lfs gnupg chezmoi \
+  fzf ripgrep direnv uv nvm jbang kitty mpv \
+  clang pyright typescript-language-server
+```
+
+`fzf` y `ripgrep` los necesitan `<Espacio>f` y `<Espacio>r` en Vim; `clang`,
+`pyright` y `typescript-language-server` son tres de los cuatro servidores LSP
+que configura Kate. El cuarto, `jdtls`, está en AUR: `yay -S jdtls`.
+
 ### Inventario de paquetes
 
-Cada equipo Arch guarda su estado reproducible bajo `hosts/<equipo>/packages/`:
-`pacman-explicit.txt` (repositorios oficiales), `aur-explicit.txt` (AUR o
-locales) y `flatpak-apps.tsv` (aplicaciones, rama, origen e instalación).
+Además, cada equipo Arch puede guardar una instantánea de lo que tiene
+instalado bajo `hosts/<equipo>/packages/`: `pacman-explicit.txt` (repositorios
+oficiales), `aur-explicit.txt` (AUR o locales) y `flatpak-apps.tsv`
+(aplicaciones, rama, origen e instalación). Es una foto descriptiva, no un
+estado deseado: hay que regenerarla para que sirva de algo.
 
 ```bash
 ./update-state.sh                    # actualiza el inventario del equipo actual
@@ -203,7 +220,7 @@ correo, CalDAV y CardDAV, y la clave del Wi-Fi. Por eso se versionan cifrados,
 igual que las claves SSH, y sólo se despliegan en los dos Mac:
 
 ```
-home/private_dot_local/share/dotfiles/private_profiles/
+home/dot_local/share/dotfiles/private_profiles/
     encrypted_private_phobos.mobileconfig.asc
     encrypted_private_janus.mobileconfig.asc
     encrypted_private_iphone.mobileconfig.asc

@@ -16,13 +16,6 @@ retire() {
   printf 'Retirado: %s -> %s\n' "$target" "$backup_dir/$relative"
 }
 
-# Instalaciones antiguas redirigían Zsh a ~/.config/zsh mediante ZDOTDIR, lo que
-# hace que se ignore el ~/.zshrc canónico que instala chezmoi.
-if [[ -f "$HOME/.zshenv" ]] &&
-   grep -Eq '^export ZDOTDIR=.?\$HOME/\.config/zsh' "$HOME/.zshenv"; then
-  retire "$HOME/.zshenv"
-fi
-
 # El historial pasa a ~/.local/state/zsh/history en los cuatro equipos.
 history_file="${XDG_STATE_HOME:-$HOME/.local/state}/zsh/history"
 if [[ -f "$HOME/.zsh_history" && ! -e "$history_file" ]]; then
@@ -40,40 +33,12 @@ for stale in "$HOME"/.zshrc.backup.* "$HOME"/.zprofile.backup.* \
 done
 
 {{ if eq .chezmoi.os "linux" -}}
-# Ghostty quedó sustituido por Kitty en Arch.
-if [[ -f "$HOME/.config/ghostty/config.ghostty" ]] &&
-   grep -Fqx 'font-family = JetBrainsMono Nerd Font Mono' "$HOME/.config/ghostty/config.ghostty"; then
-  retire "$HOME/.config/ghostty"
-fi
-
-# Ajuste de Qt exclusivo de GNOME, anterior a la migración a Plasma.
-legacy_qt="$HOME/.config/environment.d/30-qt-gnome.conf"
-if [[ -f "$legacy_qt" ]] && grep -Fqx 'QT_QPA_PLATFORMTHEME=gtk3' "$legacy_qt"; then
-  retire "$legacy_qt"
-fi
-
-# EasyEffects quedó fuera del perfil de audio.
-if [[ -e "$HOME/.config/systemd/user/easyeffects.service" ]]; then
-  systemctl --user disable --now easyeffects.service 2>/dev/null || true
-fi
-retire "$HOME/.config/easyeffects"
-retire "${XDG_DATA_HOME:-$HOME/.local/share}/easyeffects"
-retire "$HOME/.config/autostart/com.github.wwmm.easyeffects.desktop"
-retire "$HOME/.config/systemd/user/default.target.wants/easyeffects.service"
-retire "$HOME/.config/systemd/user/easyeffects.service"
-
-# Frecuencia variable de PipeWire, sustituida por 48 kHz fijos.
-legacy_clock="$HOME/.config/pipewire/pipewire.conf.d/10-lossless-audio.conf"
-if [[ -f "$legacy_clock" ]] && grep -Fq 'default.clock.rate          = 44100' "$legacy_clock"; then
-  retire "$legacy_clock"
-fi
-
 # vim-plug y sus plugins: ahora son paquetes nativos en ~/.vim/pack.
 retire "${XDG_DATA_HOME:-$HOME/.local/share}/vim/autoload/plug.vim"
 retire "${XDG_DATA_HOME:-$HOME/.local/share}/vim/plugged"
 
-# El tema del prompt se llamaba como el equipo y vivía dentro de ~/.oh-my-zsh.
-retire "$HOME/.oh-my-zsh/custom/themes/tycho.zsh-theme"
+# El tema del prompt vivía dentro de ~/.oh-my-zsh, que ahora es un externo de
+# chezmoi; ZSH_CUSTOM pasa a ~/.config/zsh/omz-custom.
 retire "$HOME/.oh-my-zsh/custom/themes/workstation.zsh-theme"
 {{- else -}}
 # En macOS los plugins de Vim se clonaban a mano en pack/plugins y pack/vendor.
