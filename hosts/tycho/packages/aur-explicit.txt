@@ -1,0 +1,5 @@
+claude-code
+claude-desktop
+jdtls
+visual-studio-code-bin
+yay
