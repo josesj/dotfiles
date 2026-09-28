@@ -341,6 +341,7 @@ socat
 sox
 spectacle
 speech-dispatcher
+spotify-launcher
 sshfs
 steam
 strace
