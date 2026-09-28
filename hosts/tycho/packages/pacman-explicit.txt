@@ -234,6 +234,7 @@ nano
 net-tools
 networkmanager
 networkmanager-openvpn
+nfs-utils
 nftables
 nlohmann-json
 noise-suppression-for-voice
