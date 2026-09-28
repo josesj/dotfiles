@@ -1,7 +1,9 @@
 autofirma
 ds9-bin
-gnome-shell-extension-dash-to-dock
+google-chrome
 jbang
+jxplorer
+modbustools-git
 siril-git
 visual-studio-code-bin
 yay
