@@ -1,0 +1,19 @@
+{{/* Perfil por equipo. El hostname corto selecciona sistema operativo y hardware. */}}
+{{- $known := list "tycho" "deimos" "phobos" "janus" -}}
+{{- if not (has .chezmoi.hostname $known) -}}
+{{-   fail (printf "Equipo desconocido: %q. Perfiles disponibles: %s." .chezmoi.hostname (join ", " $known)) -}}
+{{- end -}}
+# Generado por `chezmoi init`. Equipo: {{ .chezmoi.hostname }} ({{ .chezmoi.os }}).
+
+# Las claves SSH privadas se guardan cifradas con GPG simétrico: chezmoi pasa
+# --symmetric al cifrar y --decrypt al descifrar. No hay ninguna clave que
+# distribuir fuera de banda y gpg-agent cachea la contraseña, así que un único
+# prompt cubre todos los secretos de un `chezmoi apply`.
+encryption = "gpg"
+
+[gpg]
+    symmetric = true
+
+[git]
+    autoCommit = false
+    autoPush = false

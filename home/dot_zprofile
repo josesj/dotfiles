@@ -1,0 +1,22 @@
+# Sólo macOS (phobos, janus). Zsh lo lee en cada shell de login, antes de .zshrc.
+
+if [[ -x /opt/homebrew/bin/brew ]]; then
+  eval "$(/opt/homebrew/bin/brew shellenv)"
+elif [[ -x /usr/local/bin/brew ]]; then
+  eval "$(/usr/local/bin/brew shellenv)"
+fi
+
+export PYENV_ROOT="$HOME/.pyenv"
+[[ -d "$PYENV_ROOT/bin" ]] && export PATH="$PYENV_ROOT/bin:$PATH"
+command -v pyenv >/dev/null 2>&1 && eval "$(pyenv init --path)"
+
+if /usr/libexec/java_home -v 25 >/dev/null 2>&1; then
+  export JAVA_HOME="$(/usr/libexec/java_home -v 25)"
+  export PATH="$JAVA_HOME/bin:$PATH"
+fi
+
+# Docker Desktop y OrbStack añaden estas líneas por su cuenta al instalarse.
+# Aquí van ya condicionadas para que chezmoi pueda regenerar el archivo sin
+# romper ninguna de las dos integraciones ni imponerlas donde no están.
+[[ -d "$HOME/.docker/bin" ]] && export PATH="$PATH:$HOME/.docker/bin"
+[[ -r "$HOME/.orbstack/shell/init.zsh" ]] && source "$HOME/.orbstack/shell/init.zsh"

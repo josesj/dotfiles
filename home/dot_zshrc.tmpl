@@ -1,0 +1,117 @@
+{{- $darwin := eq .chezmoi.os "darwin" -}}
+# Configuración interactiva de Zsh compartida por los cuatro equipos.
+# Las diferencias entre Arch Linux y macOS se resuelven en plantilla, no en
+# tiempo de ejecución, salvo cuando dependen de algo que puede cambiar sin
+# reaplicar chezmoi (el modo claro/oscuro del escritorio, por ejemplo).
+[[ -o interactive ]] || return
+
+export EDITOR=vim
+export VISUAL=vim
+export PAGER=less
+export LESS='-FRX'
+{{ if $darwin -}}
+export LANG='en_US.UTF-8'
+export HOMEBREW_NO_ENV_HINTS=TRUE
+{{- else -}}
+export JAVA_HOME=/usr/lib/jvm/default
+{{- end }}
+export GRADLE_USER_HOME="${XDG_CACHE_HOME:-$HOME/.cache}/gradle"
+export PYTHONPYCACHEPREFIX="${XDG_CACHE_HOME:-$HOME/.cache}/python"
+export JBANG_DIR="${XDG_DATA_HOME:-$HOME/.local/share}/jbang"
+export VIRTUAL_ENV_DISABLE_PROMPT=1
+{{ if not $darwin -}}
+export NVM_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/nvm"
+{{- else -}}
+export NVM_DIR="$HOME/.nvm"
+{{- end }}
+
+typeset -U path PATH
+path=("$HOME/.local/bin" "$JBANG_DIR/bin" $path)
+
+# La completion de JBang la genera un script de chezmoi y la carga compinit sin
+# arrancar la JVM en cada terminal nueva.
+fpath=("${XDG_CACHE_HOME:-$HOME/.cache}/zsh/completions" $fpath)
+
+export ZSH="$HOME/.oh-my-zsh"
+# ZSH_CUSTOM vive fuera de ~/.oh-my-zsh: el árbol de Oh My Zsh es un externo de
+# chezmoi y puede reemplazarse entero sin arrastrar configuración propia.
+export ZSH_CUSTOM="${XDG_CONFIG_HOME:-$HOME/.config}/zsh/omz-custom"
+if [[ ! -r "$ZSH/oh-my-zsh.sh" ]]; then
+  print -u2 'Oh My Zsh no está instalado en ~/.oh-my-zsh.'
+  print -u2 'Ejecuta: chezmoi apply'
+  return 1
+fi
+
+ZSH_THEME="workstation"
+ZSH_COMPDUMP="${XDG_CACHE_HOME:-$HOME/.cache}/zsh/zcompdump-$ZSH_VERSION"
+zstyle ':omz:update' mode reminder
+zstyle ':omz:plugins:nvm' lazy yes
+zstyle ':omz:alpha:lib:git' async-prompt yes
+
+# Los tres plugins de terceros son externos de chezmoi bajo $ZSH_CUSTOM/plugins.
+# zsh-syntax-highlighting debe ir el último de la lista.
+plugins=(
+  git gradle mvn python pip virtualenv uv nvm direnv
+  docker kubectl
+{{- if $darwin }}
+  macos pyenv
+{{- else }}
+  command-not-found
+{{- end }}
+  colored-man-pages extract sudo history aliases
+  zsh-autosuggestions zsh-history-substring-search zsh-syntax-highlighting
+)
+
+mkdir -p "${ZSH_COMPDUMP:h}" "$GRADLE_USER_HOME"
+source "$ZSH/oh-my-zsh.sh"
+
+# Historial útil y compartido, sin repeticiones ni comandos triviales.
+HISTFILE="${XDG_STATE_HOME:-$HOME/.local/state}/zsh/history"
+HISTSIZE=50000
+SAVEHIST=50000
+HISTORY_IGNORE='(ls|cd|pwd|exit)'
+mkdir -p "${HISTFILE:h}"
+setopt append_history extended_history hist_expire_dups_first hist_ignore_all_dups
+setopt hist_ignore_space hist_reduce_blanks inc_append_history share_history
+setopt hist_save_no_dups hist_verify
+setopt auto_cd auto_pushd pushd_ignore_dups interactive_comments
+
+zstyle ':completion:*' menu select
+zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
+zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
+
+ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=$WORKSTATION_OVERLAY"
+
+# Colores semánticos Catppuccin provistos por el tema del prompt.
+if (( ${+ZSH_HIGHLIGHT_STYLES} )); then
+  ZSH_HIGHLIGHT_STYLES[default]="fg=$WORKSTATION_TEXT"
+  ZSH_HIGHLIGHT_STYLES[unknown-token]="fg=$WORKSTATION_RED,bold"
+  ZSH_HIGHLIGHT_STYLES[reserved-word]="fg=$WORKSTATION_PURPLE"
+  ZSH_HIGHLIGHT_STYLES[alias]="fg=$WORKSTATION_CYAN"
+  ZSH_HIGHLIGHT_STYLES[suffix-alias]="fg=$WORKSTATION_CYAN"
+  ZSH_HIGHLIGHT_STYLES[global-alias]="fg=$WORKSTATION_CYAN"
+  ZSH_HIGHLIGHT_STYLES[builtin]="fg=$WORKSTATION_CYAN"
+  ZSH_HIGHLIGHT_STYLES[function]="fg=$WORKSTATION_CYAN"
+  ZSH_HIGHLIGHT_STYLES[command]="fg=$WORKSTATION_GREEN"
+  ZSH_HIGHLIGHT_STYLES[precommand]="fg=$WORKSTATION_BLUE"
+  ZSH_HIGHLIGHT_STYLES[commandseparator]="fg=$WORKSTATION_BLUE"
+  ZSH_HIGHLIGHT_STYLES[single-hyphen-option]="fg=$WORKSTATION_BLUE"
+  ZSH_HIGHLIGHT_STYLES[double-hyphen-option]="fg=$WORKSTATION_BLUE"
+  ZSH_HIGHLIGHT_STYLES[single-quoted-argument]="fg=$WORKSTATION_YELLOW"
+  ZSH_HIGHLIGHT_STYLES[double-quoted-argument]="fg=$WORKSTATION_YELLOW"
+  ZSH_HIGHLIGHT_STYLES[path]="fg=$WORKSTATION_CYAN,underline"
+  ZSH_HIGHLIGHT_STYLES[comment]="fg=$WORKSTATION_OVERLAY"
+fi
+
+bindkey -e
+bindkey '^I' expand-or-complete
+bindkey '^R' history-incremental-pattern-search-backward
+bindkey '^S' history-incremental-search-forward
+# El plugin history-substring-search define estos widgets al cargarse.
+bindkey '^[[A' history-substring-search-up
+bindkey '^[[B' history-substring-search-down
+
+[[ -r "${XDG_CONFIG_HOME:-$HOME/.config}/zsh/aliases.zsh" ]] &&
+  source "${XDG_CONFIG_HOME:-$HOME/.config}/zsh/aliases.zsh"
+[[ -r "${XDG_CONFIG_HOME:-$HOME/.config}/zsh/functions.zsh" ]] &&
+  source "${XDG_CONFIG_HOME:-$HOME/.config}/zsh/functions.zsh"

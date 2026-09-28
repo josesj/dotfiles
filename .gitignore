@@ -1,0 +1,8 @@
+# Nunca versionar claves privadas en claro. Las públicas y los archivos
+# encrypted_*.asc que genera `chezmoi add --encrypt` sí se versionan.
+home/private_dot_ssh/id_*
+!home/private_dot_ssh/*.pub
+!home/private_dot_ssh/encrypted_*
+
+# Estado local del sistema operativo.
+.DS_Store

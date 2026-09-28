@@ -1,0 +1,97 @@
+# Operating systems and file managers
+.DS_Store
+.AppleDouble
+.LSOverride
+Thumbs.db
+Desktop.ini
+ehthumbs.db
+
+# Editor and IDE state
+*~
+*.swp
+*.swo
+*.swn
+*.bak
+*.orig
+*.rej
+.idea/
+*.iml
+.project
+.classpath
+.settings/
+Session.vim
+tags
+
+# Local secrets and environment overrides
+.env
+.env.*
+!.env.example
+!.env.sample
+!.env.template
+*.local
+
+# Logs, temporary files and coverage
+*.log
+*.tmp
+*.temp
+*.pid
+*.seed
+coverage/
+.coverage
+.nyc_output/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.tox/
+.nox/
+
+# Java, Kotlin and Gradle
+.gradle/
+build/
+out/
+*.class
+hs_err_pid*
+
+# C, C++ and CMake
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+cmake-build-*/
+compile_commands.json
+*.o
+*.obj
+*.so
+*.dylib
+*.dll
+*.a
+*.lib
+
+# Node and frontend tooling
+node_modules/
+.npm/
+.yarn/cache/
+.pnpm-store/
+.parcel-cache/
+.next/
+.nuxt/
+dist/
+
+# Rust and general build output
+target/
+
+# Local AI-agent instructions, state and working directories
+.claude/
+.claudeignore
+CLAUDE.md
+CLAUDE.local.md
+.codex/
+.codexignore
+.agents/
+AGENTS.md

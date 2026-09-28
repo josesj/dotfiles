@@ -1,0 +1,60 @@
+{{- if eq .chezmoi.os "darwin" -}}
+#!/usr/bin/env bash
+# Aprovisiona Homebrew y las herramientas que no son archivos de configuración.
+# Se vuelve a ejecutar cuando cambia el Brewfile.
+# Brewfile sha256: {{ include "dot_config/dotfiles/Brewfile" | sha256sum }}
+set -euo pipefail
+
+if ! xcode-select -p >/dev/null 2>&1; then
+  printf 'Faltan las Command Line Tools de Xcode. Ejecuta: xcode-select --install\n' >&2
+  printf 'Después vuelve a ejecutar: chezmoi apply\n' >&2
+  exit 1
+fi
+
+if ! command -v brew >/dev/null 2>&1; then
+  printf '==> Instalando Homebrew\n'
+  NONINTERACTIVE=1 /bin/bash -c \
+    "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+fi
+
+if [[ -x /opt/homebrew/bin/brew ]]; then
+  eval "$(/opt/homebrew/bin/brew shellenv)"
+elif [[ -x /usr/local/bin/brew ]]; then
+  eval "$(/usr/local/bin/brew shellenv)"
+fi
+
+printf '==> Instalando fórmulas y aplicaciones\n'
+brew update
+brew bundle --file "$HOME/.config/dotfiles/Brewfile"
+
+git lfs install
+
+mkdir -p "$HOME/Developer" "$HOME/.nvm"
+if [[ "${INSTALL_NODE_LTS:-1}" == "1" ]]; then
+  set +u
+  # shellcheck source=/dev/null
+  source "$(brew --prefix nvm)/nvm.sh"
+  set -u
+  nvm install --lts
+  nvm alias default 'lts/*'
+fi
+
+# /usr/libexec/java_home sólo descubre JDK registrados en este directorio.
+printf '==> Registrando los JDK de Homebrew\n'
+for java_version in 11 21 25 27; do
+  if [[ "$java_version" == "27" ]]; then
+    java_formula="openjdk"
+  else
+    java_formula="openjdk@$java_version"
+  fi
+  java_source="$(brew --prefix "$java_formula")/libexec/openjdk.jdk"
+  java_target="/Library/Java/JavaVirtualMachines/openjdk-$java_version.jdk"
+  [[ -d "$java_source" ]] || continue
+  if [[ -e "$java_target" && ! -L "$java_target" ]]; then
+    printf 'Se conserva %s porque no es un enlace simbólico.\n' "$java_target" >&2
+  elif [[ ! -L "$java_target" || "$(readlink "$java_target")" != "$java_source" ]]; then
+    sudo mkdir -p /Library/Java/JavaVirtualMachines
+    sudo ln -sfn "$java_source" "$java_target"
+  fi
+done
+{{- end -}}

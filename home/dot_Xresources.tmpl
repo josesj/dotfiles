@@ -1,0 +1,9 @@
+{{- $flavour := "mocha" -}}
+{{- if lookPath "kreadconfig6" -}}
+{{-   $scheme := output "kreadconfig6" "--file" "kdeglobals" "--group" "General" "--key" "ColorScheme" -}}
+{{-   if or (contains "Latte" $scheme) (contains "Light" $scheme) -}}
+{{-     $flavour = "latte" -}}
+{{-   end -}}
+{{- end -}}
+{{ includeTemplate "Xresources-base" . }}
+{{ includeTemplate (printf "Xresources-catppuccin-%s" $flavour) . }}

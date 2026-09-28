@@ -1,0 +1,9 @@
+# Keep project interpreters independent from Arch's system Python.
+python-preference = "managed"
+python-downloads = "automatic"
+
+# Respect the operating system trust store and precompile installed packages
+# for faster application startup on a development workstation.
+system-certs = true
+compile-bytecode = true
+

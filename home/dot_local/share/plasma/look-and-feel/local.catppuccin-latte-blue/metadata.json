@@ -1,0 +1,11 @@
+{
+  "KPackageStructure": "Plasma/LookAndFeel",
+  "KPlugin": {
+    "Id": "local.catppuccin-latte-blue",
+    "Name": "Catppuccin Latte Blue (Breeze)",
+    "Description": "Catppuccin Latte Blue colors while preserving the Breeze desktop style",
+    "Version": "1.0",
+    "License": "MIT",
+    "Authors": [{ "Name": "Catppuccin and local dotfiles" }]
+  }
+}

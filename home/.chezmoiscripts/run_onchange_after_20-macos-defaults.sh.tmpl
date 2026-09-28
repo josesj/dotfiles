@@ -1,0 +1,68 @@
+{{- if eq .chezmoi.os "darwin" -}}
+#!/usr/bin/env bash
+# Preferencias de macOS. Se vuelve a ejecutar cuando cambia este script.
+set -euo pipefail
+
+# Ajuste de firmware. Usa DISABLE_STARTUP_CHIME=0 para conservar el valor.
+if [[ "${DISABLE_STARTUP_CHIME:-1}" == "1" ]]; then
+  current_startup_mute="$(nvram StartupMute 2>/dev/null | awk '{print $2}' || true)"
+  if [[ "$current_startup_mute" != "%01" ]]; then
+    sudo nvram StartupMute=%01
+  fi
+fi
+
+# Interfaz y teclado
+defaults write NSGlobalDomain AppleShowScrollBars -string "WhenScrolling"
+defaults write NSGlobalDomain AppleShowAllExtensions -bool false
+defaults write NSGlobalDomain NSAutomaticCapitalizationEnabled -bool true
+defaults write NSGlobalDomain NSAutomaticDashSubstitutionEnabled -bool false
+defaults write NSGlobalDomain NSAutomaticPeriodSubstitutionEnabled -bool false
+defaults write NSGlobalDomain NSAutomaticQuoteSubstitutionEnabled -bool false
+defaults write NSGlobalDomain NSDocumentSaveNewDocumentsToCloud -bool false
+defaults write NSGlobalDomain InitialKeyRepeat -int 15
+defaults write NSGlobalDomain KeyRepeat -int 2
+defaults write NSGlobalDomain NSToolbarTitleViewRolloverDelay -float 0
+
+# Dock
+defaults write com.apple.dock autohide -bool true
+defaults write com.apple.dock autohide-delay -float 0
+defaults write com.apple.dock autohide-time-modifier -float 0
+defaults write com.apple.dock show-recents -bool false
+defaults write com.apple.dock tilesize -int 48
+defaults write com.apple.dock minimize-to-application -bool true
+
+# Escritorio y Stage Manager
+defaults write com.apple.WindowManager GloballyEnabled -bool false
+defaults write com.apple.WindowManager StandardHideDesktopIcons -bool false
+defaults write com.apple.WindowManager HideDesktop -bool false
+defaults write com.apple.WindowManager StandardHideWidgets -bool false
+defaults write com.apple.WindowManager StageManagerHideWidgets -bool false
+defaults write com.apple.WindowManager EnableStandardClickToShowDesktop -bool false
+
+# Finder
+defaults write com.apple.finder FXDefaultSearchScope -string "SCcf"
+defaults write com.apple.finder FXPreferredViewStyle -string "icnv"
+defaults write com.apple.finder NewWindowTarget -string "PfHm"
+defaults write com.apple.finder NewWindowTargetPath -string "file://$HOME"
+
+# Capturas de pantalla
+mkdir -p "$HOME/Pictures/Screenshots"
+defaults write com.apple.screencapture location -string "$HOME/Pictures/Screenshots"
+defaults write com.apple.screencapture type -string "png"
+
+# Diálogos de guardado e impresión expandidos
+defaults write NSGlobalDomain NSNavPanelExpandedStateForSaveMode -bool true
+defaults write NSGlobalDomain NSNavPanelExpandedStateForSaveMode2 -bool true
+defaults write NSGlobalDomain PMPrintingExpandedStateForPrint -bool true
+defaults write NSGlobalDomain PMPrintingExpandedStateForPrint2 -bool true
+
+# No dejar metadatos de Finder en volúmenes compartidos o USB
+defaults write com.apple.desktopservices DSDontWriteNetworkStores -bool true
+defaults write com.apple.desktopservices DSDontWriteUSBStores -bool true
+
+killall Dock 2>/dev/null || true
+killall Finder 2>/dev/null || true
+killall SystemUIServer 2>/dev/null || true
+
+printf 'Preferencias de macOS aplicadas.\n'
+{{- end -}}

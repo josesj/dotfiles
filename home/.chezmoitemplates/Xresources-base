@@ -1,0 +1,24 @@
+! Font rendering for X11 and XWayland applications.
+Xft.antialias: true
+Xft.hinting: true
+Xft.hintstyle: hintslight
+Xft.rgba: none
+
+! Keep classic X terminals aligned with the Fontconfig/Kitty setup.
+XTerm*faceName: JetBrainsMono Nerd Font Mono:style=Medium
+XTerm*faceNameDoublesize: Noto Sans Mono CJK JP
+XTerm*faceSize: 12
+XTerm*renderFont: true
+XTerm*utf8: 1
+XTerm*locale: true
+XTerm*termName: xterm-256color
+XTerm*saveLines: 50000
+XTerm*scrollBar: false
+XTerm*rightScrollBar: true
+XTerm*selectToClipboard: true
+XTerm*cutToBeginningOfLine: false
+XTerm*metaSendsEscape: true
+
+UXTerm*faceName: JetBrainsMono Nerd Font Mono:style=Medium
+UXTerm*faceNameDoublesize: Noto Sans Mono CJK JP
+UXTerm*faceSize: 12

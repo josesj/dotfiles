@@ -1,0 +1,91 @@
+{{- $darwin := eq .chezmoi.os "darwin" -}}
+# Funciones compartidas. `extract` la aporta el plugin homónimo de Oh My Zsh.
+
+mkcd() {
+  [[ $# -eq 1 ]] || { print -u2 'Uso: mkcd directorio'; return 2; }
+  mkdir -p -- "$1" && cd -- "$1"
+}
+
+serve() {
+  python3 -m http.server "${1:-8000}"
+}
+
+psfind() {
+  [[ $# -ge 1 ]] || { print -u2 'Uso: psfind patrón'; return 2; }
+{{- if $darwin }}
+  # pgrep de macOS no admite -a; -l ya imprime el nombre del proceso.
+  pgrep -fil -- "$*"
+{{- else }}
+  pgrep -afil -- "$*"
+{{- end }}
+}
+
+# uv gestiona los entornos de proyecto sin tocar el Python del sistema.
+uv-shell() {
+  if [[ -f pyproject.toml ]]; then
+    uv sync && source .venv/bin/activate
+  else
+    print -u2 'No hay pyproject.toml en este directorio.'
+    return 1
+  fi
+}
+{{ if not $darwin }}
+# La configuración de borgmatic del sistema es sólo de root. PolicyKit aporta el
+# diálogo de autenticación y allow_other hace accesible al usuario de escritorio
+# el montaje FUSE que pertenece a root.
+borgmatic-mount() {
+  local mount_point="$HOME/.local/mnt/borgmatic"
+  mkdir -p "$mount_point" || return
+  if mountpoint -q "$mount_point"; then
+    print "Borgmatic ya está montado en $mount_point"
+    return 0
+  fi
+  if ! command -v pkexec >/dev/null; then
+    print -u2 'Error: no se encontró pkexec (paquete polkit)'
+    return 127
+  fi
+  pkexec borgmatic mount --mount-point "$mount_point" --options allow_other "$@" || {
+    local status=$?
+    print -u2 "No se pudo montar el repositorio Borgmatic (estado $status)"
+    return "$status"
+  }
+  print "Borgmatic montado en $mount_point"
+}
+
+borgmatic-umount() {
+  local mount_point="$HOME/.local/mnt/borgmatic"
+  if ! mountpoint -q "$mount_point"; then
+    print "No hay ningún repositorio montado en $mount_point"
+    return 0
+  fi
+  if ! command -v pkexec >/dev/null; then
+    print -u2 'Error: no se encontró pkexec (paquete polkit)'
+    return 127
+  fi
+  pkexec borgmatic umount --mount-point "$mount_point" || {
+    local status=$?
+    print -u2 "No se pudo desmontar el repositorio Borgmatic (estado $status)"
+    return "$status"
+  }
+  print "Borgmatic desmontado de $mount_point"
+}
+
+# Baja temporalmente la latencia de PipeWire para grabación o trabajo con JACK.
+# Sin argumento, 128 muestras a 48 kHz son unos 2,7 ms por quantum.
+pw-lowlatency() {
+  local quantum="${1:-128}"
+  if [[ "$quantum" != (64|128|256|512) ]]; then
+    print -u2 'Uso: pw-lowlatency [64|128|256|512]'
+    return 2
+  fi
+  pw-metadata -n settings 0 clock.force-rate 48000 >/dev/null &&
+    pw-metadata -n settings 0 clock.force-quantum "$quantum" >/dev/null &&
+    print "PipeWire: 48000 Hz, quantum $quantum"
+}
+
+pw-normal() {
+  pw-metadata -n settings 0 clock.force-quantum 0 >/dev/null &&
+    pw-metadata -n settings 0 clock.force-rate 0 >/dev/null &&
+    print 'PipeWire: perfil persistente restaurado'
+}
+{{- end }}

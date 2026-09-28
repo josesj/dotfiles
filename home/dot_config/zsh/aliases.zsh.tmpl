@@ -1,0 +1,48 @@
+{{- $darwin := eq .chezmoi.os "darwin" -}}
+# Aliases compartidos por los cuatro equipos.
+
+alias ..='cd ..'
+alias ...='cd ../..'
+{{ if $darwin -}}
+alias ls='ls -G'
+alias ll='ls -lAhG'
+{{- else -}}
+alias ls='ls --color=auto'
+alias ll='ls -alF --color=auto'
+alias grep='grep --color=auto'
+{{- end }}
+
+alias g='git'
+alias gs='git status --short --branch'
+alias gd='git diff'
+alias gl='git log --oneline --graph -15'
+
+alias py='python3'
+alias venv='python3 -m venv .venv'
+alias 'j!'=jbang
+
+alias ip='curl -fsS https://ifconfig.me'
+{{ if $darwin }}
+# --- macOS ---
+alias localip='ipconfig getifaddr en0'
+alias brewup='brew update && brew upgrade && brew cleanup'
+alias flushdns='sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder'
+alias showfiles='defaults write com.apple.finder AppleShowAllFiles -bool true && killall Finder'
+alias hidefiles='defaults write com.apple.finder AppleShowAllFiles -bool false && killall Finder'
+
+# macOS añade SendEnv LANG LC_* desde /etc/ssh/ssh_config; forzar el config del
+# usuario evita propagar la configuración regional a los servidores.
+[[ -r "$HOME/.ssh/config" ]] && alias ssh='ssh -F ~/.ssh/config'
+{{- else }}
+# --- Arch Linux ---
+alias localip='ip -4 -brief address show scope global'
+alias audio-status='wpctl status'
+alias rdpunlock='desktop-unlock'
+alias borgmount='borgmatic-mount'
+alias borgumount='borgmatic-umount'
+
+# El wrapper SSH de Kitty instala el terminfo xterm-kitty en el servidor remoto.
+if [[ -n "$KITTY_WINDOW_ID" ]] && (( $+commands[kitten] )); then
+  alias ssh='kitten ssh'
+fi
+{{- end }}

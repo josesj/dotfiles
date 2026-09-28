@@ -1,0 +1,3 @@
+# Modules required by the ASUS TUF GAMING B650-PLUS monitoring setup.
+BUS_MODULES="i2c_piix4"
+HWMON_MODULES="nct6775 k10temp"

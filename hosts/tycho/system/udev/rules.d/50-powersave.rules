@@ -1,0 +1,6 @@
+# Keep the onboard Ryzen/Realtek audio controller awake to avoid pops when
+# playback starts.
+ACTION=="add", SUBSYSTEM=="pci", ATTR{vendor}=="0x1022", ATTR{device}=="0x15e3", ATTR{power/control}="on"
+
+# Apply the same policy to the RTX 5080 HDMI/DisplayPort audio controller.
+ACTION=="add", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{device}=="0x22e9", ATTR{power/control}="on"

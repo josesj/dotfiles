@@ -1,0 +1,96 @@
+#!/usr/bin/env bash
+# Retira configuraciones que los instaladores anteriores dejaron en su sitio y
+# que ahora estorban: redirecciones de ZDOTDIR, restos de GNOME/Ghostty en Arch,
+# EasyEffects, y los archivos de Zsh sueltos que en macOS vivían en $HOME.
+# Se ejecuta una sola vez por equipo; todo lo retirado se guarda en una copia.
+set -euo pipefail
+
+backup_dir="${XDG_STATE_HOME:-$HOME/.local/state}/dotfiles-backup/$(date +%Y%m%d-%H%M%S)"
+
+retire() {
+  local target=$1 relative
+  [[ -e "$target" || -L "$target" ]] || return 0
+  relative=${target#"$HOME"/}
+  mkdir -p -- "$(dirname -- "$backup_dir/$relative")"
+  mv -- "$target" "$backup_dir/$relative"
+  printf 'Retirado: %s -> %s\n' "$target" "$backup_dir/$relative"
+}
+
+# Instalaciones antiguas redirigían Zsh a ~/.config/zsh mediante ZDOTDIR, lo que
+# hace que se ignore el ~/.zshrc canónico que instala chezmoi.
+if [[ -f "$HOME/.zshenv" ]] &&
+   grep -Eq '^export ZDOTDIR=.?\$HOME/\.config/zsh' "$HOME/.zshenv"; then
+  retire "$HOME/.zshenv"
+fi
+
+# El historial pasa a ~/.local/state/zsh/history en los cuatro equipos.
+history_file="${XDG_STATE_HOME:-$HOME/.local/state}/zsh/history"
+if [[ -f "$HOME/.zsh_history" && ! -e "$history_file" ]]; then
+  mkdir -p -- "$(dirname -- "$history_file")"
+  mv -- "$HOME/.zsh_history" "$history_file"
+  printf 'Historial migrado a %s\n' "$history_file"
+fi
+
+# Aliases y funciones pasan a ~/.config/zsh/. Los .backup.* de setup.sh sobran.
+retire "$HOME/.zsh_aliases"
+retire "$HOME/.zsh_functions"
+for stale in "$HOME"/.zshrc.backup.* "$HOME"/.zprofile.backup.* \
+             "$HOME"/.zcompdump-* "$HOME"/.zcompdump; do
+  retire "$stale"
+done
+
+{{ if eq .chezmoi.os "linux" -}}
+# Ghostty quedó sustituido por Kitty en Arch.
+if [[ -f "$HOME/.config/ghostty/config.ghostty" ]] &&
+   grep -Fqx 'font-family = JetBrainsMono Nerd Font Mono' "$HOME/.config/ghostty/config.ghostty"; then
+  retire "$HOME/.config/ghostty"
+fi
+
+# Ajuste de Qt exclusivo de GNOME, anterior a la migración a Plasma.
+legacy_qt="$HOME/.config/environment.d/30-qt-gnome.conf"
+if [[ -f "$legacy_qt" ]] && grep -Fqx 'QT_QPA_PLATFORMTHEME=gtk3' "$legacy_qt"; then
+  retire "$legacy_qt"
+fi
+
+# EasyEffects quedó fuera del perfil de audio.
+if [[ -e "$HOME/.config/systemd/user/easyeffects.service" ]]; then
+  systemctl --user disable --now easyeffects.service 2>/dev/null || true
+fi
+retire "$HOME/.config/easyeffects"
+retire "${XDG_DATA_HOME:-$HOME/.local/share}/easyeffects"
+retire "$HOME/.config/autostart/com.github.wwmm.easyeffects.desktop"
+retire "$HOME/.config/systemd/user/default.target.wants/easyeffects.service"
+retire "$HOME/.config/systemd/user/easyeffects.service"
+
+# Frecuencia variable de PipeWire, sustituida por 48 kHz fijos.
+legacy_clock="$HOME/.config/pipewire/pipewire.conf.d/10-lossless-audio.conf"
+if [[ -f "$legacy_clock" ]] && grep -Fq 'default.clock.rate          = 44100' "$legacy_clock"; then
+  retire "$legacy_clock"
+fi
+
+# vim-plug y sus plugins: ahora son paquetes nativos en ~/.vim/pack.
+retire "${XDG_DATA_HOME:-$HOME/.local/share}/vim/autoload/plug.vim"
+retire "${XDG_DATA_HOME:-$HOME/.local/share}/vim/plugged"
+
+# El tema del prompt se llamaba como el equipo y vivía dentro de ~/.oh-my-zsh.
+retire "$HOME/.oh-my-zsh/custom/themes/tycho.zsh-theme"
+retire "$HOME/.oh-my-zsh/custom/themes/workstation.zsh-theme"
+{{- else -}}
+# En macOS los plugins de Vim se clonaban a mano en pack/plugins y pack/vendor.
+retire "$HOME/.vim/pack/plugins"
+retire "$HOME/.vim/pack/vendor"
+retire "$HOME/.vim/viminfo"
+
+# Los plugins de Zsh vivían dentro de ~/.oh-my-zsh/custom, que ahora es un
+# externo de chezmoi reemplazable por completo.
+retire "$HOME/.oh-my-zsh/custom/plugins/zsh-autosuggestions"
+retire "$HOME/.oh-my-zsh/custom/plugins/history-substring-search"
+retire "$HOME/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting"
+
+# ~/.ssh/config pasa a ser un único archivo en lugar de Include config.d/*.
+if [[ -f "$HOME/.ssh/config" ]] && grep -Fqx 'Include ~/.ssh/config.d/*.conf' "$HOME/.ssh/config"; then
+  retire "$HOME/.ssh/config.d"
+fi
+{{- end }}
+
+printf 'Limpieza de configuraciones anteriores terminada.\n'

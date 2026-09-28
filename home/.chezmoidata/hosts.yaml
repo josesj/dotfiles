@@ -1,0 +1,22 @@
+# Inventario declarativo de la flota. Las plantillas leen esta tabla mediante
+# `index .hosts .chezmoi.hostname`, de modo que añadir un equipo es añadir una
+# entrada aquí y, si hace falta, una regla en .chezmoiignore.
+hosts:
+  tycho:
+    os: linux
+    desktop: plasma
+    # GeForce RTX 5080 (Blackwell): decodificación NVDEC para mpv.
+    mpv_hwdec: nvdec
+    mpv_comment: "Tycho: GeForce RTX 5080 (Blackwell), NVIDIA y Wayland."
+  deimos:
+    os: linux
+    desktop: plasma
+    # Radeon RX 6600 (Navi 23) sobre Mesa/RADV: decodificación VA-API.
+    mpv_hwdec: vaapi
+    mpv_comment: "Deimos: Radeon RX 6600 (Navi 23), Mesa/RADV y Wayland."
+  phobos:
+    os: darwin
+    desktop: aqua
+  janus:
+    os: darwin
+    desktop: aqua

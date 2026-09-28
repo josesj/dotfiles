@@ -1,0 +1,134 @@
+{{- $darwin := eq .chezmoi.os "darwin" -}}
+" Configuración de Vim compartida por los cuatro equipos. Los plugins son
+" paquetes nativos en ~/.vim/pack/dotfiles/start, gestionados por chezmoi como
+" repositorios externos: no hay gestor de plugins dentro de Vim.
+set nocompatible
+
+" pack/*/start se carga después de vimrc; adelantarlo deja disponibles
+" Catppuccin y lightline al elegir el tema más abajo.
+packloadall
+silent! helptags ALL
+
+filetype plugin indent on
+syntax enable
+scriptencoding utf-8
+set encoding=utf-8
+
+set number norelativenumber cursorline showmatch
+set laststatus=2 noshowmode showcmd ruler
+set wildmenu wildmode=longest:full,full
+set wildignore+=*.o,*.obj,*.pyc,*.class,*.DS_Store,*.swp,node_modules/**,.git/**
+set ignorecase smartcase incsearch hlsearch
+set hidden autoread confirm splitbelow splitright
+set scrolloff=5 sidescrolloff=5
+set signcolumn=yes colorcolumn=100 textwidth=0
+set updatetime=300 timeoutlen=500 ttimeoutlen=50
+set mouse=a termguicolors
+set backspace=indent,eol,start
+set completeopt=menuone,noselect shortmess+=Ic belloff=all
+set list listchars=tab:»·,trail:·,extends:›,precedes:‹,nbsp:␣
+set expandtab shiftwidth=4 softtabstop=4 tabstop=4
+set autoindent smartindent shiftround
+set history=1000
+set clipboard={{ if $darwin }}unnamed{{ else }}unnamedplus{{ end }}
+
+set undofile
+set undodir=~/.cache/vim/undo//
+set directory=~/.cache/vim/swap//
+set backupdir=~/.cache/vim/backup//
+silent! call mkdir(expand('~/.cache/vim/undo'), 'p')
+silent! call mkdir(expand('~/.cache/vim/swap'), 'p')
+silent! call mkdir(expand('~/.cache/vim/backup'), 'p')
+
+" Sigue el modo claro/oscuro del escritorio. Plasma lo publica en kdeglobals;
+" macOS sólo define AppleInterfaceStyle mientras el modo oscuro está activo.
+function! s:CatppuccinFlavour() abort
+{{- if $darwin }}
+  call system('defaults read -g AppleInterfaceStyle')
+  return v:shell_error == 0 ? 'mocha' : 'latte'
+{{- else }}
+  if !executable('kreadconfig6')
+    return 'mocha'
+  endif
+  let l:scheme = system('kreadconfig6 --file kdeglobals --group General --key ColorScheme')
+  return l:scheme =~# 'Latte\|Light' ? 'latte' : 'mocha'
+{{- end }}
+endfunction
+
+function! s:ApplyCatppuccin() abort
+  let l:flavour = s:CatppuccinFlavour()
+  let l:name = 'catppuccin_' . l:flavour
+  if get(g:, 'colors_name', '') ==# l:name
+    return
+  endif
+  execute 'set background=' . (l:flavour ==# 'latte' ? 'light' : 'dark')
+  if empty(globpath(&runtimepath, 'colors/' . l:name . '.vim'))
+    return
+  endif
+  execute 'colorscheme ' . l:name
+  let g:lightline = {
+        \ 'colorscheme': l:name,
+        \ 'active': {
+        \   'left': [['mode', 'paste'], ['readonly', 'filename', 'modified']],
+        \   'right': [['lineinfo'], ['percent'], ['fileformat', 'fileencoding', 'filetype']]
+        \ }
+        \ }
+  if exists('*lightline#init')
+    call lightline#init()
+    call lightline#colorscheme()
+    call lightline#update()
+  endif
+endfunction
+
+call s:ApplyCatppuccin()
+augroup catppuccin_appearance
+  autocmd!
+  autocmd FocusGained * call s:ApplyCatppuccin()
+augroup END
+
+let g:gitgutter_map_keys = 0
+let g:gitgutter_preview_win_floating = 1
+let g:gitgutter_sign_added = '│'
+let g:gitgutter_sign_modified = '│'
+let g:gitgutter_sign_removed = '▁'
+let g:gitgutter_sign_removed_first_line = '▔'
+let g:gitgutter_sign_modified_removed = '≋'
+
+let g:ale_disable_lsp = 1
+let g:ale_lint_on_text_changed = 'normal'
+let g:ale_lint_delay = 300
+let g:ale_fix_on_save = 1
+let g:ale_linters = {'python': ['ruff', 'mypy', 'pyright'], 'c': ['clangd'], 'cpp': ['clangd'], 'java': ['javac']}
+let g:ale_fixers = {'python': ['ruff_format'], 'c': ['clang-format'], 'cpp': ['clang-format']}
+let g:ale_sign_error = '✘'
+let g:ale_sign_warning = '▲'
+
+let mapleader=' '
+nnoremap <leader>w :write<CR>
+nnoremap <leader>q :quit<CR>
+nnoremap <leader>h :nohlsearch<CR>
+nnoremap <leader>e :Lexplore<CR>
+nnoremap <leader>f :Files<CR>
+nnoremap <leader>r :Rg<CR>
+nnoremap <leader>b :Buffers<CR>
+nnoremap <leader>t :TagbarToggle<CR>
+nnoremap <leader>s :setlocal spell! spell?<CR>
+nnoremap ]h <Plug>(GitGutterNextHunk)
+nnoremap [h <Plug>(GitGutterPrevHunk)
+nnoremap <leader>hp <Plug>(GitGutterPreviewHunk)
+nnoremap <leader>hs <Plug>(GitGutterStageHunk)
+nnoremap <leader>hu <Plug>(GitGutterUndoHunk)
+nnoremap <C-h> <C-w>h
+nnoremap <C-j> <C-w>j
+nnoremap <C-k> <C-w>k
+nnoremap <C-l> <C-w>l
+
+command! W execute 'write !sudo tee ' . shellescape(expand('%:p')) . ' >/dev/null' | edit!
+
+augroup language_settings
+  autocmd!
+  autocmd FileType markdown,text,gitcommit,mail setlocal spell spelllang=es,en_us,it
+  autocmd FileType java setlocal makeprg=./gradlew\ build errorformat=%A%f:%l:\ %m,%-Z%p^,%-C%.%#
+  autocmd FileType python setlocal makeprg=uv\ run\ ruff\ check\ .
+  autocmd FileType c,cpp setlocal tabstop=2 shiftwidth=2 softtabstop=2 makeprg=cmake\ --build\ build
+augroup END

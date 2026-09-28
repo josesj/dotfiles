@@ -1,0 +1,115 @@
+Host rhea titan
+  HostName %h.tirimoche.com
+  AddressFamily inet
+  User nas
+  IdentityFile ~/.ssh/id_rsa_home
+  IdentitiesOnly yes
+  AddKeysToAgent yes
+  ForwardAgent no
+
+Host adastralapalma.com
+  HostName adastralapalma.com
+  User root
+  Port 4222
+  IdentityFile ~/.ssh/id_rsa_home
+  IdentitiesOnly yes
+  AddKeysToAgent yes
+  ForwardAgent no
+
+Host github.com
+  HostName github.com
+  User git
+  IdentityFile ~/.ssh/id_rsa_home
+  IdentitiesOnly yes
+  AddKeysToAgent yes
+  ForwardAgent no
+
+# Work
+Host deimos
+  HostName deimos.tng.iac.es
+  User jose
+  IdentityFile ~/.ssh/id_rsa_work
+  IdentitiesOnly yes
+  AddKeysToAgent yes
+  ForwardAgent no
+
+Host miram ntcs-glassfish2 algol wsoper sifap2-dev wsastro
+  HostName %h.tng.iac.es
+  User tng
+  IdentityFile ~/.ssh/id_rsa_work
+  IdentitiesOnly yes
+  AddKeysToAgent yes
+  ForwardAgent no
+
+Host gitlab.tng.iac.es gitlab
+  HostName gitlab.tng.iac.es
+  User git
+  IdentityFile ~/.ssh/id_rsa_work
+  IdentitiesOnly yes
+  AddKeysToAgent yes
+  ForwardAgent no
+
+Host atreides.tng.iac.es atreides
+  HostName atreides.tng.iac.es
+  User git
+  IdentityFile ~/.ssh/id_rsa_work
+  IdentitiesOnly yes
+  AddKeysToAgent yes
+  ForwardAgent no
+
+# Legacy servers: keep weak algorithms scoped to these hosts only.
+Host barolo.tng.iac.es fastiembed.tng.iac.es
+  User tng
+  IdentityFile ~/.ssh/id_rsa_work
+  IdentitiesOnly yes
+  KexAlgorithms +diffie-hellman-group1-sha1
+  Ciphers aes256-cbc
+
+Host etrka etrkb esha eshb
+  HostName %h.tng.iac.es
+  User tng
+  IdentityFile ~/.ssh/id_rsa_work
+  IdentitiesOnly yes
+  KexAlgorithms +diffie-hellman-group1-sha1
+  Ciphers 3des-cbc
+
+Host flictrl.local nccdctrl.local
+  User tng
+  IdentityFile ~/.ssh/id_rsa_work
+  IdentitiesOnly yes
+  AddKeysToAgent yes
+  ForwardAgent no
+
+Host ntcs-lrs
+  HostName %h.tng.iac.es
+  User tng
+  IdentityFile ~/.ssh/id_rsa_work
+  IdentitiesOnly yes
+  HostKeyAlgorithms +ssh-rsa
+
+Host *.tirimoche.com
+  AddressFamily inet
+  User nas
+  IdentityFile ~/.ssh/id_rsa_home
+  IdentitiesOnly yes
+  AddKeysToAgent yes
+  ForwardAgent no
+
+# Host * va el último: ssh_config aplica la primera coincidencia de cada opción,
+# así que los bloques específicos de arriba deben poder ganar.
+Host *
+{{- if eq .chezmoi.os "darwin" }}
+  # UseKeychain sólo existe en el OpenSSH de Apple.
+  IgnoreUnknown UseKeychain
+  UseKeychain yes
+  # macOS envía LANG y LC_* globalmente; no propagar la configuración regional.
+  SendEnv -LANG -LC_*
+  AddKeysToAgent yes
+  TCPKeepAlive yes
+  ServerAliveInterval 60
+{{- else }}
+  ServerAliveInterval 30
+  XAuthLocation /usr/bin/xauth
+{{- end }}
+  ServerAliveCountMax 3
+  HashKnownHosts yes

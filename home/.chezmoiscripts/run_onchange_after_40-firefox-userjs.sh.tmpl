@@ -1,0 +1,28 @@
+{{- if eq .chezmoi.os "linux" -}}
+#!/usr/bin/env bash
+# Despliega user.js en cada perfil real de Firefox, cubriendo tanto la
+# ubicación XDG como el diseño tradicional ~/.mozilla.
+set -euo pipefail
+
+user_js=$(mktemp)
+trap 'rm -f -- "$user_js"' EXIT
+cat > "$user_js" <<'USERJS'
+{{ includeTemplate "firefox-user.js" . }}
+USERJS
+
+installed=0
+for firefox_root in \
+  "${XDG_CONFIG_HOME:-$HOME/.config}/mozilla/firefox" \
+  "$HOME/.mozilla/firefox"; do
+  [[ -d "$firefox_root" ]] || continue
+  while IFS= read -r -d '' profile; do
+    install -m644 -- "$user_js" "$profile/user.js"
+    printf 'user.js instalado en %s\n' "$profile"
+    installed=$((installed + 1))
+  done < <(find "$firefox_root" -mindepth 2 -maxdepth 2 -type f \
+    \( -name prefs.js -o -name times.json -o -name user.js \) \
+    -printf '%h\0' | sort -zu)
+done
+
+(( installed > 0 )) || printf 'No se encontró ningún perfil de Firefox.\n'
+{{- end -}}

@@ -1,0 +1,4 @@
+# Launch Steam Big Picture in Jose's graphical session when this Bluetooth
+# controller exposes its joystick event device. All ATTRS matches belong to
+# the same input parent, preventing keyboard/battery interfaces from firing it.
+ACTION=="add", SUBSYSTEM=="input", KERNEL=="event*", ATTRS{name}=="Xbox Wireless Controller", ATTRS{id/vendor}=="045e", ATTRS{id/product}=="0b13", ATTRS{uniq}=="ac:8e:bd:10:74:13", TAG+="systemd", ENV{SYSTEMD_USER_WANTS}+="steam-big-picture-on-xbox.service"

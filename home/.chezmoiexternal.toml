@@ -1,0 +1,136 @@
+# Oh My Zsh, sus plugins y los plugins de Vim se gestionan como repositorios
+# externos: chezmoi los clona en el primer `apply` y los actualiza cuando pasa
+# refreshPeriod. Sustituyen a los `git clone` que hacían install.sh y setup.sh.
+#
+# ZSH_CUSTOM vive fuera de ~/.oh-my-zsh para que el árbol de Oh My Zsh pueda
+# reemplazarse por completo sin arrastrar configuración propia.
+
+[".oh-my-zsh"]
+    type = "git-repo"
+    url = "https://github.com/ohmyzsh/ohmyzsh.git"
+    refreshPeriod = "168h"
+    [".oh-my-zsh".clone]
+        args = ["--depth=1"]
+    [".oh-my-zsh".pull]
+        args = ["--ff-only"]
+
+[".config/zsh/omz-custom/plugins/zsh-autosuggestions"]
+    type = "git-repo"
+    url = "https://github.com/zsh-users/zsh-autosuggestions.git"
+    refreshPeriod = "168h"
+    [".config/zsh/omz-custom/plugins/zsh-autosuggestions".clone]
+        args = ["--depth=1"]
+    [".config/zsh/omz-custom/plugins/zsh-autosuggestions".pull]
+        args = ["--ff-only"]
+
+[".config/zsh/omz-custom/plugins/zsh-syntax-highlighting"]
+    type = "git-repo"
+    url = "https://github.com/zsh-users/zsh-syntax-highlighting.git"
+    refreshPeriod = "168h"
+    [".config/zsh/omz-custom/plugins/zsh-syntax-highlighting".clone]
+        args = ["--depth=1"]
+    [".config/zsh/omz-custom/plugins/zsh-syntax-highlighting".pull]
+        args = ["--ff-only"]
+
+[".config/zsh/omz-custom/plugins/zsh-history-substring-search"]
+    type = "git-repo"
+    url = "https://github.com/zsh-users/zsh-history-substring-search.git"
+    refreshPeriod = "168h"
+    [".config/zsh/omz-custom/plugins/zsh-history-substring-search".clone]
+        args = ["--depth=1"]
+    [".config/zsh/omz-custom/plugins/zsh-history-substring-search".pull]
+        args = ["--ff-only"]
+
+# Plugins de Vim como paquetes nativos (~/.vim/pack). Sustituyen a vim-plug en
+# Arch y a los `git clone` manuales de macOS: un solo mecanismo en los cuatro
+# equipos, sin gestor de plugins dentro de Vim.
+
+[".vim/pack/dotfiles/start/catppuccin"]
+    type = "git-repo"
+    url = "https://github.com/catppuccin/vim.git"
+    refreshPeriod = "168h"
+    [".vim/pack/dotfiles/start/catppuccin".clone]
+        args = ["--depth=1", "--branch=main"]
+    [".vim/pack/dotfiles/start/catppuccin".pull]
+        args = ["--ff-only"]
+
+[".vim/pack/dotfiles/start/lightline"]
+    type = "git-repo"
+    url = "https://github.com/itchyny/lightline.vim.git"
+    refreshPeriod = "168h"
+    [".vim/pack/dotfiles/start/lightline".clone]
+        args = ["--depth=1"]
+    [".vim/pack/dotfiles/start/lightline".pull]
+        args = ["--ff-only"]
+
+[".vim/pack/dotfiles/start/vim-gitgutter"]
+    type = "git-repo"
+    url = "https://github.com/airblade/vim-gitgutter.git"
+    refreshPeriod = "168h"
+    [".vim/pack/dotfiles/start/vim-gitgutter".clone]
+        args = ["--depth=1"]
+    [".vim/pack/dotfiles/start/vim-gitgutter".pull]
+        args = ["--ff-only"]
+
+[".vim/pack/dotfiles/start/ale"]
+    type = "git-repo"
+    url = "https://github.com/dense-analysis/ale.git"
+    refreshPeriod = "168h"
+    [".vim/pack/dotfiles/start/ale".clone]
+        args = ["--depth=1"]
+    [".vim/pack/dotfiles/start/ale".pull]
+        args = ["--ff-only"]
+
+[".vim/pack/dotfiles/start/fzf.vim"]
+    type = "git-repo"
+    url = "https://github.com/junegunn/fzf.vim.git"
+    refreshPeriod = "168h"
+    [".vim/pack/dotfiles/start/fzf.vim".clone]
+        args = ["--depth=1"]
+    [".vim/pack/dotfiles/start/fzf.vim".pull]
+        args = ["--ff-only"]
+
+[".vim/pack/dotfiles/start/vim-commentary"]
+    type = "git-repo"
+    url = "https://github.com/tpope/vim-commentary.git"
+    refreshPeriod = "168h"
+    [".vim/pack/dotfiles/start/vim-commentary".clone]
+        args = ["--depth=1"]
+    [".vim/pack/dotfiles/start/vim-commentary".pull]
+        args = ["--ff-only"]
+
+[".vim/pack/dotfiles/start/vim-surround"]
+    type = "git-repo"
+    url = "https://github.com/tpope/vim-surround.git"
+    refreshPeriod = "168h"
+    [".vim/pack/dotfiles/start/vim-surround".clone]
+        args = ["--depth=1"]
+    [".vim/pack/dotfiles/start/vim-surround".pull]
+        args = ["--ff-only"]
+
+[".vim/pack/dotfiles/start/vim-repeat"]
+    type = "git-repo"
+    url = "https://github.com/tpope/vim-repeat.git"
+    refreshPeriod = "168h"
+    [".vim/pack/dotfiles/start/vim-repeat".clone]
+        args = ["--depth=1"]
+    [".vim/pack/dotfiles/start/vim-repeat".pull]
+        args = ["--ff-only"]
+
+[".vim/pack/dotfiles/start/vim-polyglot"]
+    type = "git-repo"
+    url = "https://github.com/sheerun/vim-polyglot.git"
+    refreshPeriod = "168h"
+    [".vim/pack/dotfiles/start/vim-polyglot".clone]
+        args = ["--depth=1"]
+    [".vim/pack/dotfiles/start/vim-polyglot".pull]
+        args = ["--ff-only"]
+
+[".vim/pack/dotfiles/start/tagbar"]
+    type = "git-repo"
+    url = "https://github.com/preservim/tagbar.git"
+    refreshPeriod = "168h"
+    [".vim/pack/dotfiles/start/tagbar".clone]
+        args = ["--depth=1"]
+    [".vim/pack/dotfiles/start/tagbar".pull]
+        args = ["--ff-only"]

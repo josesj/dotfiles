@@ -1,0 +1,52 @@
+{{/*
+  Reparto de destinos por sistema operativo y por equipo. Todo lo que no se
+  ignora aquí se aplica en los cuatro equipos.
+*/}}
+
+{{- if ne .chezmoi.os "darwin" }}
+# --- Exclusivo de macOS (phobos, janus) ---
+.zprofile
+.config/ghostty
+.config/dotfiles/Brewfile
+.local/share/dotfiles/profiles
+{{- end }}
+
+{{- if ne .chezmoi.os "linux" }}
+# --- Exclusivo de Arch Linux (tycho, deimos) ---
+.Xresources
+.config/chrome-flags.conf
+.config/code-flags.conf
+.config/environment.d
+.config/fontconfig
+.config/kate
+.config/kitty
+.config/mpv
+.config/pipewire
+.config/systemd
+.config/wireplumber
+.config/xdg-terminals.list
+.local/bin/desktop-unlock
+.local/bin/libreoffice-kf6-x11
+.local/share/applications
+.local/share/color-schemes
+.local/share/kio
+.local/share/konsole
+.local/share/nautilus-python
+.local/share/org.kde.syntax-highlighting
+.local/share/plasma
+{{- end }}
+
+{{- if ne .chezmoi.hostname "tycho" }}
+# --- Exclusivo de Tycho: FiiO K3, Edifier, mando Xbox, LibreOffice KF6/X11 ---
+.config/pipewire/client.conf.d
+.config/pipewire/pipewire-pulse.conf.d
+.config/wireplumber/wireplumber.conf.d/51-fiio-k3.conf
+.config/wireplumber/wireplumber.conf.d/52-edifier-r1280db.conf
+.config/systemd/user/steam-big-picture-on-xbox.service
+.local/bin/libreoffice-kf6-x11
+{{- end }}
+
+{{- if ne .chezmoi.hostname "deimos" }}
+# --- Exclusivo de Deimos: nodo HDMI AMD que se duplicaba al reconectar ---
+.config/wireplumber/wireplumber.conf.d/10-alsa.conf
+{{- end }}

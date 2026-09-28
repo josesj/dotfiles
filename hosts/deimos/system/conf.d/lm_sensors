@@ -1,0 +1,2 @@
+# Modules required by the Intel B660 workstation monitoring setup.
+HWMON_MODULES="coretemp nct6775"
