@@ -45,7 +45,10 @@ colord-kde
 composefs
 cpupower
 cuda
+darktable
+dcraw
 ddcutil
+digikam
 direnv
 dkms
 dnsmasq
@@ -90,6 +93,7 @@ github-cli
 gitui
 gocryptfs
 godot
+gphoto2
 gradle
 gst-libav
 gst-plugin-onnx
@@ -106,6 +110,7 @@ harvid
 helvum
 hexyl
 htop
+hugin
 hunspell-en_us
 hunspell-es_es
 hunspell-it
@@ -318,6 +323,7 @@ qt5-wayland
 qt6-httpserver
 qt6-multimedia-gstreamer
 qt6-wayland
+rawtherapee
 rclone
 realtime-privileges
 recordmydesktop
