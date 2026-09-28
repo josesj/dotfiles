@@ -1,0 +1,29 @@
+#!/usr/bin/env python3
+# Codificador de grabación: calidad constante (CQP 20) y keyframe cada 2 s.
+{{- $obs := (index .hosts .chezmoi.hostname).obs_encoder }}
+import json
+import sys
+
+MANAGED = {
+    "rate_control": "CQP",
+    "keyint_sec": 2,
+{{- if eq $obs "nvenc" }}
+    "cqp": 20,
+    "preset2": "p5",
+    "tune": "hq",
+    "multipass": "qres",
+    "profile": "main",
+    "bf": 2,
+    "lookahead": True,
+    "psycho_aq": True,
+{{- else }}
+    "qp": 20,
+    "bf": 0,
+{{- end }}
+}
+
+text = sys.stdin.read().strip()
+settings = json.loads(text) if text else {}
+settings.update(MANAGED)
+json.dump(settings, sys.stdout, indent=4)
+sys.stdout.write("\n")

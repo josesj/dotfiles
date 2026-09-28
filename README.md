@@ -72,7 +72,7 @@ chezmoi update          # git pull + apply
 `home/.chezmoidata/hosts.yaml` describe la flota. Añadir un equipo es añadir una
 entrada en esa tabla y, si hace falta, una regla en `.chezmoiignore`.
 
-Sólo en Arch: Kitty, Plasma, Konsole, Kate, Dolphin, mpv, PipeWire,
+Sólo en Arch: Kitty, Plasma, Konsole, Kate, Dolphin, mpv, OBS, PipeWire,
 WirePlumber, fontconfig, Xresources, `environment.d` y las banderas de Chrome y
 VS Code. Sólo en macOS: Ghostty, `.zprofile` y el `Brewfile`.
 
@@ -80,7 +80,8 @@ Por equipo: Tycho añade el DAC FiiO K3, los altavoces Edifier, el remuestreo de
 alta calidad de PipeWire, el arranque de Steam Big Picture con el mando Xbox y
 los lanzadores KF6/X11 de LibreOffice. Deimos añade la regla que evita la
 suspensión del nodo HDMI de AMD. La aceleración de mpv se deriva de la GPU:
-NVDEC en Tycho, VA-API en Deimos.
+NVDEC en Tycho, VA-API en Deimos. Igual los codificadores de OBS: NVENC en
+Tycho, VA-API en Deimos.
 
 ## Aspecto
 
@@ -130,6 +131,12 @@ los Edifier antes que la salida HDMI del monitor.
 mpv limita la ventana al 80 % del escritorio, prioriza audio y subtítulos en
 español, inglés e italiano y usa yt-dlp con los perfiles `stream-2k` y
 `stream-4k`. Una regla de KWin centra sus ventanas.
+
+OBS parte de un lienzo 4K y sale a 1440p60. Graba en HEVC con calidad constante
+(CQP 20) en `~/Videos/OBS`, con tres pistas de audio: mezcla, micro y
+escritorio. Emite en H.264 CBR a 6000 kbps, reescalado a 1080p. OBS reescribe
+su perfil al salir, así que chezmoi usa scripts `modify_` que sólo fijan esas
+claves y dejan el resto (servicio, clave de emisión, escenas) en manos de OBS.
 
 ## SSH
 

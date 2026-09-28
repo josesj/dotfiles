@@ -21,6 +21,7 @@
 .config/kate
 .config/kitty
 .config/mpv
+.config/obs-studio
 .config/pipewire
 .config/systemd
 .config/wireplumber
