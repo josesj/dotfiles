@@ -249,6 +249,7 @@ nvme-cli
 nvtop
 obs-studio
 obs-studio-plugin-browser
+obsidian
 ocean-sound-theme
 okular
 ollama-cuda
