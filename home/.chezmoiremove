@@ -1,0 +1,8 @@
+{{- if eq .chezmoi.os "linux" }}
+# Catppuccin salió del escritorio: chezmoi no borra por su cuenta lo que deja
+# de gestionar, así que estos restos del tema anterior se retiran aquí.
+.local/share/color-schemes/CatppuccinLatteBlue.colors
+.local/share/color-schemes/CatppuccinMochaBlue.colors
+.local/share/plasma/look-and-feel/local.catppuccin-latte-blue
+.local/share/plasma/look-and-feel/local.catppuccin-mocha-blue
+{{- end }}

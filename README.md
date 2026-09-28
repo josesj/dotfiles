@@ -26,7 +26,8 @@ home/                   estado fuente de chezmoi ($HOME de los cuatro equipos)
   .chezmoiignore        reparto de destinos por sistema operativo y por equipo
   .chezmoiexternal.toml Oh My Zsh, plugins de Zsh y plugins de Vim
   .chezmoiscripts/      aprovisionamiento (Homebrew, Plasma, Kate, VS Code...)
-  .chezmoitemplates/    fragmentos reutilizados (Xresources, user.js)
+  .chezmoiremove        restos de configuraciones retiradas que hay que borrar
+  .chezmoitemplates/    fragmentos reutilizados (el user.js de Firefox)
 system/                 archivos de /etc comunes a los dos equipos Arch
 hosts/<equipo>/         /etc e inventario de paquetes por equipo Arch
 install-system.sh       instalador de /etc (Arch, como root)
@@ -71,7 +72,7 @@ chezmoi update          # git pull + apply
 `home/.chezmoidata/hosts.yaml` describe la flota. Añadir un equipo es añadir una
 entrada en esa tabla y, si hace falta, una regla en `.chezmoiignore`.
 
-Sólo en Arch: Kitty, Plasma, Konsole, Kate, Dolphin, Nautilus, mpv, PipeWire,
+Sólo en Arch: Kitty, Plasma, Konsole, Kate, Dolphin, mpv, PipeWire,
 WirePlumber, fontconfig, Xresources, `environment.d` y las banderas de Chrome y
 VS Code. Sólo en macOS: Ghostty, `.zprofile` y el `Brewfile`.
 
@@ -83,8 +84,9 @@ NVDEC en Tycho, VA-API en Deimos.
 
 ## Aspecto
 
-Vim, Zsh, Kitty, Ghostty, Konsole, Kate, Visual Studio Code, Plasma y los
-terminales X11 usan Catppuccin Latte en modo claro y Mocha en modo oscuro. El
+Catppuccin viste lo que muestra texto: Vim, Zsh, Kitty, Ghostty, Konsole, Kate y
+Visual Studio Code, con Latte en modo claro y Mocha en modo oscuro. El
+escritorio no: Plasma usa Breeze, su tema propio, y es quien dicta el modo. El
 sabor se detecta en el arranque del shell y al recuperar el foco en Vim: Plasma
 lo publica en `kdeglobals` y macOS sólo define `AppleInterfaceStyle` mientras el
 modo oscuro está activo. El prompt asigna colores semánticos de la variante
@@ -92,9 +94,10 @@ activa a ruta, estado de Git, errores, duración, trabajos y entornos virtuales.
 
 En Arch, fontconfig y Plasma usan Noto Sans para la interfaz, Noto Serif para
 serif y JetBrainsMono Nerd Font Mono para monoespaciado; Noto CJK, Emoji y
-Symbols completan los glifos restantes, y Xresources aplica el mismo renderizado
-a las aplicaciones X11 y XWayland. En macOS, Ghostty usa JetBrains Mono Nerd
-Font a 15 pt y sigue la apariencia del sistema.
+Symbols completan los glifos restantes. `~/.Xresources` añade los mismos ajustes
+de renderizado para las aplicaciones X11 y XWayland que leen la base de recursos
+mediante `xrdb`. En macOS, Ghostty usa JetBrains Mono Nerd Font a 15 pt y sigue
+la apariencia del sistema.
 
 Firefox y Chrome mantienen su interfaz oscura, pero informan a las páginas web
 de una preferencia de color clara (`prefers-color-scheme: light`).
@@ -190,7 +193,7 @@ es la lista mínima de la que dependen los archivos de este repositorio:
 
 ```bash
 sudo pacman -S --needed zsh vim git git-lfs gnupg chezmoi \
-  fzf ripgrep direnv uv nvm jbang kitty mpv \
+  fzf ripgrep direnv python-uv nvm jbang kitty mpv \
   clang pyright typescript-language-server
 ```
 

@@ -102,7 +102,8 @@ Latte/Mocha e instala su propio terminfo en los servidores al conectar por SSH.
 
 El prompt, las sugerencias y el resaltado de comandos usan la variante Catppuccin
 activa; verde indica éxito, rojo errores, amarillo cambios o duración, azul y
-cian contexto/rutas, y púrpura entornos Python y estado Git.
+cian contexto/rutas, y púrpura entornos Python y estado Git. El escritorio de
+Plasma usa Breeze y es quien decide si toca Latte o Mocha.
 
 ## Git
 

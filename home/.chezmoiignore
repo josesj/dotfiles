@@ -27,12 +27,9 @@
 .config/xdg-terminals.list
 .local/bin/desktop-unlock
 .local/share/applications
-.local/share/color-schemes
 .local/share/kio
 .local/share/konsole
-.local/share/nautilus-python
 .local/share/org.kde.syntax-highlighting
-.local/share/plasma
 {{- end }}
 
 {{- if ne .chezmoi.hostname "tycho" }}
