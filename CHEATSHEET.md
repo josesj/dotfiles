@@ -42,16 +42,19 @@ cargados como paquetes nativos desde `~/.vim/pack/dotfiles/start`.
 | `Ctrl+Shift+E` | División horizontal |
 | `Ctrl+Alt+←/→/↑/↓` | Moverse entre divisiones |
 | `Ctrl+Shift+Enter` | Ampliar/restaurar división |
+| `Ctrl+Shift+X` | Cerrar división |
 | `Ctrl+Shift+C/V` | Copiar/pegar |
 | `Ctrl++` / `Ctrl+-` / `Ctrl+0` | Aumentar/reducir/restaurar fuente |
 | `Ctrl+Shift+F` | Buscar en el terminal |
 | `Ctrl+Shift+PageUp/PageDown` | Prompt anterior/siguiente |
-| `Ctrl+Enter` | Pantalla completa |
+| `F11` | Pantalla completa |
 | `Ctrl+,` | Abrir configuración |
 | `Ctrl+Shift+,` | Recargar configuración |
-| `Ctrl+Shift+P` | Paleta de comandos |
+| `Ctrl+Shift+F1` | Paleta de comandos |
+| `Ctrl+Shift+P` + `F`/`L`/`H` | Copiar ruta/línea/hash visible con hints |
 
 La ventana abre a `100×29`, con margen de 4 px, y no recuerda su tamaño.
+Si un comando tarda más de 15 s y Kitty no tiene el foco, avisa por Plasma.
 Kitty usa Catppuccin Latte en modo claro y Mocha en modo oscuro.
 
 ## Ghostty (macOS)
