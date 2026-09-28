@@ -2,6 +2,8 @@
 aha
 alsa-utils
 amd-ucode
+android-tools
+android-udev
 appmenu-gtk-module
 arch-audit
 aria2
