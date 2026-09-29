@@ -1,0 +1,3 @@
+# Keep the onboard Intel 600 Series HD Audio controller awake to avoid pops when
+# playback starts.
+ACTION=="add", SUBSYSTEM=="pci", ATTR{vendor}=="0x8086", ATTR{device}=="0x7ad0", ATTR{power/control}="on"

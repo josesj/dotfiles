@@ -118,6 +118,8 @@ deploy_file "$repo_dir/system/systemd/timesyncd.conf.d/90-workstation.conf" \
   "/etc/systemd/timesyncd.conf.d/90-workstation.conf"
 deploy_file "$repo_dir/system/udev/rules.d/60-ioschedulers.rules" \
   "/etc/udev/rules.d/60-ioschedulers.rules"
+deploy_file "$repo_dir/system/udev/rules.d/90-logitech.rules" \
+  "/etc/udev/rules.d/90-logitech.rules"
 deploy_file "$repo_dir/system/ssh/sshd_config.d/99-workstation-hardening.conf" \
   "/etc/ssh/sshd_config.d/99-workstation-hardening.conf"
 
@@ -147,7 +149,7 @@ if [[ -d "$host_dir/obsolete-system" ]]; then
     relative=${source#"$host_dir/obsolete-system/"}
     target="/etc/$relative"
     [[ -f "$target" ]] || continue
-    if diff -q -B -- "$source" "$target" >/dev/null; then
+    if diff -q -B --strip-trailing-cr -- "$source" "$target" >/dev/null; then
       if $dry_run; then
         printf 'Retiraría configuración obsoleta: %s\n' "$target"
       else

@@ -1,0 +1,4 @@
+# ZWO ASI cameras and filter wheels: raise the usbfs buffer for full-frame
+# transfers and allow access without root.
+ACTION=="add", ATTR{idVendor}=="03c3", RUN+="/bin/sh -c '/bin/echo 200 >/sys/module/usbcore/parameters/usbfs_memory_mb'"
+SUBSYSTEMS=="usb", ATTR{idVendor}=="03c3", MODE="0666"

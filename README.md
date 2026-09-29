@@ -168,10 +168,11 @@ aplicar, así que ya no hace falta un paso aparte.
 ## Configuración del sistema (sólo Arch)
 
 `install-system.sh` despliega mediante copias los archivos comunes de Pacman,
-journald, timesyncd, SSH y las reglas udev de schedulers, más los específicos
-bajo `hosts/<equipo>/system/`, conservando su ruta relativa dentro de `/etc`.
-Después valida y recarga únicamente los subsistemas afectados. Necesita
-privilegios administrativos y guarda los originales en `/var/lib/dotfiles-backup/`:
+journald, timesyncd, SSH y las reglas udev de schedulers y del receptor
+Logitech, más los específicos bajo `hosts/<equipo>/system/`, conservando su
+ruta relativa dentro de `/etc`. Después valida y recarga únicamente los
+subsistemas afectados. Necesita privilegios administrativos y guarda los
+originales en `/var/lib/dotfiles-backup/`:
 
 ```bash
 ./install-system.sh --dry-run
