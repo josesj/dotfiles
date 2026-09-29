@@ -15,7 +15,8 @@ export HOMEBREW_NO_ENV_HINTS=TRUE
 {{- else -}}
 export JAVA_HOME=/usr/lib/jvm/default
 {{- end }}
-export GRADLE_USER_HOME="${XDG_CACHE_HOME:-$HOME/.cache}/gradle"
+# Gradle usa su home por defecto, ~/.gradle: ahí vive el gradle.properties que
+# gestiona chezmoi, y es el mismo que usan los IDE lanzados desde el escritorio.
 export PYTHONPYCACHEPREFIX="${XDG_CACHE_HOME:-$HOME/.cache}/python"
 export JBANG_DIR="${XDG_DATA_HOME:-$HOME/.local/share}/jbang"
 export npm_config_cache="${XDG_CACHE_HOME:-$HOME/.cache}/npm"
@@ -65,10 +66,10 @@ plugins=(
   zsh-autosuggestions zsh-history-substring-search zsh-syntax-highlighting
 )
 
-# El script de chezmoi crea estos directorios; zf_mkdir los repone sin lanzar
-# un proceso por si se ha vaciado la caché.
+# El script de chezmoi crea este directorio; zf_mkdir lo repone sin lanzar un
+# proceso por si se ha vaciado la caché.
 zmodload -F zsh/files b:zf_mkdir
-zf_mkdir -p "${ZSH_COMPDUMP:h}" "$GRADLE_USER_HOME"
+zf_mkdir -p "${ZSH_COMPDUMP:h}"
 source "$ZSH/oh-my-zsh.sh"
 
 # Historial útil y compartido, sin repeticiones ni comandos triviales.

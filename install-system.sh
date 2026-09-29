@@ -39,6 +39,9 @@ lm_sensors_changed=false
 lm_sensors_managed=false
 modules_load_changed=false
 sysctl_changed=false
+docker_changed=false
+oomd_changed=false
+resolved_changed=false
 
 backup_target() {
   local target=$1 backup_path
@@ -97,6 +100,9 @@ validate_host_file() {
     sysctl.d/*.conf)
       sysctl --dry-run --load="$source" >/dev/null
       ;;
+    docker/daemon.json)
+      python3 -m json.tool -- "$source" >/dev/null
+      ;;
   esac
 }
 
@@ -106,6 +112,9 @@ mark_changed_subsystem() {
     lact/config.yaml) lact_changed=true ;;
     modules-load.d/*.conf) modules_load_changed=true ;;
     sysctl.d/*.conf) sysctl_changed=true ;;
+    docker/daemon.json|systemd/system/docker.service.d/*) docker_changed=true ;;
+    systemd/oomd.conf.d/*) oomd_changed=true ;;
+    systemd/resolved.conf.d/*) resolved_changed=true ;;
   esac
 }
 
@@ -118,6 +127,12 @@ deploy_file "$repo_dir/system/systemd/timesyncd.conf.d/90-workstation.conf" \
   "/etc/systemd/timesyncd.conf.d/90-workstation.conf"
 deploy_file "$repo_dir/system/systemd/system/paccache.service.d/10-workstation.conf" \
   "/etc/systemd/system/paccache.service.d/10-workstation.conf"
+for relative in systemd/oomd.conf.d/10-workstation.conf \
+                systemd/system/user-1000.slice.d/10-oomd.conf; do
+  cmp -s -- "$repo_dir/system/$relative" "/etc/$relative" ||
+    mark_changed_subsystem "$relative"
+  deploy_file "$repo_dir/system/$relative" "/etc/$relative"
+done
 deploy_file "$repo_dir/system/systemd/zram-generator.conf" \
   "/etc/systemd/zram-generator.conf"
 deploy_file "$repo_dir/system/udev/rules.d/60-ioschedulers.rules" \
@@ -215,6 +230,16 @@ if ! $dry_run; then
   if $lact_changed; then
     systemctl restart lactd.service
   fi
+  if $oomd_changed; then
+    systemctl try-restart systemd-oomd.service
+  fi
+  if $resolved_changed; then
+    systemctl try-restart systemd-resolved.service
+  fi
+  # live-restore mantiene los contenedores en marcha durante el reinicio.
+  if $docker_changed; then
+    systemctl try-restart docker.service
+  fi
   systemctl restart systemd-journald.service
   systemctl restart systemd-timesyncd.service
   systemctl reload sshd.service
@@ -233,5 +258,14 @@ else
   fi
   if $lact_changed; then
     printf 'Reiniciaría lactd.service para recargar el selector de perfiles.\n'
+  fi
+  if $oomd_changed; then
+    printf 'Reiniciaría systemd-oomd.service.\n'
+  fi
+  if $resolved_changed; then
+    printf 'Reiniciaría systemd-resolved.service.\n'
+  fi
+  if $docker_changed; then
+    printf 'Reiniciaría docker.service si está en marcha.\n'
   fi
 fi

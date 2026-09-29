@@ -171,9 +171,9 @@ aplicar, así que ya no hace falta un paso aparte.
 ## Configuración del sistema (sólo Arch)
 
 `install-system.sh` despliega mediante copias los archivos comunes de Pacman,
-journald, timesyncd, zram, sysctl, SSH y las reglas udev de schedulers y del
-receptor Logitech, más los específicos bajo `hosts/<equipo>/system/`,
-conservando su ruta relativa dentro de `/etc`. Después valida y recarga únicamente los
+paccache, journald, timesyncd, systemd-oomd, zram, sysctl, SSH y las reglas
+udev de schedulers y del receptor Logitech, más los específicos bajo
+`hosts/<equipo>/system/`, conservando su ruta relativa dentro de `/etc`. Después valida y recarga únicamente los
 subsistemas afectados. Necesita privilegios administrativos y guarda los
 originales en `/var/lib/dotfiles-backup/`:
 
@@ -194,6 +194,10 @@ repositorio a mano.
 La conexión Bluetooth del mando Xbox emparejado con Tycho abre Steam en Big
 Picture. La regla está limitada al identificador del mando y no requiere un
 demonio de usuario en ejecución.
+
+systemd-oomd cierra la aplicación culpable cuando la presión de memoria de la
+sesión supera el 80 % durante 30 s, o cuando el swap pasa del 90 %, en lugar de
+dejar que el escritorio se congele.
 
 zram ocupa como mucho la mitad de la RAM, con tope de 8 GiB, en zstd. El
 sysctl común lo prioriza como swap (`swappiness=180`, sin readahead), limita la

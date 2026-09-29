@@ -3,7 +3,14 @@
 
 # vim-polyglot: el runtime de Vim ya resalta Java, Python y C++.
 .vim/pack/dotfiles/start/vim-polyglot
+
+# Gradle vuelve a su home por defecto (~/.gradle), donde está gradle.properties;
+# ~/.cache/gradle era un segundo home con cachés y daemons duplicados.
+.cache/gradle
 {{- if eq .chezmoi.os "linux" }}
+# JBang usa JBANG_DIR también fuera de Zsh (environment.d); ~/.jbang es un resto.
+.jbang
+
 # Catppuccin salió del escritorio: restos del tema anterior.
 .local/share/color-schemes/CatppuccinLatteBlue.colors
 .local/share/color-schemes/CatppuccinMochaBlue.colors

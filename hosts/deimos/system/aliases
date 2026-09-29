@@ -1,0 +1,3 @@
+# Local system mail is delivered through the internal TNG SMTP relay.
+root: jose.sanjuan@tng.iac.es
+jose: jose.sanjuan@tng.iac.es
