@@ -30,9 +30,21 @@ uv-shell() {
   fi
 }
 {{ if not $darwin }}
-# La configuración de borgmatic del sistema es sólo de root. PolicyKit aporta el
-# diálogo de autenticación y allow_other hace accesible al usuario de escritorio
-# el montaje FUSE que pertenece a root.
+# La configuración de borgmatic del sistema es sólo de root. En el escritorio,
+# PolicyKit aporta el diálogo de autenticación; por SSH no hay diálogo y sudo
+# pide la contraseña en el terminal. allow_other hace accesible al usuario el
+# montaje FUSE que pertenece a root.
+_borgmatic_as_root() {
+  if [[ -n $SSH_CONNECTION ]]; then
+    sudo borgmatic "$@"
+  elif (( $+commands[pkexec] )); then
+    pkexec borgmatic "$@"
+  else
+    print -u2 'Error: no se encontró pkexec (paquete polkit)'
+    return 127
+  fi
+}
+
 borgmatic-mount() {
   local mount_point="$HOME/.local/mnt/borgmatic"
   mkdir -p "$mount_point" || return
@@ -40,14 +52,10 @@ borgmatic-mount() {
     print "Borgmatic ya está montado en $mount_point"
     return 0
   fi
-  if ! command -v pkexec >/dev/null; then
-    print -u2 'Error: no se encontró pkexec (paquete polkit)'
-    return 127
-  fi
-  pkexec borgmatic mount --mount-point "$mount_point" --options allow_other "$@" || {
-    local status=$?
-    print -u2 "No se pudo montar el repositorio Borgmatic (estado $status)"
-    return "$status"
+  _borgmatic_as_root mount --mount-point "$mount_point" --options allow_other "$@" || {
+    local rc=$?
+    print -u2 "No se pudo montar el repositorio Borgmatic (estado $rc)"
+    return "$rc"
   }
   print "Borgmatic montado en $mount_point"
 }
@@ -58,14 +66,10 @@ borgmatic-umount() {
     print "No hay ningún repositorio montado en $mount_point"
     return 0
   fi
-  if ! command -v pkexec >/dev/null; then
-    print -u2 'Error: no se encontró pkexec (paquete polkit)'
-    return 127
-  fi
-  pkexec borgmatic umount --mount-point "$mount_point" || {
-    local status=$?
-    print -u2 "No se pudo desmontar el repositorio Borgmatic (estado $status)"
-    return "$status"
+  _borgmatic_as_root umount --mount-point "$mount_point" || {
+    local rc=$?
+    print -u2 "No se pudo desmontar el repositorio Borgmatic (estado $rc)"
+    return "$rc"
   }
   print "Borgmatic desmontado de $mount_point"
 }
