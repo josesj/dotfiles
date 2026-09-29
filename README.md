@@ -168,9 +168,9 @@ aplicar, así que ya no hace falta un paso aparte.
 ## Configuración del sistema (sólo Arch)
 
 `install-system.sh` despliega mediante copias los archivos comunes de Pacman,
-journald, timesyncd, SSH y las reglas udev de schedulers y del receptor
-Logitech, más los específicos bajo `hosts/<equipo>/system/`, conservando su
-ruta relativa dentro de `/etc`. Después valida y recarga únicamente los
+journald, timesyncd, zram, sysctl, SSH y las reglas udev de schedulers y del
+receptor Logitech, más los específicos bajo `hosts/<equipo>/system/`,
+conservando su ruta relativa dentro de `/etc`. Después valida y recarga únicamente los
 subsistemas afectados. Necesita privilegios administrativos y guarda los
 originales en `/var/lib/dotfiles-backup/`:
 
@@ -191,6 +191,12 @@ repositorio a mano.
 La conexión Bluetooth del mando Xbox emparejado con Tycho abre Steam en Big
 Picture. La regla está limitada al identificador del mando y no requiere un
 demonio de usuario en ejecución.
+
+zram ocupa como mucho la mitad de la RAM, con tope de 8 GiB, en zstd. El
+sysctl común lo prioriza como swap (`swappiness=180`, sin readahead), limita la
+escritura pendiente a 512 MiB en valor absoluto, usa BBR y deja activo SysRq. No
+repite lo que Arch y systemd ya fijan en `/usr/lib/sysctl.d` (límites de
+inotify, `vm.max_map_count`, `fq_codel`).
 
 Pacman conserva el `mirrorlist` y el keyring locales: son datos dinámicos y no
 se versionan. Los schedulers son `none` para NVMe, `mq-deadline` para SSD de

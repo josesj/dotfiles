@@ -12,8 +12,7 @@ Hardware auditado:
 
 El perfil de sistema configura `lm_sensors` con `i2c_piix4`, `nct6775` y
 `k10temp`, y carga `nct6775` al arrancar para el chip Nuvoton NCT6799. También
-aplica ajustes `sysctl` para zram, BBR, inotify, seguridad y SysRq, activa KMS
-temprano de NVIDIA y conserva la VRAM durante suspensión. Además,
+activa KMS temprano de NVIDIA y conserva la VRAM durante suspensión. Además,
 mantiene despiertos el audio Ryzen/NVIDIA y el adaptador Bluetooth ASUS USB-BT500,
 y desactiva el wake-up del receptor Logitech Bolt.
 

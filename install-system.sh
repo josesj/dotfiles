@@ -116,12 +116,18 @@ deploy_file "$repo_dir/system/systemd/journald.conf.d/90-local.conf" \
   "/etc/systemd/journald.conf.d/90-local.conf"
 deploy_file "$repo_dir/system/systemd/timesyncd.conf.d/90-workstation.conf" \
   "/etc/systemd/timesyncd.conf.d/90-workstation.conf"
+deploy_file "$repo_dir/system/systemd/zram-generator.conf" \
+  "/etc/systemd/zram-generator.conf"
 deploy_file "$repo_dir/system/udev/rules.d/60-ioschedulers.rules" \
   "/etc/udev/rules.d/60-ioschedulers.rules"
 deploy_file "$repo_dir/system/udev/rules.d/90-logitech.rules" \
   "/etc/udev/rules.d/90-logitech.rules"
 deploy_file "$repo_dir/system/ssh/sshd_config.d/99-workstation-hardening.conf" \
   "/etc/ssh/sshd_config.d/99-workstation-hardening.conf"
+validate_host_file "$repo_dir/system/sysctl.d/99-local.conf" sysctl.d/99-local.conf
+cmp -s -- "$repo_dir/system/sysctl.d/99-local.conf" /etc/sysctl.d/99-local.conf ||
+  sysctl_changed=true
+deploy_file "$repo_dir/system/sysctl.d/99-local.conf" "/etc/sysctl.d/99-local.conf"
 
 # Host-specific system files mirror their path below /etc. Deploy the current
 # host and remove files belonging exclusively to another profile, but only when
