@@ -14,9 +14,11 @@ mkdir -p \
   "$HOME/.local/bin"
 
 # Generar la completion arranca la JVM: hacerlo aquí evita ese coste en cada
-# terminal nueva. Se regenera cuando falta o cuando cambia la versión de JBang.
+# terminal nueva. Se regenera cuando falta o cuando el ejecutable de JBang es
+# más reciente que ella, es decir, tras una actualización (-nt sigue enlaces).
 completion="${XDG_CACHE_HOME:-$HOME/.cache}/zsh/completions/_jbang"
-if command -v jbang >/dev/null && [[ ! -s "$completion" ]]; then
+if jbang_bin=$(command -v jbang) &&
+   [[ ! -s "$completion" || "$jbang_bin" -nt "$completion" ]]; then
   jbang completion zsh > "$completion"
 fi
 

@@ -44,7 +44,9 @@ fi
 
 ZSH_THEME="workstation"
 ZSH_COMPDUMP="${XDG_CACHE_HOME:-$HOME/.cache}/zsh/zcompdump-$ZSH_VERSION"
-zstyle ':omz:update' mode reminder
+# Oh My Zsh lo actualiza chezmoi (externo con refreshPeriod); su propio
+# actualizador chocaría con el clon superficial.
+zstyle ':omz:update' mode disabled
 zstyle ':omz:plugins:nvm' lazy yes
 zstyle ':omz:alpha:lib:git' async-prompt yes
 
