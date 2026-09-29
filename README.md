@@ -220,8 +220,9 @@ borra sus fuentes de compilación tras cada instalación.
 Pacman conserva el `mirrorlist` y el keyring locales: son datos dinámicos y no
 se versionan. Los schedulers son `none` para NVMe, `mq-deadline` para SSD de
 bloques y `bfq` para discos rotacionales. Los cambios por equipo en mkinitcpio,
-modprobe o modules-load regeneran las imágenes de arranque. El perfil se elige
-por hostname o con `DOTFILES_HOST=deimos|tycho`.
+modprobe, modules-load, la línea de órdenes del kernel o Plymouth regeneran las
+imágenes de arranque. El perfil se elige por hostname o con
+`DOTFILES_HOST=deimos|tycho`.
 
 ### Paquetes que la configuración da por instalados
 

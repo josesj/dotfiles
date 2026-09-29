@@ -78,7 +78,8 @@ deploy_file() {
 
 is_initramfs_input() {
   [[ $1 == mkinitcpio.conf || $1 == mkinitcpio.conf.d/* ||
-     $1 == modprobe.d/* || $1 == modules-load.d/* ]]
+     $1 == modprobe.d/* || $1 == modules-load.d/* ||
+     $1 == kernel/cmdline || $1 == plymouth/plymouthd.conf ]]
 }
 
 validate_host_file() {
