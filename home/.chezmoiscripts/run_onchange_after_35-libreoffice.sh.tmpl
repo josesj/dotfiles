@@ -1,6 +1,6 @@
-{{- if and (eq .chezmoi.os "linux") (eq .chezmoi.hostname "tycho") -}}
+{{- if eq .chezmoi.os "linux" -}}
 #!/usr/bin/env bash
-# Sólo Tycho: los lanzadores de LibreOffice usan el backend KF6 sobre XWayland
+# Linux (Tycho y Deimos): los lanzadores de LibreOffice usan el backend KF6 sobre XWayland
 # para mantener proporciones coherentes con el escalado fraccional de Plasma.
 # wrapper sha256: {{ include "dot_local/bin/executable_libreoffice-kf6-x11" | sha256sum }}
 set -euo pipefail

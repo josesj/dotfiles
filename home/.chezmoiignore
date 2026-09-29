@@ -27,6 +27,7 @@
 .config/wireplumber
 .config/xdg-terminals.list
 .local/bin/desktop-unlock
+.local/bin/libreoffice-kf6-x11
 .local/share/applications
 .local/share/kio
 .local/share/konsole
@@ -34,11 +35,10 @@
 {{- end }}
 
 {{- if ne .chezmoi.hostname "tycho" }}
-# --- Exclusivo de Tycho: FiiO K3, Edifier, mando Xbox, LibreOffice KF6/X11 ---
+# --- Exclusivo de Tycho: FiiO K3, Edifier, mando Xbox ---
 .config/wireplumber/wireplumber.conf.d/51-fiio-k3.conf
 .config/wireplumber/wireplumber.conf.d/52-edifier-r1280db.conf
 .config/systemd/user/steam-big-picture-on-xbox.service
-.local/bin/libreoffice-kf6-x11
 {{- end }}
 
 {{- if ne .chezmoi.hostname "deimos" }}

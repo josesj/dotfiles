@@ -54,7 +54,7 @@ explícita si no es uno de los cuatro conocidos. El primer `apply`:
 3. Escribe los archivos de configuración del equipo.
 4. En macOS instala Homebrew y el `Brewfile`, registra los JDK y aplica las
    preferencias del sistema; en Arch configura Plasma, Konsole, Kate, KWin,
-   Baloo y el atajo de Kitty.
+   Baloo, el atajo de Kitty y los lanzadores KF6/X11 de LibreOffice.
 
 Uso diario:
 
@@ -77,8 +77,8 @@ Sólo en Arch: Kitty, Plasma, Konsole, Kate, Dolphin, mpv, OBS, PipeWire,
 WirePlumber, fontconfig, Xresources, `environment.d` y las banderas de Chrome y
 VS Code. Sólo en macOS: Ghostty, `.zprofile` y el `Brewfile`.
 
-Por equipo: Tycho añade el DAC FiiO K3, los altavoces Edifier, el arranque de
-Steam Big Picture con el mando Xbox y los lanzadores KF6/X11 de LibreOffice. Deimos añade la regla que evita la
+Por equipo: Tycho añade el DAC FiiO K3, los altavoces Edifier y el arranque de
+Steam Big Picture con el mando Xbox. Deimos añade la regla que evita la
 suspensión del nodo HDMI de AMD. La aceleración de mpv se deriva de la GPU:
 NVDEC en Tycho, VA-API en Deimos. Igual los codificadores de OBS: NVENC en
 Tycho, VA-API en Deimos.
