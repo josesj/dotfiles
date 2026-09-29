@@ -14,9 +14,6 @@ da acceso sin root a las cámaras y ruedas de filtros ZWO ASI.
 
 También versiona el resto de su `/etc` propio:
 
-- SSH: `10-hardening.conf` sólo admite clave pública para `jose`. sshd aplica
-  el primer valor de cada opción y este archivo se lee antes que el común
-  `99-workstation-hardening.conf`, así que prevalece sobre él.
 - DNS: DNS sobre TLS estricto, sin servidores de respaldo, y mDNS fuera de
   systemd-resolved (lo resuelve Avahi).
 - Docker: datos en `/mnt/docker` (el servicio exige ese montaje), `overlay2`,
@@ -29,7 +26,8 @@ También versiona el resto de su `/etc` propio:
 - `lm_sensors`: etiquetas del chip NCT6798D de la ASUS PRIME B660M-A D4.
 
 `obsolete-system/` retira la copia duplicada de la regla ASI que quedó como
-`/etc/udev/rules.d/99-`.
+`/etc/udev/rules.d/99-` y el antiguo `sshd_config.d/10-hardening.conf`, que
+sólo admitía clave pública y, al leerse antes, anulaba la política SSH común.
 
 Este perfil selecciona Vulkan/Wayland y VA-API para mpv, y evita la suspensión
 del nodo HDMI AMD que provocaba duplicados al reconectar el monitor.

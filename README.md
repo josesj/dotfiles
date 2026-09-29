@@ -205,6 +205,11 @@ escritura pendiente a 512 MiB en valor absoluto, usa BBR y deja activo SysRq. No
 repite lo que Arch y systemd ya fijan en `/usr/lib/sysctl.d` (límites de
 inotify, `vm.max_map_count`, `fq_codel`).
 
+SSH sigue una única política, `99-workstation-hardening.conf`: sólo `jose`,
+con clave pública o contraseña, nunca root, tres intentos por conexión y sin
+reenvío de agente ni X11. sshd aplica el primer valor que lee de cada opción,
+así que ningún otro archivo de `sshd_config.d` debe contradecirla.
+
 `paccache.timer` guarda dos versiones de cada paquete instalado y borra las de
 los paquetes desinstalados; yay, configurado por chezmoi con `--cleanafter`,
 borra sus fuentes de compilación tras cada instalación.
