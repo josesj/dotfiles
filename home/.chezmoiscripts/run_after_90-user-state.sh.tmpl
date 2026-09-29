@@ -22,6 +22,12 @@ if jbang_bin=$(command -v jbang) &&
   jbang completion zsh > "$completion"
 fi
 
+# Índices de la ayuda de los plugins de Vim, que chezmoi acaba de clonar o
+# actualizar. Hacerlo aquí ahorra el helptags de cada arranque de Vim.
+if command -v vim >/dev/null; then
+  vim -Nu NONE -i NONE -es -c 'packloadall | silent! helptags ALL' -c q || true
+fi
+
 {{ if eq .chezmoi.os "linux" -}}
 # El paquete nvm de Arch deja sus scripts en /usr/share/nvm, pero el plugin de
 # Oh My Zsh sale sin hacer nada si no encuentra $NVM_DIR/nvm.sh, y NVM_DIR debe

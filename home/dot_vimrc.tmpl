@@ -15,9 +15,9 @@ for s:fzf_prefix in ['/opt/homebrew/opt/fzf', '/usr/local/opt/fzf']
 endfor
 {{ end }}
 " pack/*/start se carga después de vimrc; adelantarlo deja disponibles
-" Catppuccin y lightline al elegir el tema más abajo.
+" Catppuccin y lightline al elegir el tema más abajo. Los índices de la ayuda
+" de los plugins los genera chezmoi al aplicar, no cada arranque de Vim.
 packloadall
-silent! helptags ALL
 
 filetype plugin indent on
 syntax enable

@@ -64,7 +64,10 @@ plugins=(
   zsh-autosuggestions zsh-history-substring-search zsh-syntax-highlighting
 )
 
-mkdir -p "${ZSH_COMPDUMP:h}" "$GRADLE_USER_HOME"
+# El script de chezmoi crea estos directorios; zf_mkdir los repone sin lanzar
+# un proceso por si se ha vaciado la caché.
+zmodload -F zsh/files b:zf_mkdir
+zf_mkdir -p "${ZSH_COMPDUMP:h}" "$GRADLE_USER_HOME"
 source "$ZSH/oh-my-zsh.sh"
 
 # Historial útil y compartido, sin repeticiones ni comandos triviales.
@@ -72,9 +75,10 @@ HISTFILE="${XDG_STATE_HOME:-$HOME/.local/state}/zsh/history"
 HISTSIZE=50000
 SAVEHIST=50000
 HISTORY_IGNORE='(ls|cd|pwd|exit)'
-mkdir -p "${HISTFILE:h}"
+zf_mkdir -p "${HISTFILE:h}"
 setopt append_history extended_history hist_expire_dups_first hist_ignore_all_dups
-setopt hist_ignore_space hist_reduce_blanks inc_append_history share_history
+# share_history ya escribe cada comando al momento: inc_append_history sobra.
+setopt hist_ignore_space hist_reduce_blanks share_history
 setopt hist_save_no_dups hist_verify
 setopt auto_cd auto_pushd pushd_ignore_dups interactive_comments
 
