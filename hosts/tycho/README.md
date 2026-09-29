@@ -23,3 +23,15 @@ PipeWire sigue la frecuencia del contenido (hasta 96 kHz, que el K3 admite) con
 quantum 256. El K3 es la salida predeterminada; la C920 es la entrada predeterminada. Las salidas
 analógica Ryzen y HDMI NVIDIA permanecen disponibles y no presentan el problema
 de duplicados de Deimos.
+
+Los ficheros vacíos de `system/systemd/system/` enmascaran las mediciones de
+TPM de systemd (`systemd-pcrproduct`, `systemd-pcrlogin@` y
+`systemd-tpm2-setup-early`): el fTPM del Ryzen no admite los índices NvPCR y
+fallaban en cada arranque. Tycho no usa el TPM para cifrado ni arranque medido.
+Un fichero de unidad vacío equivale a un enlace a `/dev/null`.
+
+`makepkg.conf.d/zz-native.conf` compila los paquetes de AUR con
+`-march=native` y `target-cpu=native` para el 9700X.
+
+Docker arranca bajo demanda con `docker.socket` en lugar de `docker.service`:
+`sudo systemctl disable --now docker.service && sudo systemctl enable --now docker.socket`.
