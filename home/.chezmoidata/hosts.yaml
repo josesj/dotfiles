@@ -1,26 +1,18 @@
-# Inventario declarativo de la flota. Las plantillas leen esta tabla mediante
-# `index .hosts .chezmoi.hostname`, de modo que añadir un equipo es añadir una
-# entrada aquí y, si hace falta, una regla en .chezmoiignore.
+# Hardware de la flota que las plantillas necesitan: el decodificador de mpv y
+# el codificador de OBS. Se lee mediante `index .hosts .chezmoi.hostname`. El
+# sistema operativo sale de .chezmoi.os; los equipos Mac no tienen claves.
 hosts:
   tycho:
-    os: linux
-    desktop: plasma
     # GeForce RTX 5080 (Blackwell): decodificación NVDEC para mpv.
     mpv_hwdec: nvdec
     mpv_comment: "Tycho: GeForce RTX 5080 (Blackwell), NVIDIA y Wayland."
     # OBS: NVENC (H.264 para emitir, HEVC para grabar).
     obs_encoder: nvenc
   deimos:
-    os: linux
-    desktop: plasma
     # Radeon RX 6600 (Navi 23) sobre Mesa/RADV: decodificación VA-API.
     mpv_hwdec: vaapi
     mpv_comment: "Deimos: Radeon RX 6600 (Navi 23), Mesa/RADV y Wayland."
     # OBS: VA-API (H.264 para emitir, HEVC para grabar; Navi 23 no codifica AV1).
     obs_encoder: vaapi
-  phobos:
-    os: darwin
-    desktop: aqua
-  janus:
-    os: darwin
-    desktop: aqua
+  phobos: {}
+  janus: {}

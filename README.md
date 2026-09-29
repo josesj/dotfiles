@@ -22,9 +22,9 @@ aliases y comandos de mantenimiento.
 .chezmoiroot            -> "home": chezmoi sólo gestiona ese subárbol
 home/                   estado fuente de chezmoi ($HOME de los cuatro equipos)
   .chezmoi.toml.tmpl    configuración que genera `chezmoi init`
-  .chezmoidata/         inventario de la flota: SO, escritorio y GPU por equipo
+  .chezmoidata/         hardware por equipo: decodificador de mpv y codificador de OBS
   .chezmoiignore        reparto de destinos por sistema operativo y por equipo
-  .chezmoiexternal.toml Oh My Zsh, plugins de Zsh y plugins de Vim
+  .chezmoiexternal.toml.tmpl  Oh My Zsh, plugins de Zsh y de Vim (tabla destino-URL)
   .chezmoiscripts/      aprovisionamiento (Homebrew, Plasma, Kate, VS Code...)
   .chezmoiremove        restos de configuraciones retiradas que hay que borrar
   .chezmoitemplates/    fragmentos reutilizados (el user.js de Firefox)
@@ -69,8 +69,9 @@ chezmoi update          # git pull + apply
 ## Reparto por sistema y por equipo
 
 `home/.chezmoiignore` decide qué se aplica en cada sitio, y
-`home/.chezmoidata/hosts.yaml` describe la flota. Añadir un equipo es añadir una
-entrada en esa tabla y, si hace falta, una regla en `.chezmoiignore`.
+`home/.chezmoidata/hosts.yaml` describe el hardware que usan las plantillas.
+Añadir un equipo es añadir su entrada en esa tabla y en la lista de
+`home/.chezmoi.toml.tmpl` y, si hace falta, una regla en `.chezmoiignore`.
 
 Sólo en Arch: Kitty, Plasma, Konsole, Kate, Dolphin, mpv, OBS, PipeWire,
 WirePlumber, fontconfig, Xresources, `environment.d` y las banderas de Chrome y

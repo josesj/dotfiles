@@ -1,4 +1,6 @@
-{{/* Perfil por equipo. El hostname corto selecciona sistema operativo y hardware. */}}
+{{/* Perfil por equipo. El hostname corto selecciona sistema operativo y hardware.
+     .chezmoidata no está disponible durante `chezmoi init`, así que esta lista
+     se mantiene a mano junto a las claves de .chezmoidata/hosts.yaml. */}}
 {{- $known := list "tycho" "deimos" "phobos" "janus" -}}
 {{- if not (has .chezmoi.hostname $known) -}}
 {{-   fail (printf "Equipo desconocido: %q. Perfiles disponibles: %s." .chezmoi.hostname (join ", " $known)) -}}
