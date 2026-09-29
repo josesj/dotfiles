@@ -19,8 +19,7 @@ y desactiva el wake-up del receptor Logitech Bolt.
 mpv usa `gpu-next` con Vulkan/Wayland y decodificación NVDEC. Esta combinación se
 validó reproduciendo H.264 mediante la RTX 5080. WirePlumber mantiene el FiiO K3
 en `S32LE`, con periodo 256 y sin suspensión.
-PipeWire permanece fijo a 48 kHz con quantum 256 y usa remuestreo de calidad 14
-solo cuando la conversión es inevitable. El K3 es
-la salida predeterminada; la C920 es la entrada predeterminada. Las salidas
+PipeWire sigue la frecuencia del contenido (hasta 96 kHz, que el K3 admite) con
+quantum 256. El K3 es la salida predeterminada; la C920 es la entrada predeterminada. Las salidas
 analógica Ryzen y HDMI NVIDIA permanecen disponibles y no presentan el problema
 de duplicados de Deimos.

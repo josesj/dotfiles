@@ -77,9 +77,8 @@ Sólo en Arch: Kitty, Plasma, Konsole, Kate, Dolphin, mpv, OBS, PipeWire,
 WirePlumber, fontconfig, Xresources, `environment.d` y las banderas de Chrome y
 VS Code. Sólo en macOS: Ghostty, `.zprofile` y el `Brewfile`.
 
-Por equipo: Tycho añade el DAC FiiO K3, los altavoces Edifier, el remuestreo de
-alta calidad de PipeWire, el arranque de Steam Big Picture con el mando Xbox y
-los lanzadores KF6/X11 de LibreOffice. Deimos añade la regla que evita la
+Por equipo: Tycho añade el DAC FiiO K3, los altavoces Edifier, el arranque de
+Steam Big Picture con el mando Xbox y los lanzadores KF6/X11 de LibreOffice. Deimos añade la regla que evita la
 suspensión del nodo HDMI de AMD. La aceleración de mpv se deriva de la GPU:
 NVDEC en Tycho, VA-API en Deimos. Igual los codificadores de OBS: NVENC en
 Tycho, VA-API en Deimos.
@@ -125,8 +124,12 @@ primer `apply` migra el `~/.zsh_history` de macOS.
 
 ## Audio y vídeo en Arch
 
-PipeWire permanece fijo a 48 kHz con quantum 256 (unos 5,3 ms) para reducir la
-latencia. `pw-lowlatency` fuerza temporalmente otro quantum y `pw-normal`
+PipeWire trabaja con quantum 256 (unos 5,3 ms a 48 kHz) y sigue la frecuencia
+del contenido: 44,1, 48, 88,2 o 96 kHz según lo que admita la salida, de modo
+que la música llega sin remuestrear. Cuando la conversión es inevitable usa la
+calidad máxima del remuestreador (14), tanto en los clientes como en los nodos
+de dispositivo: un auricular Bluetooth fija su frecuencia al negociar el códec
+y es su propio nodo quien convierte. `pw-lowlatency` fuerza temporalmente otro quantum y `pw-normal`
 restaura los valores configurados. En Tycho, WirePlumber mantiene el FiiO K3 en
 `S32LE` con periodo 256 y lo prioriza como salida; cuando no está disponible usa
 los Edifier antes que la salida HDMI del monitor.

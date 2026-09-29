@@ -35,8 +35,6 @@
 
 {{- if ne .chezmoi.hostname "tycho" }}
 # --- Exclusivo de Tycho: FiiO K3, Edifier, mando Xbox, LibreOffice KF6/X11 ---
-.config/pipewire/client.conf.d
-.config/pipewire/pipewire-pulse.conf.d
 .config/wireplumber/wireplumber.conf.d/51-fiio-k3.conf
 .config/wireplumber/wireplumber.conf.d/52-edifier-r1280db.conf
 .config/systemd/user/steam-big-picture-on-xbox.service
