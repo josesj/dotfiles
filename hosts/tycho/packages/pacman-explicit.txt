@@ -110,7 +110,6 @@ gwenview
 handbrake
 harvid
 heaptrack
-helvum
 hexyl
 htop
 hugin
@@ -339,6 +338,7 @@ python-uv
 python-vosk
 python-xattr
 qemu-full
+qpwgraph
 qt5-wayland
 qt6-httpserver
 qt6-multimedia-gstreamer
