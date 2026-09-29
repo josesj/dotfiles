@@ -1,4 +1,6 @@
 autofirma
+claude-code
+claude-desktop
 ds9-bin
 google-chrome
 jbang

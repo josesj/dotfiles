@@ -104,6 +104,7 @@ git-lfs
 github-cli
 gitui
 gjs
+glab
 go
 gopls
 gperf
@@ -123,7 +124,6 @@ gwenview
 handbrake
 harvid
 helm
-helvum
 hexyl
 hiprt
 htop
@@ -294,11 +294,12 @@ ntfs-3g
 nvm
 nvme-cli
 nvtop
+obs-studio
+obs-studio-plugin-browser
 obsidian
 ocean-sound-theme
 okteta
 okular
-openai-codex
 openbsd-netcat
 opencamlib
 opencl-mesa
@@ -371,6 +372,7 @@ python-uv
 python-vosk
 python-xattr
 qemu-emulators-full
+qpwgraph
 qt5-wayland
 qt6-httpserver
 qt6-multimedia-gstreamer
