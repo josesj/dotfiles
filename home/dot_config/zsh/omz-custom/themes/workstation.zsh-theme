@@ -2,12 +2,37 @@
 zmodload zsh/datetime
 zmodload zsh/parameter
 
-# Follow the desktop's current mode at shell startup: Latte for light, Mocha
-# for dark. Plasma reports it through kdeglobals; macOS only defines
+# Over SSH the palette must match the local terminal, not the remote desktop:
+# ask the terminal for its background colour (OSC 11, answered by Kitty and
+# Ghostty) and pick the flavour by luminance. The result is exported so Vim
+# can follow it too. Terminals that do not answer time out after 0.3 s.
+function workstation_ssh_flavour() {
+  [[ -n $SSH_CONNECTION && -t 0 && -t 1 ]] || return 1
+  local reply char
+  print -n $'\e]11;?\a' >/dev/tty
+  # Byte by byte: read -t only bounds the wait for the first character, and
+  # the reply may end in BEL or in ST (ESC \).
+  while IFS= read -rs -k 1 -t 0.3 char </dev/tty; do
+    reply+=$char
+    [[ $char == $'\a' || $reply == *$'\e\\' ]] && break
+  done
+  [[ $reply =~ 'rgb:([[:xdigit:]]{2})[[:xdigit:]]*/([[:xdigit:]]{2})[[:xdigit:]]*/([[:xdigit:]]{2})' ]] ||
+    return 1
+  local -i red=16#$match[1] green=16#$match[2] blue=16#$match[3]
+  (( red * 299 + green * 587 + blue * 114 > 128000 )) && REPLY=latte || REPLY=mocha
+}
+
+# Otherwise follow the desktop's current mode at shell startup: Latte for
+# light, Mocha for dark. Plasma reports it through kdeglobals and leaves the
+# key unset while it uses its default, Breeze Light; macOS only defines
 # AppleInterfaceStyle while dark mode is active, so its absence means light.
 typeset workstation_color_scheme='Mocha'
-if (( $+commands[kreadconfig6] )); then
+if workstation_ssh_flavour; then
+  export WORKSTATION_FLAVOUR=$REPLY
+  workstation_color_scheme=${(C)REPLY}
+elif (( $+commands[kreadconfig6] )); then
   workstation_color_scheme=$(kreadconfig6 --file kdeglobals --group General --key ColorScheme 2>/dev/null)
+  : ${workstation_color_scheme:=BreezeLight}
 elif [[ $OSTYPE == darwin* ]]; then
   defaults read -g AppleInterfaceStyle &>/dev/null || workstation_color_scheme='Latte'
 fi

@@ -91,7 +91,9 @@ Visual Studio Code, con Latte en modo claro y Mocha en modo oscuro. El
 escritorio no: Plasma usa Breeze, su tema propio, y es quien dicta el modo. El
 sabor se detecta en el arranque del shell y al recuperar el foco en Vim: Plasma
 lo publica en `kdeglobals` y macOS sólo define `AppleInterfaceStyle` mientras el
-modo oscuro está activo. El prompt asigna colores semánticos de la variante
+modo oscuro está activo. Por SSH manda el terminal local, no el escritorio
+remoto: el prompt pregunta a Kitty o Ghostty su color de fondo (OSC 11) y
+exporta `WORKSTATION_FLAVOUR`, que Vim también sigue. El prompt asigna colores semánticos de la variante
 activa a ruta, estado de Git, errores, duración, trabajos y entornos virtuales.
 
 En Arch, fontconfig y Plasma usan Noto Sans para la interfaz, Noto Serif para
