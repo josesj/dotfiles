@@ -1,6 +1,10 @@
+# chezmoi no borra por su cuenta lo que deja de gestionar: los externos y
+# archivos retirados se eliminan aquí.
+
+# vim-polyglot: el runtime de Vim ya resalta Java, Python y C++.
+.vim/pack/dotfiles/start/vim-polyglot
 {{- if eq .chezmoi.os "linux" }}
-# Catppuccin salió del escritorio: chezmoi no borra por su cuenta lo que deja
-# de gestionar, así que estos restos del tema anterior se retiran aquí.
+# Catppuccin salió del escritorio: restos del tema anterior.
 .local/share/color-schemes/CatppuccinLatteBlue.colors
 .local/share/color-schemes/CatppuccinMochaBlue.colors
 .local/share/plasma/look-and-feel/local.catppuccin-latte-blue

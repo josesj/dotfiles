@@ -25,7 +25,7 @@
 | `:make` | Java: Gradle; Python: Ruff; C/C++: CMake |
 
 Vim usa números de línea absolutos, Catppuccin Latte/Mocha, Lightline,
-GitGutter, ALE, fzf.vim, Commentary, Surround, Repeat, Polyglot y Tagbar,
+GitGutter, ALE, fzf.vim, Commentary, Surround, Repeat y Tagbar,
 cargados como paquetes nativos desde `~/.vim/pack/dotfiles/start`.
 
 ## Kitty (Arch)

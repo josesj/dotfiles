@@ -50,7 +50,7 @@ explícita si no es uno de los cuatro conocidos. El primer `apply`:
 
 1. Retira la configuración que dejaron los instaladores anteriores y guarda
    copia en `~/.local/state/dotfiles-backup/FECHA-HORA`.
-2. Clona Oh My Zsh, los tres plugins de Zsh y los diez plugins de Vim.
+2. Clona Oh My Zsh, los tres plugins de Zsh y los nueve plugins de Vim.
 3. Escribe los archivos de configuración del equipo.
 4. En macOS instala Homebrew y el `Brewfile`, registra los JDK y aplica las
    preferencias del sistema; en Arch configura Plasma, Konsole, Kate, KWin y el
@@ -114,9 +114,11 @@ Zsh pueda reemplazarse entero sin arrastrar configuración propia.
 
 Los plugins de Vim son paquetes nativos en `~/.vim/pack/dotfiles/start`,
 también como externos: Catppuccin, Lightline, GitGutter, ALE, fzf.vim,
-Commentary, Surround, Repeat, Polyglot y Tagbar. No hay gestor de plugins dentro
-de Vim: vim-plug quedó retirado. `:Files` y `:Rg` necesitan `fzf` y `ripgrep`
-instalados por el gestor de paquetes del sistema.
+Commentary, Surround, Repeat y Tagbar. No hay gestor de plugins dentro de Vim:
+vim-plug quedó retirado. El resaltado de sintaxis es el que trae el runtime de
+Vim; vim-polyglot se retiró porque era el plugin más lento de cargar. `:Files`
+y `:Rg` necesitan `fzf` y `ripgrep` instalados por el gestor de paquetes del
+sistema.
 
 El historial vive en `~/.local/state/zsh/history` en los cuatro equipos; el
 primer `apply` migra el `~/.zsh_history` de macOS.
