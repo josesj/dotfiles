@@ -53,8 +53,8 @@ explícita si no es uno de los cuatro conocidos. El primer `apply`:
 2. Clona Oh My Zsh, los tres plugins de Zsh y los nueve plugins de Vim.
 3. Escribe los archivos de configuración del equipo.
 4. En macOS instala Homebrew y el `Brewfile`, registra los JDK y aplica las
-   preferencias del sistema; en Arch configura Plasma, Konsole, Kate, KWin y el
-   atajo de Kitty.
+   preferencias del sistema; en Arch configura Plasma, Konsole, Kate, KWin,
+   Baloo y el atajo de Kitty.
 
 Uso diario:
 
