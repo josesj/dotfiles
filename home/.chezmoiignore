@@ -42,6 +42,7 @@
 {{- end }}
 
 {{- if ne .chezmoi.hostname "deimos" }}
-# --- Exclusivo de Deimos: nodo HDMI AMD que se duplicaba al reconectar ---
+# --- Exclusivo de Deimos: nodo HDMI AMD que se duplicaba al reconectar y ROCm para gfx1032 ---
 .config/wireplumber/wireplumber.conf.d/10-alsa.conf
+.config/environment.d/50-rocm.conf
 {{- end }}

@@ -79,8 +79,9 @@ VS Code. Sólo en macOS: Ghostty, `.zprofile` y el `Brewfile`.
 
 Por equipo: Tycho añade el DAC FiiO K3, los altavoces Edifier y el arranque de
 Steam Big Picture con el mando Xbox. Deimos añade la regla que evita la
-suspensión del nodo HDMI de AMD. La aceleración de mpv se deriva de la GPU:
-NVDEC en Tycho, VA-API en Deimos. Igual los codificadores de OBS: NVENC en
+suspensión del nodo HDMI de AMD y `HSA_OVERRIDE_GFX_VERSION`, con la que ROCm
+trata la RX 6600 (gfx1032) como gfx1030. La aceleración de mpv se deriva de la
+GPU: NVDEC en Tycho, VA-API en Deimos. Igual los codificadores de OBS: NVENC en
 Tycho, VA-API en Deimos.
 
 ## Aspecto
