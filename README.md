@@ -201,6 +201,10 @@ escritura pendiente a 512 MiB en valor absoluto, usa BBR y deja activo SysRq. No
 repite lo que Arch y systemd ya fijan en `/usr/lib/sysctl.d` (límites de
 inotify, `vm.max_map_count`, `fq_codel`).
 
+`paccache.timer` guarda dos versiones de cada paquete instalado y borra las de
+los paquetes desinstalados; yay, configurado por chezmoi con `--cleanafter`,
+borra sus fuentes de compilación tras cada instalación.
+
 Pacman conserva el `mirrorlist` y el keyring locales: son datos dinámicos y no
 se versionan. Los schedulers son `none` para NVMe, `mq-deadline` para SSD de
 bloques y `bfq` para discos rotacionales. Los cambios por equipo en mkinitcpio,

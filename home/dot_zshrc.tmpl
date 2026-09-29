@@ -18,6 +18,7 @@ export JAVA_HOME=/usr/lib/jvm/default
 export GRADLE_USER_HOME="${XDG_CACHE_HOME:-$HOME/.cache}/gradle"
 export PYTHONPYCACHEPREFIX="${XDG_CACHE_HOME:-$HOME/.cache}/python"
 export JBANG_DIR="${XDG_DATA_HOME:-$HOME/.local/share}/jbang"
+export npm_config_cache="${XDG_CACHE_HOME:-$HOME/.cache}/npm"
 export VIRTUAL_ENV_DISABLE_PROMPT=1
 {{ if not $darwin -}}
 export NVM_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/nvm"

@@ -1,0 +1,12 @@
+{{- if eq .chezmoi.os "linux" -}}
+#!/usr/bin/env bash
+# yay deja por defecto las fuentes y los paquetes compilados en ~/.cache/yay
+# después de instalar; en Deimos llegaron a sumar 6,9 GB. --cleanafter los borra
+# tras cada instalación correcta. yay guarda la opción en su config.json, que
+# reescribe él mismo, por eso se fija con --save y no como archivo gestionado.
+set -euo pipefail
+command -v yay >/dev/null || exit 0
+
+yay -Y --save --cleanafter >/dev/null
+printf 'yay: fuentes de compilación borradas tras cada instalación.\n'
+{{- end -}}

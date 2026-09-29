@@ -116,6 +116,8 @@ deploy_file "$repo_dir/system/systemd/journald.conf.d/90-local.conf" \
   "/etc/systemd/journald.conf.d/90-local.conf"
 deploy_file "$repo_dir/system/systemd/timesyncd.conf.d/90-workstation.conf" \
   "/etc/systemd/timesyncd.conf.d/90-workstation.conf"
+deploy_file "$repo_dir/system/systemd/system/paccache.service.d/10-workstation.conf" \
+  "/etc/systemd/system/paccache.service.d/10-workstation.conf"
 deploy_file "$repo_dir/system/systemd/zram-generator.conf" \
   "/etc/systemd/zram-generator.conf"
 deploy_file "$repo_dir/system/udev/rules.d/60-ioschedulers.rules" \
