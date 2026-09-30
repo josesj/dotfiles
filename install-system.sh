@@ -43,6 +43,7 @@ docker_changed=false
 oomd_changed=false
 resolved_changed=false
 networkmanager_changed=false
+firewalld_changed=false
 
 backup_target() {
   local target=$1 backup_path
@@ -118,6 +119,7 @@ mark_changed_subsystem() {
     systemd/oomd.conf.d/*) oomd_changed=true ;;
     systemd/resolved.conf.d/*) resolved_changed=true ;;
     NetworkManager/conf.d/*) networkmanager_changed=true ;;
+    firewalld/*) firewalld_changed=true ;;
   esac
 }
 
@@ -249,6 +251,12 @@ if ! $dry_run; then
   if $networkmanager_changed; then
     systemctl try-reload-or-restart NetworkManager.service
   fi
+  # Se valida antes de recargar: con un error, firewalld sigue con las reglas
+  # que tiene en memoria.
+  if $firewalld_changed && systemctl -q is-active firewalld.service; then
+    firewall-cmd --check-config
+    firewall-cmd --reload
+  fi
   # live-restore mantiene los contenedores en marcha durante el reinicio.
   if $docker_changed; then
     systemctl try-restart docker.service
@@ -280,6 +288,9 @@ else
   fi
   if $networkmanager_changed; then
     printf 'Recargaría la configuración de NetworkManager.\n'
+  fi
+  if $firewalld_changed; then
+    printf 'Validaría y recargaría firewalld.\n'
   fi
   if $docker_changed; then
     printf 'Reiniciaría docker.service si está en marcha.\n'

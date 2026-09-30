@@ -22,7 +22,7 @@ aliases y comandos de mantenimiento.
 .chezmoiroot            -> "home": chezmoi sólo gestiona ese subárbol
 home/                   estado fuente de chezmoi ($HOME de los cuatro equipos)
   .chezmoi.toml.tmpl    configuración que genera `chezmoi init`
-  .chezmoidata/         hardware por equipo: codificador de Sunshine
+  .chezmoidata/         hardware por equipo: claves de Sunshine de cada GPU
   .chezmoiignore        reparto de destinos por sistema operativo y por equipo
   .chezmoiexternal.toml.tmpl  Oh My Zsh, plugins de Zsh y de Vim (tabla destino-URL)
   .chezmoiscripts/      aprovisionamiento (Homebrew, Plasma, Kate, VS Code...)
@@ -78,7 +78,8 @@ Sólo en Arch: Kitty, Plasma, Konsole, Kate, Dolphin, Sunshine, PipeWire,
 WirePlumber, fontconfig, Xresources, `environment.d` y las banderas de Chrome y
 VS Code. Sólo en macOS: Ghostty, `.zprofile` y el `Brewfile`.
 
-Por equipo: Sunshine codifica con NVENC en Tycho y con VA-API en Deimos.
+Por equipo: Sunshine codifica con NVENC en Tycho y con VA-API, sin AV1, en
+Deimos.
 Deimos añade la regla que evita la suspensión del nodo HDMI de AMD y
 `HSA_OVERRIDE_GFX_VERSION`, con la que ROCm trata la RX 6600 (gfx1032) como
 gfx1030.
@@ -100,10 +101,11 @@ monitor y sus periféricos.
   contraseña desde Moonlight, o por SSH con `desktop-unlock`. KWallet no se abre
   con el inicio automático y pide su contraseña la primera vez que se usa.
 - **Sunshine.** `sunshine-bin` (AUR) trae el servicio de usuario, que chezmoi
-  activa con un enlace en `graphical-session.target.wants`. chezmoi crea
-  `~/.config/sunshine/sunshine.conf` una sola vez, con captura KMS (la única que
-  también ve la pantalla de bloqueo) y el codificador del equipo; después es de
-  la interfaz web, `https://<equipo>:47990`.
+  activa con un enlace en `graphical-session.target.wants`. Un script
+  `modify_` fija en `~/.config/sunshine/sunshine.conf` la captura KMS (la única
+  que también ve la pantalla de bloqueo) y las claves de la GPU de cada equipo
+  en `.chezmoidata/hosts.yaml`; el resto es de la interfaz web,
+  `https://<equipo>:47990`.
 - **Energía.** Plasma no atenúa ni apaga la pantalla (Sunshine capturaría en
   negro) ni suspende por inactividad, porque SSH y los trabajos largos no
   cuentan como actividad. Se suspende a mano con `systemctl suspend`.
