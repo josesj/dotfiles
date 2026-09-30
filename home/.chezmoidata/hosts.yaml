@@ -6,6 +6,11 @@ hosts:
     sunshine:
       # GeForce RTX 5080 (Blackwell): NVENC con H.264, HEVC y AV1.
       encoder: nvenc
+      # Sin output_name: con el Dell conectado el dongle HDMI es el monitor 1
+      # de KMS, pero Tycho acabará headless y entonces será el 0, el de serie.
+    # Salida que Sunshine ajusta al modo del cliente (apps.json): el dongle HDMI
+    # Evanlak8K V2 (4K a 60 Hz, 1440p a 144 Hz, 1080p a 144/120 Hz).
+    sunshine_display: HDMI-A-1
   deimos:
     sunshine:
       # Radeon RX 6600 (Navi 23), única GPU (el UHD 770 del i5 está
