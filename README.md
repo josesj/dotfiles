@@ -225,6 +225,10 @@ con clave pública o contraseña, nunca root, tres intentos por conexión y sin
 reenvío de agente ni X11. sshd aplica el primer valor que lee de cada opción,
 así que ningún otro archivo de `sshd_config.d` debe contradecirla.
 
+systemd-resolved usa los DNS que anuncia cada red. Si `/etc/systemd/resolved.conf`
+aún fija servidores de NextDNS, `install-system.sh` lo devuelve a la versión del
+paquete systemd de la caché de pacman.
+
 `paccache.timer` guarda dos versiones de cada paquete instalado y borra las de
 los paquetes desinstalados; yay, configurado por chezmoi con `--cleanafter`,
 borra sus fuentes de compilación tras cada instalación.

@@ -13,8 +13,10 @@ da acceso sin root a las cámaras y ruedas de filtros ZWO ASI.
 
 También versiona el resto de su `/etc` propio:
 
-- DNS: DNS sobre TLS estricto, sin servidores de respaldo, y mDNS fuera de
-  systemd-resolved (lo resuelve Avahi).
+- DNS: los servidores que da cada red, sin DNS sobre TLS (los corporativos no
+  lo admiten), y mDNS fuera de systemd-resolved (lo resuelve Avahi). NextDNS se
+  retiró: `obsolete-system/` quita su DoT estricto e `install-system.sh`
+  devuelve `/etc/systemd/resolved.conf` a la versión del paquete.
 - Docker: datos en `/mnt/docker` (el servicio exige ese montaje), `overlay2`,
   `live-restore` y registros rotados.
 - Borgmatic: copias cada seis horas y aviso por correo si fallan, enviado con
