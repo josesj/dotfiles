@@ -155,6 +155,34 @@ cmp -s -- "$repo_dir/system/sysctl.d/99-local.conf" /etc/sysctl.d/99-local.conf 
   sysctl_changed=true
 deploy_file "$repo_dir/system/sysctl.d/99-local.conf" "/etc/sysctl.d/99-local.conf"
 
+# NextDNS se retiró: resolved usa los DNS que da cada red. Los servidores se
+# fijaron a mano en /etc/systemd/resolved.conf, que es del paquete systemd, así
+# que se devuelve a la versión del paquete en caché en lugar de versionarlo.
+restore_resolved_conf() {
+  local target=/etc/systemd/resolved.conf version package temporary
+  [[ -f $target ]] && grep -qi 'nextdns\.io' "$target" || return 0
+  version=$(pacman -Q systemd | cut -d' ' -f2)
+  package=$(find /var/cache/pacman/pkg -maxdepth 1 \
+    -name "systemd-$version-*.pkg.tar.zst" -print -quit)
+  if [[ -z $package ]]; then
+    printf 'Error: falta systemd %s en la caché; descárgalo con: pacman -Sw systemd\n' \
+      "$version" >&2
+    return 1
+  fi
+  if $dry_run; then
+    printf 'Restauraría la versión del paquete: %s (quita NextDNS)\n' "$target"
+    return 0
+  fi
+  temporary=$(mktemp)
+  bsdtar -xOf "$package" etc/systemd/resolved.conf > "$temporary"
+  backup_target "$target"
+  install -Dm644 "$temporary" "$target"
+  rm -f -- "$temporary"
+  resolved_changed=true
+  printf 'Versión del paquete restaurada: %s\n' "$target"
+}
+restore_resolved_conf
+
 # Host-specific system files mirror their path below /etc. Deploy the current
 # host and remove files belonging exclusively to another profile, but only when
 # their contents still match a managed source.
