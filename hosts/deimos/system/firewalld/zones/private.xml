@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- La LAN de Deimos (161.72.52.0/24) y el enlace local IPv6 entran por aquí;
-     el resto de orígenes caen en public, que sólo abre SSH. Sunshine y su
-     interfaz web quedan limitados a la LAN. -->
+<!-- Deimos se usa desde varias redes, privadas y públicas, y el filtro por
+     origen lo hace el cortafuegos corporativo. Por eso eno1 entera entra por
+     esta zona: la asigna NetworkManager (connection.zone=private en la
+     conexión "deimos static"), que manda sobre firewalld en las interfaces
+     que gestiona. Las fuentes de abajo sólo cuentan si eno1 volviera a public. -->
 <zone>
   <short>Private</short>
   <description>Trusted local networks and local-only services</description>

@@ -23,9 +23,14 @@ También versiona el resto de su `/etc` propio:
   (`/usr/local/libexec/borgmatic-failure-notify`) no se versionan: sólo root
   puede leerlos.
 - `lm_sensors`: etiquetas del chip NCT6798D de la ASUS PRIME B660M-A D4.
-- firewalld: la LAN (161.72.52.0/24) entra por la zona `private`, que abre SSH,
-  mDNS, LLMNR y Sunshine (`services/sunshine.xml`); el resto cae en `public`,
-  que sólo abre SSH. Sunshine y su interfaz web no se exponen fuera de la LAN.
+- firewalld: `eno1` entera va a la zona `private`, que abre SSH, mDNS, LLMNR y
+  Sunshine (`services/sunshine.xml`). Deimos se usa desde varias redes, privadas
+  y públicas, y el filtro por origen lo hace el cortafuegos corporativo. La
+  zona de la interfaz la fija NetworkManager, no firewalld, y no se versiona
+  porque la conexión guarda la IP estática:
+  `nmcli connection modify "deimos static" connection.zone private`.
+  Fuera de la LAN (161.72.52.0/24) mDNS no llega: en Moonlight se añade deimos
+  a mano por nombre o IP.
 
 `obsolete-system/` retira la copia duplicada de la regla ASI que quedó como
 `/etc/udev/rules.d/99-`, el antiguo `sshd_config.d/10-hardening.conf`, que
