@@ -31,8 +31,9 @@ y el desbloqueo de OverDrive de `amdgpu`, que sólo servía a LACT.
 
 Deimos se usa en remoto con Sunshine (VA-API) y se despierta por WoL por su
 Intel I219 (`eno1`, `e1000e`), pero conserva el monitor LG 27UP850 y sus
-periféricos: Bluetooth, webcam, impresora y escáner. También conserva la
-astronomía y la electrónica/IoT. WirePlumber evita la suspensión del nodo HDMI
-AMD que provocaba duplicados al reconectar el monitor.
+periféricos: Bluetooth, webcam e impresora. También conserva la
+electrónica/IoT; de la astronomía sólo quedan las bibliotecas (INDI, CCfits,
+Astropy) y la regla udev de las cámaras ASI. WirePlumber evita la suspensión
+del nodo HDMI AMD que provocaba duplicados al reconectar el monitor.
 
 El directorio también contiene el inventario de paquetes de Deimos.

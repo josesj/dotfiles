@@ -265,8 +265,6 @@ screen
 shellcheck
 shfmt
 skaffold
-skanlite
-skanpage
 smartmontools
 snap-pac
 snapper
@@ -276,7 +274,6 @@ solaar
 spectacle
 sqlfluff
 sshfs
-stellarium
 stern
 strace
 subversion
@@ -305,7 +302,6 @@ tuned-ppd
 typescript
 typescript-language-server
 typst
-umbrello
 unarchiver
 union
 unrar

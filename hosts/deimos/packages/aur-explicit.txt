@@ -1,9 +1,6 @@
 claude-code
-claude-desktop
-ds9-bin
 jbang
 modbustools-git
-siril-git
 sunshine-bin
 visual-studio-code-bin
 yay

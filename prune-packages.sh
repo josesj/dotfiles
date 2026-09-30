@@ -47,12 +47,20 @@ if (( ${#installed[@]} > 0 )); then
   sudo pacman -D --asdeps "${installed[@]}"
 fi
 
-# pacman enseña la lista completa (incluidos huérfanos que ya hubiera) y pide
-# confirmación antes de borrar.
-mapfile -t orphans < <(pacman -Qqdt || true)
-if (( ${#orphans[@]} > 0 )); then
+# Huérfanos de verdad, más los retirados que sólo alguien tiene como
+# dependencia opcional: -Qdt a secas los excluye (así se quedaban kdeconnect o
+# los idiomas de LibreOffice). Se repite porque cada borrado puede dejar
+# huérfanos nuevos. pacman enseña la lista completa y pide confirmación.
+while :; do
+  mapfile -t orphans < <(
+    {
+      pacman -Qqdt || true
+      pacman -Qqdtt | grep -Fxf <(printf '%s\n' "${retired[@]}") || true
+    } | LC_ALL=C sort -u
+  )
+  (( ${#orphans[@]} > 0 )) || break
   sudo pacman -Rns "${orphans[@]}"
-fi
+done
 
 # LACT no es dueño de su configuración: pacman la deja al desinstalarse.
 if [[ -d /etc/lact ]] && ! pacman -Qq lact >/dev/null 2>&1; then

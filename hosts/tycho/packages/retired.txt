@@ -27,7 +27,7 @@ pipewire-libcamera pipewire-v4l2 pipewire-zeroconf
 # Ofimática, lectura y notas.
 libreoffice-fresh libreoffice-fresh-es libreoffice-fresh-it
 hyphen-en hyphen-es hyphen-it mythes-en mythes-es mythes-it
-ttf-caladea ttf-carlito okular gwenview obsidian print-manager
+ttf-caladea ttf-carlito okular gwenview obsidian umbrello print-manager
 speech-dispatcher
 
 # Periféricos locales: Bluetooth, móvil, tarjetas, pantalla física.
@@ -49,4 +49,4 @@ iwd wireless_tools bcachefs-tools f2fs-tools jfsutils udftools fatresize lvm2
 dnssec-tools
 
 # AUR.
-davinci-resolve-studio-aacfix
+davinci-resolve-studio-aacfix claude-desktop

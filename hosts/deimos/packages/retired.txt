@@ -1,7 +1,7 @@
 # Paquetes que prune-packages.sh retira de Deimos al pasar a uso remoto. Se
 # marcan como dependencias: lo que otro paquete conservado necesite se queda.
 # Deimos conserva el monitor y sus periféricos (Bluetooth, webcam, impresora,
-# escáner, tableta, Solaar), la astronomía y la electrónica/IoT.
+# tableta, Solaar) y la electrónica/IoT.
 
 # Foto, vídeo, audio, 3D y diseño.
 gimp inkscape imagemagick optipng perl-image-exiftool libultrahdr libwmf
@@ -26,7 +26,10 @@ libreoffice-fresh libreoffice-fresh-es libreoffice-fresh-it
 hyphen-en hyphen-es hyphen-it mythes-en mythes-es mythes-it
 texlive-fontsrecommended texlive-latexrecommended texlive-xetex pandoc-cli
 tesseract-data-ita tesseract-data-spa doxygen graphviz mermaid-cli zeal
-okular gwenview obsidian
+okular gwenview obsidian umbrello
+
+# Astronomía y escáner.
+stellarium skanlite skanpage
 
 # Trabajo: firma electrónica, mensajería y clientes de bases de datos.
 ccid opensc pcsc-tools mattermost-desktop dbeaver
@@ -50,4 +53,5 @@ iwd wireless_tools bcachefs-tools f2fs-tools jfsutils nilfs-utils udftools
 fatresize lvm2 dnssec-tools geoipupdate
 
 # AUR.
-autofirma google-chrome jxplorer pocket-casts-linux
+autofirma google-chrome jxplorer pocket-casts-linux claude-desktop ds9-bin
+siril-git
