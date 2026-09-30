@@ -1,7 +1,0 @@
-# chezmoi sólo crea este archivo: después es de Sunshine, que lo reescribe
-# desde su interfaz web (https://{{ .chezmoi.hostname }}:47990).
-sunshine_name = {{ .chezmoi.hostname }}
-# KMS captura también la pantalla de bloqueo; exige cap_sys_admin, que el
-# paquete sunshine-bin concede al instalarse.
-capture = kms
-encoder = {{ (index .hosts .chezmoi.hostname).sunshine_encoder }}

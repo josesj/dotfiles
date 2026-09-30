@@ -23,6 +23,9 @@ También versiona el resto de su `/etc` propio:
   (`/usr/local/libexec/borgmatic-failure-notify`) no se versionan: sólo root
   puede leerlos.
 - `lm_sensors`: etiquetas del chip NCT6798D de la ASUS PRIME B660M-A D4.
+- firewalld: la LAN (161.72.52.0/24) entra por la zona `private`, que abre SSH,
+  mDNS, LLMNR y Sunshine (`services/sunshine.xml`); el resto cae en `public`,
+  que sólo abre SSH. Sunshine y su interfaz web no se exponen fuera de la LAN.
 
 `obsolete-system/` retira la copia duplicada de la regla ASI que quedó como
 `/etc/udev/rules.d/99-`, el antiguo `sshd_config.d/10-hardening.conf`, que
