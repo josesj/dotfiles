@@ -42,6 +42,7 @@ sysctl_changed=false
 docker_changed=false
 oomd_changed=false
 resolved_changed=false
+networkmanager_changed=false
 
 backup_target() {
   local target=$1 backup_path
@@ -116,6 +117,7 @@ mark_changed_subsystem() {
     docker/daemon.json|systemd/system/docker.service.d/*) docker_changed=true ;;
     systemd/oomd.conf.d/*) oomd_changed=true ;;
     systemd/resolved.conf.d/*) resolved_changed=true ;;
+    NetworkManager/conf.d/*) networkmanager_changed=true ;;
   esac
 }
 
@@ -129,11 +131,15 @@ deploy_file "$repo_dir/system/systemd/timesyncd.conf.d/90-workstation.conf" \
 deploy_file "$repo_dir/system/systemd/system/paccache.service.d/10-workstation.conf" \
   "/etc/systemd/system/paccache.service.d/10-workstation.conf"
 for relative in systemd/oomd.conf.d/10-workstation.conf \
-                systemd/system/user-1000.slice.d/10-oomd.conf; do
+                systemd/system/user-1000.slice.d/10-oomd.conf \
+                NetworkManager/conf.d/wake-on-lan.conf; do
   cmp -s -- "$repo_dir/system/$relative" "/etc/$relative" ||
     mark_changed_subsystem "$relative"
   deploy_file "$repo_dir/system/$relative" "/etc/$relative"
 done
+# El inicio automático se aplica en el siguiente arranque.
+deploy_file "$repo_dir/system/plasmalogin.conf.d/autologin.conf" \
+  "/etc/plasmalogin.conf.d/autologin.conf"
 deploy_file "$repo_dir/system/systemd/zram-generator.conf" \
   "/etc/systemd/zram-generator.conf"
 deploy_file "$repo_dir/system/udev/rules.d/60-ioschedulers.rules" \
@@ -179,6 +185,7 @@ if [[ -d "$host_dir/obsolete-system" ]]; then
       else
         backup_target "$target"
         printf 'Configuración obsoleta retirada: %s\n' "$target"
+        is_initramfs_input "$relative" && initramfs_changed=true
       fi
       mark_changed_subsystem "$relative"
     else
@@ -237,6 +244,11 @@ if ! $dry_run; then
   if $resolved_changed; then
     systemctl try-restart systemd-resolved.service
   fi
+  # reload relee conf.d sin cortar la conexión; los valores por defecto de
+  # conexión se aplican en la siguiente activación.
+  if $networkmanager_changed; then
+    systemctl try-reload-or-restart NetworkManager.service
+  fi
   # live-restore mantiene los contenedores en marcha durante el reinicio.
   if $docker_changed; then
     systemctl try-restart docker.service
@@ -265,6 +277,9 @@ else
   fi
   if $resolved_changed; then
     printf 'Reiniciaría systemd-resolved.service.\n'
+  fi
+  if $networkmanager_changed; then
+    printf 'Recargaría la configuración de NetworkManager.\n'
   fi
   if $docker_changed; then
     printf 'Reiniciaría docker.service si está en marcha.\n'

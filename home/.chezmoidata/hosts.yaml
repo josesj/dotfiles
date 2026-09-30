@@ -1,18 +1,12 @@
-# Hardware de la flota que las plantillas necesitan: el decodificador de mpv y
-# el codificador de OBS. Se lee mediante `index .hosts .chezmoi.hostname`. El
-# sistema operativo sale de .chezmoi.os; los equipos Mac no tienen claves.
+# Hardware de la flota que las plantillas necesitan: el codificador de
+# Sunshine. Se lee mediante `index .hosts .chezmoi.hostname`. El sistema
+# operativo sale de .chezmoi.os; los equipos Mac no tienen claves.
 hosts:
   tycho:
-    # GeForce RTX 5080 (Blackwell): decodificación NVDEC para mpv.
-    mpv_hwdec: nvdec
-    mpv_comment: "Tycho: GeForce RTX 5080 (Blackwell), NVIDIA y Wayland."
-    # OBS: NVENC (H.264 para emitir, HEVC para grabar).
-    obs_encoder: nvenc
+    # GeForce RTX 5080 (Blackwell): NVENC.
+    sunshine_encoder: nvenc
   deimos:
-    # Radeon RX 6600 (Navi 23) sobre Mesa/RADV: decodificación VA-API.
-    mpv_hwdec: vaapi
-    mpv_comment: "Deimos: Radeon RX 6600 (Navi 23), Mesa/RADV y Wayland."
-    # OBS: VA-API (H.264 para emitir, HEVC para grabar; Navi 23 no codifica AV1).
-    obs_encoder: vaapi
+    # Radeon RX 6600 (Navi 23) sobre Mesa: VA-API (H.264 y HEVC, sin AV1).
+    sunshine_encoder: vaapi
   phobos: {}
   janus: {}

@@ -16,4 +16,16 @@
 .local/share/color-schemes/CatppuccinMochaBlue.colors
 .local/share/plasma/look-and-feel/local.catppuccin-latte-blue
 .local/share/plasma/look-and-feel/local.catppuccin-mocha-blue
+
+# Los dos Arch se usan en remoto con Sunshine: sin mpv ni LibreOffice. La
+# configuración de OBS se deja porque guarda escenas y perfiles propios.
+.config/mpv
+.local/bin/libreoffice-kf6-x11
+.local/share/applications/libreoffice-*.desktop
+{{- end }}
+{{- if eq .chezmoi.hostname "tycho" }}
+# Tycho no tiene nadie delante: sin DAC, altavoces ni mando.
+.config/wireplumber/wireplumber.conf.d/51-fiio-k3.conf
+.config/wireplumber/wireplumber.conf.d/52-edifier-r1280db.conf
+.config/systemd/user/steam-big-picture-on-xbox.service
 {{- end }}

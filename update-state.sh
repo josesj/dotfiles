@@ -16,13 +16,18 @@ trap 'rm -rf -- "$stage_dir"' EXIT
 
 pacman -Qqen | LC_ALL=C sort > "$stage_dir/pacman-explicit.txt"
 pacman -Qqem | LC_ALL=C sort > "$stage_dir/aur-explicit.txt"
-flatpak list --app --columns=application,branch,origin,installation \
-  | LC_ALL=C sort > "$stage_dir/flatpak-apps.tsv"
 install -Dm644 "$stage_dir/pacman-explicit.txt" \
   "$host_dir/packages/pacman-explicit.txt"
 install -Dm644 "$stage_dir/aur-explicit.txt" \
   "$host_dir/packages/aur-explicit.txt"
-install -Dm644 "$stage_dir/flatpak-apps.tsv" \
-  "$host_dir/packages/flatpak-apps.tsv"
+# Tycho ya no instala Flatpak: sin él, el inventario de Flatpak desaparece.
+if command -v flatpak >/dev/null; then
+  flatpak list --app --columns=application,branch,origin,installation \
+    | LC_ALL=C sort > "$stage_dir/flatpak-apps.tsv"
+  install -Dm644 "$stage_dir/flatpak-apps.tsv" \
+    "$host_dir/packages/flatpak-apps.tsv"
+else
+  rm -f -- "$host_dir/packages/flatpak-apps.tsv"
+fi
 
 printf 'Estado actualizado para %s.\n' "$host_name"

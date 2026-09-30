@@ -8,8 +8,7 @@ Hardware auditado:
 - Audio integrado Intel en `pci-0000_00_1f.3`.
 - Lectura de energía Intel RAPL habilitada para usuarios sin privilegios.
 
-El perfil configura `lm_sensors` con `coretemp` y `nct6775`, desbloquea
-OverDrive de `amdgpu` para LACT, mantiene despierto el audio integrado Intel y
+El perfil configura `lm_sensors` con `coretemp` y `nct6775`, mantiene despierto el audio integrado Intel y
 da acceso sin root a las cámaras y ruedas de filtros ZWO ASI.
 
 También versiona el resto de su `/etc` propio:
@@ -26,10 +25,14 @@ También versiona el resto de su `/etc` propio:
 - `lm_sensors`: etiquetas del chip NCT6798D de la ASUS PRIME B660M-A D4.
 
 `obsolete-system/` retira la copia duplicada de la regla ASI que quedó como
-`/etc/udev/rules.d/99-` y el antiguo `sshd_config.d/10-hardening.conf`, que
-sólo admitía clave pública y, al leerse antes, anulaba la política SSH común.
+`/etc/udev/rules.d/99-`, el antiguo `sshd_config.d/10-hardening.conf`, que
+sólo admitía clave pública y, al leerse antes, anulaba la política SSH común,
+y el desbloqueo de OverDrive de `amdgpu`, que sólo servía a LACT.
 
-Este perfil selecciona Vulkan/Wayland y VA-API para mpv, y evita la suspensión
-del nodo HDMI AMD que provocaba duplicados al reconectar el monitor.
+Deimos se usa en remoto con Sunshine (VA-API) y se despierta por WoL por su
+Intel I219 (`eno1`, `e1000e`), pero conserva el monitor LG 27UP850 y sus
+periféricos: Bluetooth, webcam, impresora y escáner. También conserva la
+astronomía y la electrónica/IoT. WirePlumber evita la suspensión del nodo HDMI
+AMD que provocaba duplicados al reconectar el monitor.
 
 El directorio también contiene el inventario de paquetes de Deimos.
