@@ -1,6 +1,5 @@
 claude-code
-claude-desktop
-davinci-resolve-studio-aacfix
 jdtls
+sunshine-bin
 visual-studio-code-bin
 yay

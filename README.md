@@ -105,7 +105,9 @@ monitor y sus periféricos.
   `modify_` fija en `~/.config/sunshine/sunshine.conf` la captura KMS (la única
   que también ve la pantalla de bloqueo) y las claves de la GPU de cada equipo
   en `.chezmoidata/hosts.yaml`; el resto es de la interfaz web,
-  `https://<equipo>:47990`.
+  `https://<equipo>:47990`. Otro `modify_` de `apps.json` retira la app de
+  serie basada en `xrandr`, que no funciona en Wayland, y en los equipos con
+  `sunshine_display` ajusta esa salida al modo del cliente.
 - **Energía.** Plasma no atenúa ni apaga la pantalla (Sunshine capturaría en
   negro) ni suspende por inactividad, porque SSH y los trabajos largos no
   cuentan como actividad. Se suspende a mano con `systemctl suspend`.

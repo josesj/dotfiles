@@ -27,6 +27,7 @@
 .config/wireplumber
 .config/xdg-terminals.list
 .local/bin/desktop-unlock
+.local/bin/sunshine-display
 .local/share/applications
 .local/share/kio
 .local/share/konsole

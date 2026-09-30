@@ -20,6 +20,15 @@ RTL8125 (`enp8s0`), y un dongle HDMI en la RTX 5080 hace de pantalla, de modo
 que las resoluciones posibles son las de su EDID. La configuración común está
 descrita en el README principal.
 
+El dongle es un Evanlak8K V2 en `HDMI-A-1`: 4K a 60 Hz, 1440p a 144 Hz, 1080p a
+144 y 120 Hz y 2560×1080 a 120 Hz, sin HDR. Las apps «Desktop» y «Steam Big
+Picture» de Sunshine lo ponen en el modo que pide Moonlight con
+`sunshine-display` (escala 150 % en 4K y 125 % en 1440p) y lo devuelven al
+anterior al cerrar la sesión; si el cliente pide una resolución que el dongle
+no tiene, Sunshine reescala. Sunshine captura el monitor 0 de KMS, que sin el
+Dell conectado es el dongle; mientras el Dell siga enchufado, el dongle es el
+monitor 1.
+
 Las reglas del audio Ryzen/NVIDIA, del Bluetooth ASUS USB-BT500 y del mando Xbox
 están en `obsolete-system/`: `install-system.sh` las retira de `/etc`. El
 perfil de LACT para jugar se retiró con LACT.
