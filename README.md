@@ -188,6 +188,11 @@ chezmoi pide la contraseña al añadirlas y al aplicarlas; gpg-agent la cachea,
 de modo que un único `apply` sólo pregunta una vez. Quedan en el repositorio
 como `home/private_dot_ssh/encrypted_private_id_rsa_*.asc`.
 
+En los Mac, `~/.gnupg/gpg-agent.conf` usa `pinentry-mac` (en el Brewfile): la
+contraseña se pide en un diálogo nativo, que funciona también fuera de un TTY y
+permite guardarla en el Llavero. La pinentry de terminal falla en terminales
+integradas y obliga a teclear la contraseña dos veces por archivo al cifrar.
+
 Sustituyen al bundle `private-keys.tar.gpg` que agrupaba ambas claves en un solo
 tar y a sus dos scripts: chezmoi cifra cada clave por separado y la restaura al
 aplicar, así que ya no hace falta un paso aparte.
@@ -305,6 +310,27 @@ El nombre del equipo se fija aparte:
 sudo scutil --set ComputerName phobos
 sudo scutil --set LocalHostName phobos
 sudo scutil --set HostName phobos
+```
+
+## VPN
+
+Los perfiles de WireGuard de lodero (`iphone` y `phobos`, cada uno en variante
+`-full`, que enruta todo el tráfico, y `-home`, sólo la red de casa) y los de
+OpenVPN de TNG (`FGG` y `TNG`) llevan claves privadas y certificados, así que
+se versionan cifrados como los perfiles de macOS:
+
+```
+home/dot_local/share/dotfiles/private_vpn/
+    private_lodero/encrypted_private_{iphone,phobos}-{full,home}.conf.asc
+    private_tng/encrypted_private_{FGG,TNG}.ovpn.asc
+```
+
+`chezmoi apply` los descifra en `~/.local/share/dotfiles/vpn/` (directorios en
+`700`, archivos en `600`) y, como el resto de `.local/share/dotfiles`, sólo en
+los Mac. Para añadir o actualizar uno:
+
+```bash
+chezmoi add --encrypt ~/.local/share/dotfiles/vpn/lodero/phobos-full.conf
 ```
 
 ## Flujo recomendado
