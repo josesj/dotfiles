@@ -9,6 +9,7 @@
 .config/ghostty
 .config/dotfiles/Brewfile
 .local/share/dotfiles
+.gnupg/gpg-agent.conf
 {{- end }}
 
 {{- if ne .chezmoi.os "linux" }}
