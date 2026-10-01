@@ -121,8 +121,8 @@ configuración de Arch.
 
 ## Aspecto
 
-Vim, Kitty, Ghostty y Visual Studio Code usan One Light en modo claro y One
-Dark en modo oscuro; Zsh, Konsole y Kate siguen con Catppuccin Latte y Mocha. El
+Catppuccin viste lo que muestra texto: Vim, Zsh, Kitty, Ghostty, Konsole, Kate y
+Visual Studio Code, con Latte en modo claro y Mocha en modo oscuro. El
 escritorio no: Plasma usa Breeze, su tema propio, y es quien dicta el modo. El
 sabor se detecta en el arranque del shell y al recuperar el foco en Vim: Plasma
 lo publica en `kdeglobals` y macOS sólo define `AppleInterfaceStyle` mientras el
@@ -150,7 +150,7 @@ primer `apply` y se refrescan cada semana. `ZSH_CUSTOM` apunta a
 Zsh pueda reemplazarse entero sin arrastrar configuración propia.
 
 Los plugins de Vim son paquetes nativos en `~/.vim/pack/dotfiles/start`,
-también como externos: vim-one, Lightline, GitGutter, ALE, fzf.vim,
+también como externos: Catppuccin, Lightline, GitGutter, ALE, fzf.vim,
 Commentary, Surround, Repeat y Tagbar. No hay gestor de plugins dentro de Vim:
 vim-plug quedó retirado. El resaltado de sintaxis es el que trae el runtime de
 Vim; vim-polyglot se retiró porque era el plugin más lento de cargar. `:Files`

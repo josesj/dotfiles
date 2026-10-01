@@ -24,7 +24,7 @@
 | `ys`, `cs`, `ds` | Añadir, cambiar o borrar delimitadores |
 | `:make` | Java: Gradle; Python: Ruff; C/C++: CMake |
 
-Vim usa números de línea absolutos, One Light/One Dark, Lightline,
+Vim usa números de línea absolutos, Catppuccin Latte/Mocha, Lightline,
 GitGutter, ALE, fzf.vim, Commentary, Surround, Repeat y Tagbar,
 cargados como paquetes nativos desde `~/.vim/pack/dotfiles/start`.
 
@@ -55,7 +55,7 @@ cargados como paquetes nativos desde `~/.vim/pack/dotfiles/start`.
 
 La ventana abre a `100×29`, con margen de 4 px, y no recuerda su tamaño.
 Si un comando tarda más de 15 s y Kitty no tiene el foco, avisa por Plasma.
-Kitty usa One Light en modo claro y One Dark en modo oscuro.
+Kitty usa Catppuccin Latte en modo claro y Mocha en modo oscuro.
 
 ## Ghostty (macOS)
 
@@ -72,8 +72,8 @@ Kitty usa One Light en modo claro y One Dark en modo oscuro.
 | `Cmd+Shift+,` | Recargar la configuración |
 | `Cmd+Shift+R` | Reiniciar el terminal |
 
-La ventana abre a `100×29`. Ghostty sigue la apariencia de macOS con One
-Light/One Dark e instala su propio terminfo en los servidores al conectar por SSH.
+La ventana abre a `100×29`. Ghostty sigue la apariencia de macOS con Catppuccin
+Latte/Mocha e instala su propio terminfo en los servidores al conectar por SSH.
 
 ## Zsh y aliases
 

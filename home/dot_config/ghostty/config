@@ -3,8 +3,8 @@ font-family = JetBrainsMono Nerd Font
 font-size = 15
 font-thicken = true
 
-# One Light/One Dark cambia automáticamente con la apariencia de macOS.
-theme = light:one-light,dark:one-dark
+# Catppuccin cambia automáticamente con la apariencia de macOS.
+theme = light:catppuccin-latte,dark:catppuccin-mocha
 window-theme = system
 window-colorspace = srgb
 
