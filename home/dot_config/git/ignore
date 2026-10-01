@@ -91,7 +91,5 @@ target/
 .claudeignore
 CLAUDE.md
 CLAUDE.local.md
-.codex/
-.codexignore
 .agents/
 AGENTS.md
