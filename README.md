@@ -6,8 +6,8 @@ Configuración de cuatro equipos gestionada con [chezmoi](https://chezmoi.io):
 |---|---|---|
 | `tycho` | Arch Linux + Plasma | Equipo remoto con Sunshine (Ryzen 7 9700X, RTX 5080) |
 | `deimos` | Arch Linux + Plasma | Equipo remoto con Sunshine y monitor (i5-12600, RX 6600) |
-| `phobos` | macOS | Portátil |
-| `janus` | macOS | Portátil |
+| `phobos` | macOS | Portátil (MacBook Pro, M4 Pro) |
+| `janus` | macOS | Sobremesa (Mac Studio) |
 
 Está orientada a Java, Python y C++ con Zsh, Vim y Gradle. Los cuatro equipos
 comparten prompt, historial, aliases, funciones, Vim, Git, SSH, direnv y uv; las
