@@ -15,7 +15,7 @@ for s:fzf_prefix in ['/opt/homebrew/opt/fzf', '/usr/local/opt/fzf']
 endfor
 {{ end }}
 " pack/*/start se carga después de vimrc; adelantarlo deja disponibles
-" Catppuccin y lightline al elegir el tema más abajo. Los índices de la ayuda
+" vim-one y lightline al elegir el tema más abajo. Los índices de la ayuda
 " de los plugins los genera chezmoi al aplicar, no cada arranque de Vim.
 packloadall
 
@@ -54,35 +54,35 @@ silent! call mkdir(expand('~/.cache/vim/backup'), 'p')
 " deja la clave vacía mientras usa su esquema de serie, Breeze claro; macOS
 " sólo define AppleInterfaceStyle mientras el modo oscuro está activo. Por SSH
 " manda el terminal local: el prompt de Zsh lo averigua y lo exporta.
-function! s:CatppuccinFlavour() abort
+function! s:Background() abort
   if !empty($SSH_CONNECTION) && $WORKSTATION_FLAVOUR =~# '^\(latte\|mocha\)$'
-    return $WORKSTATION_FLAVOUR
+    return $WORKSTATION_FLAVOUR ==# 'latte' ? 'light' : 'dark'
   endif
 {{- if $darwin }}
   call system('defaults read -g AppleInterfaceStyle')
-  return v:shell_error == 0 ? 'mocha' : 'latte'
+  return v:shell_error == 0 ? 'dark' : 'light'
 {{- else }}
   if !executable('kreadconfig6')
-    return 'mocha'
+    return 'dark'
   endif
   let l:scheme = system('kreadconfig6 --file kdeglobals --group General --key ColorScheme')
-  return l:scheme =~# 'Latte\|Light' || empty(trim(l:scheme)) ? 'latte' : 'mocha'
+  return l:scheme =~# 'Latte\|Light' || empty(trim(l:scheme)) ? 'light' : 'dark'
 {{- end }}
 endfunction
 
-function! s:ApplyCatppuccin() abort
-  let l:flavour = s:CatppuccinFlavour()
-  let l:name = 'catppuccin_' . l:flavour
-  if get(g:, 'colors_name', '') ==# l:name
+" vim-one trae One Light y One Dark en un solo esquema: decide `background`.
+function! s:ApplyOne() abort
+  let l:background = s:Background()
+  if get(g:, 'colors_name', '') ==# 'one' && &background ==# l:background
     return
   endif
-  execute 'set background=' . (l:flavour ==# 'latte' ? 'light' : 'dark')
-  if empty(globpath(&runtimepath, 'colors/' . l:name . '.vim'))
+  execute 'set background=' . l:background
+  if empty(globpath(&runtimepath, 'colors/one.vim'))
     return
   endif
-  execute 'colorscheme ' . l:name
+  colorscheme one
   let g:lightline = {
-        \ 'colorscheme': l:name,
+        \ 'colorscheme': 'one',
         \ 'active': {
         \   'left': [['mode', 'paste'], ['readonly', 'filename', 'modified']],
         \   'right': [['lineinfo'], ['percent'], ['fileformat', 'fileencoding', 'filetype']]
@@ -95,10 +95,10 @@ function! s:ApplyCatppuccin() abort
   endif
 endfunction
 
-call s:ApplyCatppuccin()
-augroup catppuccin_appearance
+call s:ApplyOne()
+augroup one_appearance
   autocmd!
-  autocmd FocusGained * call s:ApplyCatppuccin()
+  autocmd FocusGained * call s:ApplyOne()
 augroup END
 
 let g:gitgutter_map_keys = 0

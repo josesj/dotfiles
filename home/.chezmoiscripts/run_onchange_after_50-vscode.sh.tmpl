@@ -1,15 +1,19 @@
 #!/usr/bin/env bash
-# Catppuccin Latte/Mocha en Visual Studio Code, con detección automática del
-# modo claro/oscuro del sistema. Además, la barra de título y el menú se
+# One Light/One Dark en Visual Studio Code, con detección automática del modo
+# claro/oscuro del sistema. Además, la barra de título y el menú se
 # excluyen de Settings Sync: los valores de Arch no aplican en macOS.
 set -euo pipefail
 
 command -v code >/dev/null || {
-  printf 'Aviso: VS Code no está instalado; se omite Catppuccin.\n' >&2
+  printf 'Aviso: VS Code no está instalado; se omite el tema.\n' >&2
   exit 0
 }
 
-code --install-extension Catppuccin.catppuccin-vsc --force >/dev/null
+code --install-extension zhuangtongfa.material-theme --force >/dev/null
+code --install-extension akamud.vscode-theme-onelight --force >/dev/null
+if code --list-extensions | grep -qx 'catppuccin.catppuccin-vsc'; then
+  code --uninstall-extension catppuccin.catppuccin-vsc >/dev/null
+fi
 
 {{ if eq .chezmoi.os "darwin" -}}
 settings="$HOME/Library/Application Support/Code/User/settings.json"
@@ -17,7 +21,7 @@ settings="$HOME/Library/Application Support/Code/User/settings.json"
 settings="${XDG_CONFIG_HOME:-$HOME/.config}/Code/User/settings.json"
 {{- end }}
 [[ -f "$settings" ]] || {
-  printf 'Aviso: no existe %s; selecciona Catppuccin desde VS Code.\n' "$settings" >&2
+  printf 'Aviso: no existe %s; selecciona One Dark Pro desde VS Code.\n' "$settings" >&2
   exit 0
 }
 
@@ -26,17 +30,11 @@ settings="${XDG_CONFIG_HOME:-$HOME/.config}/Code/User/settings.json"
 temporary=$(mktemp)
 trap 'rm -f -- "$temporary"' EXIT
 sed \
-  -e 's/"workbench.colorTheme": "[^"]*"/"workbench.colorTheme": "Catppuccin Mocha"/' \
-  -e 's/"workbench.preferredLightColorTheme": "[^"]*"/"workbench.preferredLightColorTheme": "Catppuccin Latte"/' \
-  -e 's/"workbench.preferredDarkColorTheme": "[^"]*"/"workbench.preferredDarkColorTheme": "Catppuccin Mocha"/' \
-  -e 's/"catppuccin.accentColor": "[^"]*"/"catppuccin.accentColor": "blue"/' \
+  -e 's/"workbench.colorTheme": "[^"]*"/"workbench.colorTheme": "One Dark Pro"/' \
+  -e 's/"workbench.preferredLightColorTheme": "[^"]*"/"workbench.preferredLightColorTheme": "Atom One Light"/' \
+  -e 's/"workbench.preferredDarkColorTheme": "[^"]*"/"workbench.preferredDarkColorTheme": "One Dark Pro"/' \
+  -e '/"catppuccin.accentColor"[[:space:]]*:/d' \
   "$settings" > "$temporary"
-if ! grep -Fq '"catppuccin.accentColor"' "$temporary"; then
-  sed -i.bak '/"workbench.colorTheme"/i\
-  "catppuccin.accentColor": "blue",
-' "$temporary"
-  rm -f -- "$temporary.bak"
-fi
 # `settingsSync.ignoredSettings` también se sincroniza, así que basta con que
 # un equipo lo suba para que todos conserven sus valores locales.
 if ! grep -Fq '"settingsSync.ignoredSettings"' "$temporary"; then
@@ -51,4 +49,4 @@ rm -f -- "$temporary.bak"
 {{- end }}
 cmp -s -- "$temporary" "$settings" || install -m600 -- "$temporary" "$settings"
 
-printf 'VS Code configurado con Catppuccin Latte/Mocha y detección automática.\n'
+printf 'VS Code configurado con One Light/One Dark y detección automática.\n'

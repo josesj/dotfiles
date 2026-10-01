@@ -4,6 +4,9 @@
 # vim-polyglot: el runtime de Vim ya resalta Java, Python y C++.
 .vim/pack/dotfiles/start/vim-polyglot
 
+# Vim pasó de Catppuccin a vim-one.
+.vim/pack/dotfiles/start/catppuccin
+
 # Gradle vuelve a su home por defecto (~/.gradle), donde está gradle.properties;
 # ~/.cache/gradle era un segundo home con cachés y daemons duplicados.
 .cache/gradle
