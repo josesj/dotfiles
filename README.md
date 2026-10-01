@@ -111,6 +111,9 @@ monitor y sus periféricos.
 - **Energía.** Plasma no atenúa ni apaga la pantalla (Sunshine capturaría en
   negro) ni suspende por inactividad, porque SSH y los trabajos largos no
   cuentan como actividad. Se suspende a mano con `systemctl suspend`.
+- **Docker.** Los Mac tienen un contexto `deimos` que habla con su Docker por
+  SSH (`run_onchange_after_55-docker-contexts.sh`). No pasa a ser el activo: se
+  usa con `docker --context deimos …` o `docker context use deimos`.
 
 `prune-packages.sh` hace el paso una sola vez: instala Sunshine y retira lo que
 enumera `hosts/<equipo>/packages/retired.txt` (juegos, multimedia, ofimática,

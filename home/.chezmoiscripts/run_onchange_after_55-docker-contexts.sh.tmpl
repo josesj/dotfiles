@@ -1,0 +1,30 @@
+{{- if eq .chezmoi.os "darwin" -}}
+#!/usr/bin/env bash
+# Contextos de Docker para usar el motor de los equipos Arch desde los Mac por
+# SSH. No cambia el contexto activo: `docker --context deimos ...` o
+# `docker context use deimos`. Se vuelve a ejecutar cuando cambia este script.
+set -euo pipefail
+
+command -v docker >/dev/null || {
+  printf 'Aviso: Docker no está instalado; se omiten los contextos.\n' >&2
+  exit 0
+}
+
+# nombre=endpoint; el host SSH se resuelve con ~/.ssh/config.
+contexts=(
+  "deimos=ssh://deimos"
+)
+
+for entry in "${contexts[@]}"; do
+  name=${entry%%=*}
+  host=${entry#*=}
+  current=$(docker context inspect "$name" --format '{{ "{{.Endpoints.docker.Host}}" }}' 2>/dev/null || true)
+  if [[ -z "$current" ]]; then
+    docker context create "$name" --description "Docker de $name por SSH" --docker "host=$host" >/dev/null
+  elif [[ "$current" != "$host" ]]; then
+    docker context update "$name" --docker "host=$host" >/dev/null
+  fi
+done
+
+printf 'Contextos de Docker configurados: %s.\n' "${contexts[*]%%=*}"
+{{- end -}}
