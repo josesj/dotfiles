@@ -15,8 +15,7 @@ if /usr/libexec/java_home -v 25 >/dev/null 2>&1; then
   export PATH="$JAVA_HOME/bin:$PATH"
 fi
 
-# Docker Desktop y OrbStack añaden estas líneas por su cuenta al instalarse.
-# Aquí van ya condicionadas para que chezmoi pueda regenerar el archivo sin
-# romper ninguna de las dos integraciones ni imponerlas donde no están.
-[[ -d "$HOME/.docker/bin" ]] && export PATH="$PATH:$HOME/.docker/bin"
+# OrbStack añade esta línea por su cuenta al instalarse. Aquí va ya
+# condicionada para que chezmoi pueda regenerar el archivo sin romper la
+# integración ni imponerla donde no está.
 [[ -r "$HOME/.orbstack/shell/init.zsh" ]] && source "$HOME/.orbstack/shell/init.zsh"
