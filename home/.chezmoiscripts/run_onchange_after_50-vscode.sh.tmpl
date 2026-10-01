@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # Catppuccin Latte/Mocha en Visual Studio Code, con detección automática del
-# modo claro/oscuro del sistema.
+# modo claro/oscuro del sistema. Además, la barra de título y el menú se
+# excluyen de Settings Sync: los valores de Arch no aplican en macOS.
 set -euo pipefail
 
 command -v code >/dev/null || {
@@ -36,6 +37,18 @@ if ! grep -Fq '"catppuccin.accentColor"' "$temporary"; then
 ' "$temporary"
   rm -f -- "$temporary.bak"
 fi
+# `settingsSync.ignoredSettings` también se sincroniza, así que basta con que
+# un equipo lo suba para que todos conserven sus valores locales.
+if ! grep -Fq '"settingsSync.ignoredSettings"' "$temporary"; then
+  sed -i.bak '/"workbench.colorTheme"/i\
+  "settingsSync.ignoredSettings": ["window.titleBarStyle", "window.menuStyle"],
+' "$temporary"
+  rm -f -- "$temporary.bak"
+fi
+{{- if eq .chezmoi.os "darwin" }}
+sed -i.bak -e '/"window.titleBarStyle"[[:space:]]*:/d' -e '/"window.menuStyle"[[:space:]]*:/d' "$temporary"
+rm -f -- "$temporary.bak"
+{{- end }}
 cmp -s -- "$temporary" "$settings" || install -m600 -- "$temporary" "$settings"
 
 printf 'VS Code configurado con Catppuccin Latte/Mocha y detección automática.\n'

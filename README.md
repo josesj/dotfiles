@@ -6,8 +6,8 @@ Configuración de cuatro equipos gestionada con [chezmoi](https://chezmoi.io):
 |---|---|---|
 | `tycho` | Arch Linux + Plasma | Equipo remoto con Sunshine (Ryzen 7 9700X, RTX 5080) |
 | `deimos` | Arch Linux + Plasma | Equipo remoto con Sunshine y monitor (i5-12600, RX 6600) |
-| `phobos` | macOS | Portátil |
-| `janus` | macOS | Portátil |
+| `phobos` | macOS | Portátil (MacBook Pro, M4 Pro, 24 GB) |
+| `janus` | macOS | Sobremesa (Mac Studio, M2 Max, 32 GB) |
 
 Está orientada a Java, Python y C++ con Zsh, Vim y Gradle. Los cuatro equipos
 comparten prompt, historial, aliases, funciones, Vim, Git, SSH, direnv y uv; las
@@ -111,6 +111,9 @@ monitor y sus periféricos.
 - **Energía.** Plasma no atenúa ni apaga la pantalla (Sunshine capturaría en
   negro) ni suspende por inactividad, porque SSH y los trabajos largos no
   cuentan como actividad. Se suspende a mano con `systemctl suspend`.
+- **Docker.** Los Mac tienen un contexto `deimos` que habla con su Docker por
+  SSH (`run_onchange_after_55-docker-contexts.sh`). No pasa a ser el activo: se
+  usa con `docker --context deimos …` o `docker context use deimos`.
 
 `prune-packages.sh` hace el paso una sola vez: instala Sunshine y retira lo que
 enumera `hosts/<equipo>/packages/retired.txt` (juegos, multimedia, ofimática,
