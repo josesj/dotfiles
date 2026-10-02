@@ -317,16 +317,23 @@ sudo scutil --set HostName phobos
 
 ## VPN
 
-Los perfiles de WireGuard de lodero (`iphone` y `phobos`, cada uno en variante
-`-full`, que enruta todo el tráfico, y `-home`, sólo la red de casa) y los de
-OpenVPN de TNG (`FGG` y `TNG`) llevan claves privadas y certificados, así que
-se versionan cifrados como los perfiles de macOS:
+Los perfiles de WireGuard de lodero (`iphone`, `ipad` y `phobos`, cada uno en
+variante `-full`, que enruta todo el tráfico, y `-home`, sólo la red de casa) y
+los de OpenVPN de TNG (`FGG` y `TNG`) llevan claves privadas y certificados, así
+que se versionan cifrados como los perfiles de macOS:
 
 ```
 home/dot_local/share/dotfiles/private_vpn/
-    private_lodero/encrypted_private_{iphone,phobos}-{full,home}.conf.asc
+    private_lodero/encrypted_private_{iphone,ipad,phobos}-{full,home}.conf.asc
     private_tng/encrypted_private_{FGG,TNG}.ovpn.asc
 ```
+
+El servidor es la interfaz `wg0` del router OpenWrt (`root@192.168.0.1`,
+UDP 51820, red `192.168.9.0/24` y `fd00:9::/64`) y el endpoint es
+`lodero.tirimoche.com`, que mantiene el DDNS del propio router. Cada cliente
+tiene su dirección (`iphone` .2, `ipad` .3, `phobos` .4) y una clave
+precompartida; las dos variantes de un cliente comparten claves, así que sólo
+puede estar activa una a la vez.
 
 `chezmoi apply` los descifra en `~/.local/share/dotfiles/vpn/` (directorios en
 `700`, archivos en `600`) y, como el resto de `.local/share/dotfiles`, sólo en
