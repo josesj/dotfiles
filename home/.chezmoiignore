@@ -22,17 +22,25 @@
 .config/fontconfig
 .config/kate
 .config/kitty
+.config/mpv
+.config/obs-studio
 .config/pipewire
-.config/sunshine
 .config/systemd
 .config/wireplumber
 .config/xdg-terminals.list
 .local/bin/desktop-unlock
-.local/bin/sunshine-display
+.local/bin/libreoffice-kf6-x11
 .local/share/applications
 .local/share/kio
 .local/share/konsole
 .local/share/org.kde.syntax-highlighting
+{{- end }}
+
+{{- if ne .chezmoi.hostname "tycho" }}
+# --- Exclusivo de Tycho: FiiO K3, Edifier, mando Xbox ---
+.config/wireplumber/wireplumber.conf.d/51-fiio-k3.conf
+.config/wireplumber/wireplumber.conf.d/52-edifier-r1280db.conf
+.config/systemd/user/steam-big-picture-on-xbox.service
 {{- end }}
 
 {{- if ne .chezmoi.hostname "deimos" }}

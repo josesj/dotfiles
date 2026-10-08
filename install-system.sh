@@ -139,9 +139,6 @@ for relative in systemd/oomd.conf.d/10-workstation.conf \
     mark_changed_subsystem "$relative"
   deploy_file "$repo_dir/system/$relative" "/etc/$relative"
 done
-# El inicio automático se aplica en el siguiente arranque.
-deploy_file "$repo_dir/system/plasmalogin.conf.d/autologin.conf" \
-  "/etc/plasmalogin.conf.d/autologin.conf"
 deploy_file "$repo_dir/system/systemd/zram-generator.conf" \
   "/etc/systemd/zram-generator.conf"
 deploy_file "$repo_dir/system/udev/rules.d/60-ioschedulers.rules" \
