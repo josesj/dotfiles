@@ -1,5 +1,6 @@
+1password
 claude-code
+claude-desktop
 jdtls
-sunshine-bin
 visual-studio-code-bin
 yay
