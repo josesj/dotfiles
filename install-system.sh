@@ -43,6 +43,7 @@ docker_changed=false
 oomd_changed=false
 resolved_changed=false
 networkmanager_changed=false
+dispatcher_changed=false
 firewalld_changed=false
 
 backup_target() {
@@ -54,15 +55,15 @@ backup_target() {
 }
 
 deploy_file() {
-  local source=$1 target=$2 backup_path
+  local source=$1 target=$2 mode=${3:-644} backup_path
   if [[ -f "$target" && ! -L "$target" ]] && cmp -s -- "$source" "$target"; then
     if $dry_run; then
-      if [[ $(stat -c '%U:%G %a' -- "$target") != 'root:root 644' ]]; then
-        printf 'Ajustaría propietario/permisos: %s -> root:root 644\n' "$target"
+      if [[ $(stat -c '%U:%G %a' -- "$target") != "root:root $mode" ]]; then
+        printf 'Ajustaría propietario/permisos: %s -> root:root %s\n' "$target" "$mode"
       fi
     else
       chown root:root -- "$target"
-      chmod 644 -- "$target"
+      chmod "$mode" -- "$target"
     fi
     printf 'Ya configurado: %s\n' "$target"
     return
@@ -74,7 +75,7 @@ deploy_file() {
   if [[ -e "$target" || -L "$target" ]]; then
     backup_target "$target"
   fi
-  install -Dm644 "$source" "$target"
+  install -Dm"$mode" "$source" "$target"
   printf 'Archivo copiado: %s <- %s\n' "$target" "$source"
 }
 
@@ -119,6 +120,7 @@ mark_changed_subsystem() {
     systemd/oomd.conf.d/*) oomd_changed=true ;;
     systemd/resolved.conf.d/*) resolved_changed=true ;;
     NetworkManager/conf.d/*) networkmanager_changed=true ;;
+    NetworkManager/dispatcher.d/*) dispatcher_changed=true ;;
     firewalld/*) firewalld_changed=true ;;
   esac
 }
@@ -195,7 +197,10 @@ if [[ -d "$host_dir/system" ]]; then
     if is_initramfs_input "$relative" && ! cmp -s -- "$source" "$target"; then
       initramfs_changed=true
     fi
-    deploy_file "$source" "$target"
+    # NetworkManager sólo ejecuta dispatchers ejecutables y propiedad de root.
+    mode=644
+    [[ $relative == NetworkManager/dispatcher.d/* ]] && mode=755
+    deploy_file "$source" "$target" "$mode"
   done < <(find "$host_dir/system" -type f -print0 | sort -z)
 fi
 
@@ -276,6 +281,10 @@ if ! $dry_run; then
   if $networkmanager_changed; then
     systemctl try-reload-or-restart NetworkManager.service
   fi
+  # Aplica ya los DNS por enlace sin esperar al siguiente evento de red.
+  if $dispatcher_changed && [[ -x /etc/NetworkManager/dispatcher.d/90-dns-split ]]; then
+    /etc/NetworkManager/dispatcher.d/90-dns-split eno1 reapply
+  fi
   # Se valida antes de recargar: con un error, firewalld sigue con las reglas
   # que tiene en memoria.
   if $firewalld_changed && systemctl -q is-active firewalld.service; then
@@ -313,6 +322,9 @@ else
   fi
   if $networkmanager_changed; then
     printf 'Recargaría la configuración de NetworkManager.\n'
+  fi
+  if $dispatcher_changed; then
+    printf 'Ejecutaría el dispatcher de DNS por enlace.\n'
   fi
   if $firewalld_changed; then
     printf 'Validaría y recargaría firewalld.\n'

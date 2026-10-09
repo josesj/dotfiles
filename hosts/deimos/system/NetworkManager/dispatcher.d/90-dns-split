@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+# DNS por enlace para systemd-resolved. El valor global es NextDNS (DoT y
+# DNSSEC, ver resolved.conf.d/70-nextdns.conf); aquí se exceptúa lo que no
+# admite ni DoT ni DNSSEC:
+#   - eno1: tng.iac.es y tirimoche.com siempre por los DNS de TNG, que no
+#     son la ruta por defecto, así que el resto de consultas no los usa.
+#   - lodero-*: mientras el túnel WireGuard está activo, todo por el DNS del
+#     túnel. tng.iac.es sigue yendo por eno1 (dominio más específico).
+# NetworkManager vuelve a publicar los DNS del enlace en cada cambio, de ahí
+# que se reaplique en cada evento relevante.
+set -euo pipefail
+
+case ${2:-} in
+  up|dhcp4-change|dhcp6-change|dns-change|reapply) ;;
+  *) exit 0 ;;
+esac
+
+tng_dns=(161.72.52.25 161.72.53.1)
+
+link_exists() { [[ -d /sys/class/net/$1 ]]; }
+
+if link_exists eno1; then
+  resolvectl dns eno1 "${tng_dns[@]}"
+  resolvectl domain eno1 '~tng.iac.es' '~tirimoche.com'
+  resolvectl default-route eno1 no
+  resolvectl dnsovertls eno1 no
+  resolvectl dnssec eno1 no
+fi
+
+for link in /sys/class/net/lodero-*; do
+  [[ -e $link ]] || continue
+  name=${link##*/}
+  resolvectl domain "$name" '~.'
+  resolvectl default-route "$name" yes
+  resolvectl dnsovertls "$name" no
+  resolvectl dnssec "$name" no
+done

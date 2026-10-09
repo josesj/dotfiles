@@ -13,10 +13,14 @@ da acceso sin root a las cámaras y ruedas de filtros ZWO ASI.
 
 También versiona el resto de su `/etc` propio:
 
-- DNS: los servidores que da cada red, sin DNS sobre TLS (los corporativos no
-  lo admiten), y mDNS fuera de systemd-resolved (lo resuelve Avahi). NextDNS se
-  retiró: `obsolete-system/` quita su DoT estricto e `install-system.sh`
-  devuelve `/etc/systemd/resolved.conf` a la versión del paquete.
+- DNS: NextDNS (perfil `ed8357`) por defecto, con DNS sobre TLS y DNSSEC
+  (`resolved.conf.d/70-nextdns.conf`). `tng.iac.es` y `tirimoche.com` salen
+  siempre por los DNS de TNG (`161.72.52.25` y `161.72.53.1`), y con el túnel
+  WireGuard `lodero-full` o `lodero-home` activo todo lo demás va al DNS del
+  túnel; ni los de TNG ni el del túnel admiten DoT ni DNSSEC. Lo fija por
+  enlace `NetworkManager/dispatcher.d/90-dns-split`, y chezmoi importa los
+  perfiles de WireGuard (peer de phobos) a NetworkManager sin autoconexión.
+  mDNS queda fuera de systemd-resolved (lo resuelve Avahi).
 - Docker: datos en `/mnt/docker` (el servicio exige ese montaje), `overlay2`,
   `live-restore` y registros rotados.
 - Borgmatic: copias cada seis horas y aviso por correo si fallan, enviado con
