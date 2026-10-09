@@ -8,8 +8,19 @@
 .zprofile
 .config/ghostty
 .config/dotfiles/Brewfile
-.local/share/dotfiles
 .gnupg/gpg-agent.conf
+{{- end }}
+
+{{- /* Perfiles de VPN: los de TNG y los .mobileconfig son de macOS; los de
+       WireGuard de lodero también se aplican en deimos, que los importa a
+       NetworkManager (run_onchange_after_65-wireguard.sh.tmpl). */}}
+{{- if and (ne .chezmoi.os "darwin") (ne .chezmoi.hostname "deimos") }}
+.local/share/dotfiles
+{{- else if ne .chezmoi.os "darwin" }}
+.local/share/dotfiles/profiles
+.local/share/dotfiles/vpn/tng
+.local/share/dotfiles/vpn/lodero/iphone-*
+.local/share/dotfiles/vpn/lodero/ipad-*
 {{- end }}
 
 {{- if ne .chezmoi.os "linux" }}
