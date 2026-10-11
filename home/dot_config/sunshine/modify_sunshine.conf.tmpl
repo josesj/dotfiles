@@ -1,0 +1,31 @@
+#!/usr/bin/env python3
+# Sunshine reescribe sunshine.conf desde su interfaz web
+# (https://{{ .chezmoi.hostname }}:47990), así que chezmoi sólo fija las claves
+# que dependen del equipo y deja las demás en manos de Sunshine.
+import sys
+
+MANAGED = {
+    "sunshine_name": "{{ .chezmoi.hostname }}",
+    # KMS captura también la pantalla de bloqueo; exige cap_sys_admin, que el
+    # paquete sunshine-bin concede al instalarse.
+    "capture": "kms",
+{{- range $key, $value := (index .hosts .chezmoi.hostname).sunshine }}
+    {{ $key | quote }}: {{ $value | toString | quote }},
+{{- end }}
+}
+
+pending = dict(MANAGED)
+lines = []
+for line in sys.stdin.read().splitlines():
+    # Sunshine no escribe comentarios: los que haya son de la versión anterior
+    # de este archivo, que chezmoi sólo creaba.
+    if line.lstrip().startswith("#"):
+        continue
+    key = line.split("=", 1)[0].strip()
+    if "=" in line and key in MANAGED:
+        if key in pending:
+            lines.append(f"{key} = {pending.pop(key)}")
+        continue
+    lines.append(line)
+lines.extend(f"{key} = {value}" for key, value in pending.items())
+sys.stdout.write("\n".join(lines) + "\n")

@@ -17,10 +17,22 @@
 .local/share/plasma/look-and-feel/local.catppuccin-latte-blue
 .local/share/plasma/look-and-feel/local.catppuccin-mocha-blue
 
-# Tycho y Deimos vuelven a ser equipos de escritorio: fuera el bloqueo al
-# iniciar sesión, el ajuste del dongle y el arranque de Sunshine. Se conserva
-# ~/.config/sunshine, que guarda los emparejamientos de Moonlight.
+{{- if eq .chezmoi.hostname "tycho" }}
+# Tycho se usa en remoto para desarrollar y jugar con Sunshine: sin mpv,
+# LibreOffice ni periféricos locales (el mando y el audio llegan por Moonlight).
+# La configuración de OBS se deja porque guarda escenas y perfiles propios.
+.config/mpv
+.local/bin/libreoffice-kf6-x11
+.local/share/applications/libreoffice-*.desktop
+.config/wireplumber/wireplumber.conf.d/51-fiio-k3.conf
+.config/wireplumber/wireplumber.conf.d/52-edifier-r1280db.conf
+.config/systemd/user/steam-big-picture-on-xbox.service
+{{- else }}
+# Deimos es una estación de trabajo: fuera el bloqueo al iniciar la sesión, el
+# ajuste del dongle y el arranque de Sunshine. Se conserva ~/.config/sunshine,
+# que guarda los emparejamientos de Moonlight.
 .config/autostart/lock-on-login.desktop
 .local/bin/sunshine-display
 .config/systemd/user/graphical-session.target.wants/app-dev.lizardbyte.app.Sunshine.service
+{{- end }}
 {{- end }}

@@ -4,7 +4,7 @@ Configuración de cuatro equipos gestionada con [chezmoi](https://chezmoi.io):
 
 | Equipo | Sistema | Papel |
 |---|---|---|
-| `tycho` | Arch Linux + Plasma | Estación de trabajo (Ryzen 7 9700X, RTX 5080) |
+| `tycho` | Arch Linux + Plasma | Remoto con Sunshine para desarrollar y jugar (Ryzen 7 9700X, RTX 5080) |
 | `deimos` | Arch Linux + Plasma | Estación de trabajo (i5-12600, RX 6600) |
 | `phobos` | macOS | Portátil (MacBook Pro, M4 Pro, 24 GB) |
 | `janus` | macOS | Sobremesa (Mac Studio, M2 Max, 32 GB) |
@@ -22,7 +22,7 @@ aliases y comandos de mantenimiento.
 .chezmoiroot            -> "home": chezmoi sólo gestiona ese subárbol
 home/                   estado fuente de chezmoi ($HOME de los cuatro equipos)
   .chezmoi.toml.tmpl    configuración que genera `chezmoi init`
-  .chezmoidata/         hardware por equipo: decodificador de mpv y codificador de OBS
+  .chezmoidata/         hardware por equipo: Sunshine en Tycho, mpv y OBS en Deimos
   .chezmoiignore        reparto de destinos por sistema operativo y por equipo
   .chezmoiexternal.toml.tmpl  Oh My Zsh, plugins de Zsh y de Vim (tabla destino-URL)
   .chezmoiscripts/      aprovisionamiento (Homebrew, Plasma, Kate, VS Code...)
@@ -32,6 +32,7 @@ system/                 archivos de /etc comunes a los dos equipos Arch
 hosts/<equipo>/         /etc e inventario de paquetes por equipo Arch
 install-system.sh       instalador de /etc (Arch, como root)
 update-state.sh         actualiza el inventario de paquetes del equipo actual
+prune-packages.sh       paso único a uso remoto: Sunshine y retirada de paquetes
 ```
 
 Lo que vive en `$HOME` lo gestiona chezmoi. Lo que vive fuera —`/etc` y el
@@ -54,7 +55,8 @@ explícita si no es uno de los cuatro conocidos. El primer `apply`:
 3. Escribe los archivos de configuración del equipo.
 4. En macOS instala Homebrew y el `Brewfile`, registra los JDK y aplica las
    preferencias del sistema; en Arch configura Plasma, Konsole, Kate, KWin,
-   Baloo, el atajo de Kitty y los lanzadores KF6/X11 de LibreOffice.
+   Baloo y el atajo de Kitty; en Deimos, los lanzadores KF6/X11 de
+   LibreOffice, y en Tycho, la energía para el uso remoto.
 
 Uso diario:
 
@@ -73,30 +75,56 @@ chezmoi update          # git pull + apply
 Añadir un equipo es añadir su entrada en esa tabla y en la lista de
 `home/.chezmoi.toml.tmpl` y, si hace falta, una regla en `.chezmoiignore`.
 
-Sólo en Arch: Kitty, Plasma, Konsole, Kate, Dolphin, mpv, OBS, PipeWire,
+Sólo en Arch: Kitty, Plasma, Konsole, Kate, Dolphin, PipeWire,
 WirePlumber, fontconfig, Xresources, `environment.d` y las banderas de Chrome y
 VS Code. Sólo en macOS: Ghostty, `.zprofile` y el `Brewfile`.
 
-Por equipo: Tycho añade el DAC FiiO K3, los altavoces Edifier y el arranque de
-Steam Big Picture con el mando Xbox. Deimos añade la regla que evita la
-suspensión del nodo HDMI de AMD y `HSA_OVERRIDE_GFX_VERSION`, con la que ROCm
-trata la RX 6600 (gfx1032) como gfx1030. La aceleración de mpv se deriva de la
-GPU: NVDEC en Tycho, VA-API en Deimos. Igual los codificadores de OBS: NVENC en
-Tycho, VA-API en Deimos.
+Por equipo: Tycho añade Sunshine con NVENC, el inicio automático con bloqueo y
+la energía para el uso remoto. Deimos añade mpv con VA-API, OBS con VA-API,
+LibreOffice, la regla que evita la suspensión del nodo HDMI de AMD y
+`HSA_OVERRIDE_GFX_VERSION`, con la que ROCm trata la RX 6600 (gfx1032) como
+gfx1030.
 
 ## Acceso remoto en Arch
 
-Tycho y Deimos son estaciones de trabajo con pantalla y periféricos, pero
-pueden encenderse y usarse a distancia:
+Tycho se usa desde otros equipos con Moonlight o por SSH, para desarrollar y
+para jugar. No tiene nadie delante: un dongle HDMI Evanlak8K V2 hace de
+pantalla. Deimos es una estación de trabajo con su monitor y sus periféricos,
+pero también se enciende y se usa a distancia.
 
-- **WoL.** `system/NetworkManager/conf.d/wake-on-lan.conf` deja la Ethernet
-  esperando el paquete mágico al suspender o apagar. En la UEFI hay que activar
-  «Power On By PCI-E» y desactivar ErP. Se comprueba con
+- **WoL.** `system/NetworkManager/conf.d/wake-on-lan.conf` deja la Ethernet de
+  los dos equipos esperando el paquete mágico al suspender o apagar. En la UEFI
+  hay que activar «Power On By PCI-E» y desactivar ErP. Se comprueba con
   `ethtool <interfaz> | grep Wake-on`, que debe decir `g`.
-- **SSH.** `desktop-unlock` desbloquea la sesión gráfica desde una conexión SSH.
+- **Sesión (Tycho).** `hosts/tycho/system/plasmalogin.conf.d/autologin.conf`
+  abre la sesión Wayland de `jose` sin contraseña y el autostart
+  `lock-on-login.desktop` la bloquea en cuanto Plasma arranca. Sunshine corre
+  así como usuario, con su PipeWire y su KWin, y el escritorio queda protegido:
+  se desbloquea con la contraseña desde Moonlight, o por SSH con
+  `desktop-unlock`. KWallet no se abre con el inicio automático y pide su
+  contraseña la primera vez que se usa.
+- **Sunshine (Tycho).** `sunshine-bin` (AUR) trae el servicio de usuario, que
+  chezmoi activa con un enlace en `graphical-session.target.wants`. Un script
+  `modify_` fija en `~/.config/sunshine/sunshine.conf` la captura KMS (la única
+  que también ve la pantalla de bloqueo) y las claves de la GPU en
+  `.chezmoidata/hosts.yaml`; el resto es de la interfaz web,
+  `https://tycho:47990`. Otro `modify_` de `apps.json` retira la app de serie
+  basada en `xrandr`, que no funciona en Wayland, y hace que «Desktop» y «Steam
+  Big Picture» ajusten el dongle al modo del cliente con `sunshine-display`.
+- **Energía (Tycho).** Plasma no atenúa ni apaga la pantalla (Sunshine
+  capturaría en negro) ni suspende por inactividad, porque SSH y los trabajos
+  largos no cuentan como actividad. Se suspende a mano con `systemctl suspend`.
+  Deimos conserva la energía de serie de Plasma.
 - **Docker.** Los Mac tienen un contexto `deimos` que habla con su Docker por
   SSH (`run_onchange_after_55-docker-contexts.sh`). No pasa a ser el activo: se
   usa con `docker --context deimos …` o `docker context use deimos`.
+
+`prune-packages.sh` hace el paso de Tycho una sola vez: instala Sunshine y
+retira lo que enumera `hosts/tycho/packages/retired.txt` (foto, vídeo,
+reproductores, ofimática, periféricos locales y accesorios de Plasma). Conserva
+Steam, GameMode, MangoHud, LACT y las herramientas de desarrollo. Marca los
+paquetes como dependencias y deja que pacman quite los huérfanos, de modo que
+nada que siga haciendo falta se desinstala.
 
 ## Aspecto
 
@@ -147,15 +175,13 @@ que la música llega sin remuestrear. Cuando la conversión es inevitable usa la
 calidad máxima del remuestreador (14), tanto en los clientes como en los nodos
 de dispositivo: un auricular Bluetooth fija su frecuencia al negociar el códec
 y es su propio nodo quien convierte. `pw-lowlatency` fuerza temporalmente otro quantum y `pw-normal`
-restaura los valores configurados. En Tycho, WirePlumber mantiene el FiiO K3 en
-`S32LE` con periodo 256 y lo prioriza como salida; cuando no está disponible usa
-los Edifier antes que la salida HDMI del monitor.
+restaura los valores configurados.
 
-mpv limita la ventana al 80 % del escritorio, prioriza audio y subtítulos en
+En Deimos, mpv limita la ventana al 80 % del escritorio, prioriza audio y subtítulos en
 español, inglés e italiano y usa yt-dlp con los perfiles `stream-2k` y
 `stream-4k`. Una regla de KWin centra sus ventanas.
 
-OBS parte de un lienzo 4K y sale a 1440p60. Graba en HEVC con calidad constante
+OBS, también en Deimos, parte de un lienzo 4K y sale a 1440p60. Graba en HEVC con calidad constante
 (CQP 20) en `~/Videos/OBS`, con tres pistas de audio: mezcla, micro y
 escritorio. Emite en H.264 CBR a 6000 kbps, reescalado a 1080p. OBS reescribe
 su perfil al salir, así que chezmoi usa scripts `modify_` que sólo fijan esas
@@ -217,10 +243,6 @@ límite oficial de 360 W y aplica un undervolt: la curva sube 442 MHz hasta
 ventiladores de serie. La interfaz de LACT reescribe `/etc/lact/config.yaml` y
 pierde los comentarios: los cambios hechos desde ella hay que traerlos al
 repositorio a mano.
-
-La conexión Bluetooth del mando Xbox emparejado con Tycho abre Steam en Big
-Picture. La regla está limitada al identificador del mando y no requiere un
-demonio de usuario en ejecución.
 
 systemd-oomd cierra la aplicación culpable cuando la presión de memoria de la
 sesión supera el 80 % durante 30 s, o cuando el swap pasa del 90 %, en lugar de
