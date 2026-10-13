@@ -1,0 +1,47 @@
+{{- if and (eq .chezmoi.os "linux") (ne .chezmoi.hostname "tycho") -}}
+#!/usr/bin/env bash
+# Regla de KWin que centra las ventanas de mpv. mpv.conf limita el tamaño al
+# 80 % del escritorio; fijar geometry allí anclaría la esquina superior
+# izquierda en Wayland en lugar de centrar la ventana. El uso remoto la borró;
+# al volver al escritorio se crea de nuevo.
+# Este texto cambia para que chezmoi lo vuelva a ejecutar en Deimos tras volver al escritorio.
+set -euo pipefail
+command -v kreadconfig6 >/dev/null || exit 0
+command -v kwriteconfig6 >/dev/null || exit 0
+
+rules_file=kwinrulesrc
+rule_id=dotfiles-mpv-centered
+rules=$(kreadconfig6 --file "$rules_file" --group General --key rules)
+
+case ",$rules," in
+  *,"$rule_id",*) ;;
+  *)
+    if [[ -n "$rules" ]]; then
+      rules+=",$rule_id"
+    else
+      rules=$rule_id
+    fi
+    ;;
+esac
+
+IFS=, read -r -a rule_ids <<< "$rules"
+kwriteconfig6 --file "$rules_file" --group General --key rules "$rules"
+kwriteconfig6 --file "$rules_file" --group General --key count "${#rule_ids[@]}"
+
+kwriteconfig6 --file "$rules_file" --group "$rule_id" --key Description 'Center mpv windows'
+kwriteconfig6 --file "$rules_file" --group "$rule_id" --key wmclass mpv
+kwriteconfig6 --file "$rules_file" --group "$rule_id" --key wmclassmatch 1
+kwriteconfig6 --file "$rules_file" --group "$rule_id" --key wmclasscomplete false
+kwriteconfig6 --file "$rules_file" --group "$rule_id" --key types 1
+
+# PlacementCentered de KWin es 5. Force (2) hace que decida KWin, y no el
+# cliente Wayland, la posición inicial de cada ventana nueva de mpv.
+kwriteconfig6 --file "$rules_file" --group "$rule_id" --key ignoregeometry true
+kwriteconfig6 --file "$rules_file" --group "$rule_id" --key ignoregeometryrule 2
+kwriteconfig6 --file "$rules_file" --group "$rule_id" --key placement 5
+kwriteconfig6 --file "$rules_file" --group "$rule_id" --key placementrule 2
+
+if command -v qdbus6 >/dev/null; then
+  qdbus6 org.kde.KWin /KWin org.kde.KWin.reconfigure >/dev/null || true
+fi
+{{- end -}}

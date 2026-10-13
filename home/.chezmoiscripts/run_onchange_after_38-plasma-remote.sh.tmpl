@@ -1,10 +1,9 @@
-{{- if eq .chezmoi.os "linux" -}}
+{{- if eq .chezmoi.hostname "tycho" -}}
 #!/usr/bin/env bash
-# Tycho y Deimos se usan en remoto con Sunshine y se despiertan por WoL. Si
+# Tycho se usa en remoto con Sunshine y se despierta por WoL. Si
 # PowerDevil apaga la salida de vídeo, Sunshine captura en negro; y si suspende
 # por inactividad, corta las sesiones SSH y los trabajos largos, que no cuentan
-# como actividad. Se suspende a mano. Este texto cambia para que chezmoi lo
-# vuelva a ejecutar en Deimos tras el paso a uso de escritorio.
+# como actividad. Se suspende a mano.
 set -euo pipefail
 command -v kwriteconfig6 >/dev/null || exit 0
 

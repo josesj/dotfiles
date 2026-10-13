@@ -1,6 +1,11 @@
+autofirma
 claude-code
+claude-desktop
+ds9-bin
+google-chrome
 jbang
+jxplorer
 modbustools-git
-sunshine-bin
+siril-git
 visual-studio-code-bin
 yay

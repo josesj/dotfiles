@@ -48,16 +48,17 @@
 .local/share/org.kde.syntax-highlighting
 {{- end }}
 
-{{- if eq .chezmoi.os "linux" }}
-# --- Tycho y Deimos se usan en remoto: sin reproductor, OBS ni LibreOffice ---
+{{- if eq .chezmoi.hostname "tycho" }}
+# --- Tycho se usa en remoto: sin reproductor, OBS ni LibreOffice ---
 .config/mpv
 .config/obs-studio
 .local/bin/libreoffice-kf6-x11
 {{- else }}
-# --- Sólo Arch: Sunshine y el bloqueo al iniciar la sesión ---
+# --- Sólo Tycho: Sunshine y el bloqueo al iniciar la sesión ---
 .config/autostart
 .config/sunshine
 .config/systemd/user/graphical-session.target.wants
+.local/bin/lock-after-sunshine
 .local/bin/sunshine-display
 {{- end }}
 

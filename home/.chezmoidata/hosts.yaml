@@ -1,7 +1,7 @@
 # Hardware de la flota que las plantillas necesitan: las claves de Sunshine de
-# Tycho y Deimos, que se usan en remoto. Se lee mediante
-# `index .hosts .chezmoi.hostname`. El sistema operativo sale de .chezmoi.os;
-# los equipos Mac no tienen claves.
+# Tycho, que se usa en remoto, y el decodificador de mpv y el codificador de OBS
+# de Deimos. Se lee mediante `index .hosts .chezmoi.hostname`. El sistema
+# operativo sale de .chezmoi.os; los equipos Mac no tienen claves.
 hosts:
   tycho:
     sunshine:
@@ -13,17 +13,10 @@ hosts:
     # Evanlak8K V2 (4K a 60 Hz, 1440p a 144 Hz, 1080p a 144/120 Hz).
     sunshine_display: HDMI-A-1
   deimos:
-    sunshine:
-      # Radeon RX 6600 (Navi 23), única GPU (el UHD 770 del i5 está
-      # desactivado), con Mesa/radeonsi: VA-API codifica H.264 y HEVC.
-      encoder: vaapi
-      adapter_name: /dev/dri/renderD128
-      # Monitor 0 de KMS: el LG 27UP850 (4K a 60 Hz) por DP-3.
-      output_name: 0
-      # Navi 23 no codifica AV1: no se ofrece a Moonlight.
-      av1_mode: 1
-      # Tope de bitrate (kbps) por encima de lo que pida Moonlight: 4K a 60 Hz en
-      # HEVC va bien con 80 Mbps y el cliente elige el suyo por debajo.
-      max_bitrate: 80000
+    # Radeon RX 6600 (Navi 23) sobre Mesa/RADV: decodificación VA-API.
+    mpv_hwdec: vaapi
+    mpv_comment: "Deimos: Radeon RX 6600 (Navi 23), Mesa/RADV y Wayland."
+    # OBS: VA-API (H.264 para emitir, HEVC para grabar; Navi 23 no codifica AV1).
+    obs_encoder: vaapi
   phobos: {}
   janus: {}

@@ -3,23 +3,13 @@
 # retoca lo imprescindible y conserva el resto de apps y ajustes:
 # - retira "Low Res Desktop", que la plantilla de serie define con xrandr y no
 #   funciona en una sesión Wayland;
-# - en Deimos añade «VS Code»: como «Desktop» (sin cmd, para que la transmisión
-#   dure hasta que se desconecte el cliente) pero abriendo VS Code al empezar,
-#   desligado de Sunshine: cerrar Moonlight no cierra el editor, y si ya había
-#   una ventana abierta, `code` sólo le pasa el encargo y termina;
 # - en los equipos con sunshine_display (hosts.yaml), "Desktop" y "Steam Big
 #   Picture" ajustan esa salida al modo del cliente con sunshine-display.
-{{- $vscode := eq .chezmoi.hostname "deimos" }}
-{{- $display := get (index .hosts .chezmoi.hostname) "sunshine_display" | default "" }}
+{{- $display := (index .hosts .chezmoi.hostname).sunshine_display | default "" }}
 import json
 import sys
 
 DISPLAY = {{ $display | quote }}
-VSCODE = {{ if $vscode }}{
-    "name": "VS Code",
-    "detached": ["code --new-window"],
-    "image-path": "/usr/share/pixmaps/vscode.png",
-}{{ else }}None{{ end }}
 ADJUSTED = ("Desktop", "Steam Big Picture")
 
 text = sys.stdin.read().strip()
@@ -41,10 +31,6 @@ for app in apps:
         app["prep-cmd"] = steps
     else:
         app.pop("prep-cmd", None)
-
-if VSCODE:
-    apps = [app for app in apps if app.get("name") != VSCODE["name"]]
-    apps.append(VSCODE)
 
 config["apps"] = apps
 json.dump(config, sys.stdout, indent=2, ensure_ascii=False)
