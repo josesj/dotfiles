@@ -22,5 +22,8 @@ hosts:
       output_name: 0
       # Navi 23 no codifica AV1: no se ofrece a Moonlight.
       av1_mode: 1
+      # Tope de bitrate (kbps) por encima de lo que pida Moonlight: 4K a 60 Hz en
+      # HEVC va bien con 80 Mbps y el cliente elige el suyo por debajo.
+      max_bitrate: 80000
   phobos: {}
   janus: {}
