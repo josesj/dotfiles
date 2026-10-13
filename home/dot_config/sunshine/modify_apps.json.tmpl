@@ -5,7 +5,7 @@
 #   funciona en una sesión Wayland;
 # - en los equipos con sunshine_display (hosts.yaml), "Desktop" y "Steam Big
 #   Picture" ajustan esa salida al modo del cliente con sunshine-display.
-{{- $display := (index .hosts .chezmoi.hostname).sunshine_display | default "" }}
+{{- $display := get (index .hosts .chezmoi.hostname) "sunshine_display" | default "" }}
 import json
 import sys
 

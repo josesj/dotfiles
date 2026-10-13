@@ -11,6 +11,7 @@
   <service name="dhcpv6-client"/>
   <service name="mdns"/>
   <service name="llmnr"/>
+  <service name="sunshine"/>
   <service name="ws-discovery-client"/>
   <source address="161.72.52.0/24"/>
   <source address="fe80::/10"/>
