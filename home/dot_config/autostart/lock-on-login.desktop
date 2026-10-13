@@ -1,9 +1,10 @@
 [Desktop Entry]
-# Tycho inicia la sesión de jose sin contraseña para que Sunshine corra como
-# usuario desde el arranque (WoL). La pantalla se bloquea en cuanto Plasma
-# levanta el escritorio: quien conecte por Moonlight desbloquea con la clave.
+# Tycho y Deimos inician la sesión de jose sin contraseña para que Sunshine
+# corra como usuario desde el arranque (WoL). La pantalla se bloquea cuando
+# Sunshine ya está en marcha (lock-after-sunshine): quien conecte por Moonlight
+# desbloquea con la clave.
 Type=Application
 Name=Bloquear al iniciar la sesión
-Exec=dbus-send --session --type=method_call --dest=org.freedesktop.ScreenSaver /ScreenSaver org.freedesktop.ScreenSaver.Lock
+Exec=sh -c 'exec "$HOME/.local/bin/lock-after-sunshine"'
 OnlyShowIn=KDE;
 NoDisplay=true

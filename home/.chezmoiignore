@@ -41,6 +41,7 @@
 .config/xdg-terminals.list
 .local/bin/desktop-unlock
 .local/bin/libreoffice-kf6-x11
+.local/bin/lock-after-sunshine
 .local/share/applications
 .local/share/kio
 .local/share/konsole

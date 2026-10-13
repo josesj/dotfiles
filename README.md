@@ -96,7 +96,7 @@ periféricos.
   `ethtool <interfaz> | grep Wake-on`, que debe decir `g`.
 - **Sesión.** `hosts/<equipo>/system/plasmalogin.conf.d/autologin.conf`
   abre la sesión Wayland de `jose` sin contraseña y el autostart
-  `lock-on-login.desktop` la bloquea en cuanto Plasma arranca. Sunshine corre
+  `lock-on-login.desktop` la bloquea cuando Sunshine ya está en marcha. Sunshine corre
   así como usuario, con su PipeWire y su KWin, y el escritorio queda protegido:
   se desbloquea con la contraseña desde Moonlight, o por SSH con
   `desktop-unlock`. KWallet no se abre con el inicio automático: su
