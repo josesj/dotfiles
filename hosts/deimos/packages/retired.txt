@@ -1,0 +1,57 @@
+# Paquetes que prune-packages.sh retira de Deimos al pasar a uso remoto. Se
+# marcan como dependencias: lo que otro paquete conservado necesite se queda.
+# Deimos conserva el monitor y sus periféricos (Bluetooth, webcam, impresora,
+# tableta, Solaar) y la electrónica/IoT.
+
+# Foto, vídeo, audio, 3D y diseño.
+gimp inkscape imagemagick optipng perl-image-exiftool libultrahdr libwmf
+bigsh0t kamoso kdenlive mlt movit frei0r-plugins handbrake harvid hiprt
+obs-studio obs-studio-plugin-browser recordmydesktop
+v4l2loopback-dkms v4l2loopback-utils
+audacity audacious audiofile rnnoise noise-suppression-for-voice
+realtime-privileges qpwgraph pavucontrol krecorder
+freecad opencamlib openscad
+
+# Reproducción multimedia y voz sintética.
+mpv mpv-mpris mpvqt vlc-plugin-ffmpeg vlc-plugins-video-output libvdpau-va-gl
+spotify-launcher yt-dlp yt-dlp-ejs atomicparsley mediainfo libdvdcss
+ffmpegthumbnailer ffmpegthumbs
+gst-libav gst-plugin-msdk gst-plugin-onnx gst-plugin-opencv gst-plugin-qsv
+gst-plugin-va gst-plugin-wpe gst-plugins-ugly qt6-multimedia-gstreamer
+python-brotli python-mutagen python-pycryptodome python-pycryptodomex
+espeak-ng festival speech-dispatcher
+
+# Ofimática, LaTeX, documentación y notas.
+libreoffice-fresh libreoffice-fresh-es libreoffice-fresh-it
+hyphen-en hyphen-es hyphen-it mythes-en mythes-es mythes-it
+texlive-fontsrecommended texlive-latexrecommended texlive-xetex pandoc-cli
+tesseract-data-ita tesseract-data-spa doxygen graphviz mermaid-cli zeal
+okular gwenview obsidian umbrello
+
+# Astronomía y escáner.
+stellarium skanlite skanpage
+
+# Trabajo: firma electrónica, mensajería y clientes de bases de datos.
+ccid opensc pcsc-tools mattermost-desktop dbeaver
+
+# Juegos, ajuste de GPU y 32 bits.
+knights lact lib32-mesa lib32-vulkan-radeon
+
+# Escritorio remoto previo, X11 y accesorios de Plasma prescindibles.
+krdc krdp rdesktop tigervnc libvncserver weston xdg-desktop-portal-wlr
+kwin-x11 xorg-server xorg-xinit xf86-video-amdgpu xf86-video-ati
+kdeconnect kio-gdrive kaccounts-providers kio-zeroconf kdenetwork-filesharing
+kdegraphics-thumbnailers kcalc kcharselect kclock kcolorchooser kweather
+kfind kget ktorrent keditbookmarks khelpcenter kde-inotify-survey kgpg
+kleopatra kcron ksystemlog kjournald sweeper filelight partitionmanager
+isoimagewriter oxygen oxygen-sounds francis tokodon plasma-vault
+plasma-welcome plasma-workspace-wallpapers kdeplasma-addons plasma-keyboard
+kgamma colord-kde futuresql gjs
+
+# Wi-Fi y sistemas de archivos que Deimos no usa.
+iwd wireless_tools bcachefs-tools f2fs-tools jfsutils nilfs-utils udftools
+fatresize lvm2 dnssec-tools geoipupdate
+
+# AUR.
+autofirma google-chrome jxplorer pocket-casts-linux claude-desktop ds9-bin
+siril-git
