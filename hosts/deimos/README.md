@@ -36,8 +36,16 @@ También versiona el resto de su `/etc` propio:
   zona de la interfaz la fija NetworkManager, no firewalld, y no se versiona
   porque la conexión guarda la IP estática:
   `nmcli connection modify "deimos static" connection.zone private`.
+- Pantalla: `DP-3` va forzado (`video=DP-3:e` y `drm.edid_firmware` en
+  `kernel/cmdline`) con el EDID del LG 27UP850 guardado en
+  `firmware/edid/lg-27up850.bin`, que `install-system.sh` copia a
+  `/usr/lib/firmware/edid` y `mkinitcpio.conf` mete en la UKI. Así el
+  conector existe aunque el monitor esté apagado del todo al arrancar, y KWin y
+  Sunshine (`output_name = 0`) tienen siempre una salida. Si el arranque se
+  queda sin vídeo, se quitan esos dos parámetros de `/etc/kernel/cmdline` por
+  SSH y se ejecuta `mkinitcpio -P`.
 - Sesión: `plasmalogin.conf.d/autologin.conf` abre la sesión de `jose` sola y
-  `lock-on-login.desktop` la bloquea al arrancar Plasma. KWallet debe tener la
+  `lock-on-login.desktop` la bloquea cuando Sunshine ya está en marcha. KWallet debe tener la
   contraseña vacía, porque PAM no la desbloquea sin teclear la clave.
 
 `obsolete-system/` retira la copia duplicada de la regla ASI que quedó como
