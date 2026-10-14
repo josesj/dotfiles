@@ -360,6 +360,7 @@ python-pycryptodome
 python-pycryptodomex
 python-pyfuse3
 python-pytest
+python-pytorch-rocm
 python-regex
 python-secretstorage
 python-setuptools

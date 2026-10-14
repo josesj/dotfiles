@@ -1,7 +1,6 @@
-autofirma
 claude-code
 claude-desktop
-ds9-bin
+ds9
 google-chrome
 jbang
 jxplorer
