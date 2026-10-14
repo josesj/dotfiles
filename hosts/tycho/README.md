@@ -5,35 +5,25 @@ Hardware auditado:
 - AMD Ryzen 7 9700X con microcódigo `amd-ucode`.
 - NVIDIA GeForce RTX 5080 (Blackwell) en `pci-0000_01_00.0`, con el módulo
   abierto de NVIDIA.
-- Dongle HDMI en la RTX 5080 como única pantalla.
+- Audio HDMI NVIDIA en `pci-0000_01_00.1`, audio integrado Ryzen/Realtek en
+  `pci-0000_0d_00.6`, DAC USB FiiO K3 y webcam USB Logitech C920.
 - Ethernet Realtek RTL8125 2.5GbE en `pci-0000_08_00.0`, gestionada por `r8169`.
 - Dos SSD Samsung 980 PRO NVMe, ambos con scheduler `none`.
 
 El perfil de sistema configura `lm_sensors` con `i2c_piix4`, `nct6775` y
 `k10temp`, y carga `nct6775` al arrancar para el chip Nuvoton NCT6799. También
-activa KMS temprano de NVIDIA y conserva la VRAM durante suspensión.
+activa KMS temprano de NVIDIA y conserva la VRAM durante suspensión. Además,
+mantiene despiertos el audio Ryzen/NVIDIA y el adaptador Bluetooth ASUS USB-BT500,
+y desactiva el wake-up del receptor Logitech Bolt. Se enciende o sale de la
+suspensión por WoL por su RTL8125 (`enp8s0`).
 
-## Uso remoto
-
-Tycho se usa en remoto para desarrollar y jugar con Sunshine y Moonlight. No
-tiene nadie delante: arranca o sale de la suspensión por WoL por su RTL8125
-(`enp8s0`), y un dongle HDMI en la RTX 5080 hace de pantalla, de modo que las
-resoluciones posibles son las de su EDID. La configuración común está descrita
-en el README principal. Para jugar conserva Steam, GameMode, MangoHud y el
-perfil Gaming de LACT, que se activa con GameMode.
-
-El dongle es un Evanlak8K V2 en `HDMI-A-1`: 4K a 60 Hz, 1440p a 144 Hz, 1080p a
-144 y 120 Hz y 2560×1080 a 120 Hz, sin HDR. Las apps «Desktop» y «Steam Big
-Picture» de Sunshine lo ponen en el modo que pide Moonlight con
-`sunshine-display` (escala 150 % en 4K y 125 % en 1440p) y lo devuelven al
-anterior al cerrar la sesión; si el cliente pide una resolución que el dongle
-no tiene, Sunshine reescala. Sunshine captura el monitor 0 de KMS, que es el
-dongle mientras no haya otro monitor por DisplayPort; con uno conectado, el
-dongle pasa a ser el monitor 1 y Sunshine emitiría ese otro.
-
-Las reglas del audio Ryzen/NVIDIA, del Bluetooth ASUS USB-BT500 y del mando Xbox
-están en `obsolete-system/`: `install-system.sh` las retira de `/etc`. El mando
-y el audio llegan por Moonlight desde el cliente.
+mpv usa `gpu-next` con Vulkan/Wayland y decodificación NVDEC. Esta combinación se
+validó reproduciendo H.264 mediante la RTX 5080. WirePlumber mantiene el FiiO K3
+en `S32LE`, con periodo 256 y sin suspensión.
+PipeWire sigue la frecuencia del contenido (hasta 96 kHz, que el K3 admite) con
+quantum 256. El K3 es la salida predeterminada; la C920 es la entrada predeterminada. Las salidas
+analógica Ryzen y HDMI NVIDIA permanecen disponibles y no presentan el problema
+de duplicados de Deimos.
 
 Los ficheros vacíos de `system/systemd/system/` enmascaran las mediciones de
 TPM de systemd (`systemd-pcrproduct`, `systemd-pcrlogin@` y

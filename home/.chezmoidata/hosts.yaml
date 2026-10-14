@@ -1,17 +1,13 @@
-# Hardware de la flota que las plantillas necesitan: las claves de Sunshine de
-# Tycho, que se usa en remoto, y el decodificador de mpv y el codificador de OBS
-# de Deimos. Se lee mediante `index .hosts .chezmoi.hostname`. El sistema
-# operativo sale de .chezmoi.os; los equipos Mac no tienen claves.
+# Hardware de la flota que las plantillas necesitan: el decodificador de mpv y
+# el codificador de OBS. Se lee mediante `index .hosts .chezmoi.hostname`. El
+# sistema operativo sale de .chezmoi.os; los equipos Mac no tienen claves.
 hosts:
   tycho:
-    sunshine:
-      # GeForce RTX 5080 (Blackwell): NVENC con H.264, HEVC y AV1.
-      encoder: nvenc
-      # Sin output_name: headless, el dongle HDMI es el monitor 0 de KMS, el de
-      # serie. Si se conecta otro monitor por DisplayPort, pasa a ser el 1.
-    # Salida que Sunshine ajusta al modo del cliente (apps.json): el dongle HDMI
-    # Evanlak8K V2 (4K a 60 Hz, 1440p a 144 Hz, 1080p a 144/120 Hz).
-    sunshine_display: HDMI-A-1
+    # GeForce RTX 5080 (Blackwell): decodificación NVDEC para mpv.
+    mpv_hwdec: nvdec
+    mpv_comment: "Tycho: GeForce RTX 5080 (Blackwell), NVIDIA y Wayland."
+    # OBS: NVENC (H.264 para emitir, HEVC para grabar).
+    obs_encoder: nvenc
   deimos:
     # Radeon RX 6600 (Navi 23) sobre Mesa/RADV: decodificación VA-API.
     mpv_hwdec: vaapi

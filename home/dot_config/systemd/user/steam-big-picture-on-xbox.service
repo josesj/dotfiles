@@ -1,0 +1,8 @@
+[Unit]
+Description=Open Steam Big Picture when the Xbox controller connects
+After=graphical-session.target
+ConditionEnvironment=WAYLAND_DISPLAY
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/steam steam://open/bigpicture
