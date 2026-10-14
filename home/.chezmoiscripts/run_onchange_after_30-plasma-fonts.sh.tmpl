@@ -12,7 +12,7 @@ declare -A fonts=(
   [toolBarFont]='Noto Sans,10,-1,5,400,0,0,0,0,0,0,0,0,0,0,1,,0,0'
   [activeFont]='Noto Sans,10,-1,5,400,0,0,0,0,0,0,0,0,0,0,1,,0,0'
   [smallFont]='Noto Sans,8,-1,5,400,0,0,0,0,0,0,0,0,0,0,1,,0,0'
-  [fixed]='JetBrainsMono Nerd Font Mono,10,-1,5,400,0,0,0,0,0,0,0,0,0,0,1,,0,0'
+  [fixed]='Iosevka Nerd Font Mono,10,-1,5,400,0,0,0,0,0,0,0,0,0,0,1,,0,0'
 )
 
 for key in font menuFont toolBarFont activeFont smallFont fixed; do
@@ -23,5 +23,5 @@ kwriteconfig6 --file kdeglobals --group General --key XftAntialias true
 kwriteconfig6 --file kdeglobals --group General --key XftHintStyle hintslight
 kwriteconfig6 --file kdeglobals --group General --key XftSubPixel none
 
-printf 'Fuentes de Plasma: Noto Sans; monoespaciada: JetBrainsMono Nerd Font Mono.\n'
+printf 'Fuentes de Plasma: Noto Sans; monoespaciada: Iosevka Nerd Font Mono.\n'
 {{- end -}}
