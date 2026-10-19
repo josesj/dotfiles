@@ -77,6 +77,10 @@ Sólo en Arch: Kitty, Plasma, Konsole, Kate, Dolphin, mpv, OBS, PipeWire,
 WirePlumber, fontconfig, Xresources, `environment.d` y las banderas de Chrome y
 VS Code. Sólo en macOS: Ghostty, `.zprofile` y el `Brewfile`.
 
+En Arch, el indexador de Baloo usa la plataforma Qt `offscreen` (drop-in de
+`kde-baloo.service`): arranca antes de que la sesión publique `WAYLAND_DISPLAY`
+y, sin pantalla, `baloo_file_extractor` abortaba en cada lote.
+
 Por equipo: Tycho añade el DAC FiiO K3, los altavoces Edifier y el arranque de
 Steam Big Picture con el mando Xbox. Deimos añade la regla que evita la
 suspensión del nodo HDMI de AMD y `HSA_OVERRIDE_GFX_VERSION`, con la que ROCm
