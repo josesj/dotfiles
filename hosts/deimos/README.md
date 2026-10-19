@@ -44,6 +44,12 @@ También versiona el resto de su `/etc` propio:
   salida y la sesión se quedaba en negro. También cubre arrancar con el monitor
   apagado. Si el arranque se queda sin vídeo, se quitan esos dos parámetros de
   `/etc/kernel/cmdline` por SSH y se ejecuta `mkinitcpio -P`.
+- Bluetooth: ASUS USB-BT500 (Realtek RTL8761BU). `modprobe.d` le quita el
+  autosuspend. En llamadas (HFP) el kernel descarta paquetes de voz
+  (`corrupted SCO packet`) mientras el adaptador cuelga del hub ASM1074: los
+  paquetes de voz van en transferencias USB isócronas, que se corrompen
+  detrás de ese hub. Debe ir en un puerto que `lsusb -t` muestre directamente
+  bajo el `root_hub`. A2DP no se ve afectado.
 
 `obsolete-system/` retira la copia duplicada de la regla ASI que quedó como
 `/etc/udev/rules.d/99-`, el antiguo `sshd_config.d/10-hardening.conf`, que
