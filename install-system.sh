@@ -204,6 +204,19 @@ if [[ -d "$host_dir/system" ]]; then
   done < <(find "$host_dir/system" -type f -print0 | sort -z)
 fi
 
+# Blobs de firmware por equipo (EDID de monitores) bajo hosts/<equipo>/firmware,
+# con su ruta relativa dentro de /usr/lib/firmware. drm.edid_firmware los lee de
+# ahí y mkinitcpio los empaqueta en la UKI (FILES), así que un cambio regenera
+# el initramfs. Se despliegan antes de mkinitcpio.
+if [[ -d "$host_dir/firmware" ]]; then
+  while IFS= read -r -d '' source; do
+    relative=${source#"$host_dir/firmware/"}
+    target="/usr/lib/firmware/$relative"
+    cmp -s -- "$source" "$target" || initramfs_changed=true
+    deploy_file "$source" "$target"
+  done < <(find "$host_dir/firmware" -type f -print0 | sort -z)
+fi
+
 # Files under obsolete-system are retired only while their installed contents
 # still match the known legacy version. Locally edited files are preserved.
 if [[ -d "$host_dir/obsolete-system" ]]; then

@@ -35,6 +35,15 @@ También versiona el resto de su `/etc` propio:
   zona de la interfaz la fija NetworkManager, no firewalld, y no se versiona
   porque la conexión guarda la IP estática:
   `nmcli connection modify "deimos static" connection.zone private`.
+- Pantalla: `DP-3` va forzado (`video=DP-3:e` y `drm.edid_firmware` en
+  `kernel/cmdline`) con el EDID del LG 27UP850 guardado en
+  `firmware/edid/lg-27up850.bin`, que `install-system.sh` copia a
+  `/usr/lib/firmware/edid` y `mkinitcpio.conf` mete en la UKI. El LG, al salir
+  de su reposo profundo tras apagarse la pantalla por inactividad, se desconecta
+  entero (DisplayPort y su hub USB); sin el conector forzado KWin perdía la
+  salida y la sesión se quedaba en negro. También cubre arrancar con el monitor
+  apagado. Si el arranque se queda sin vídeo, se quitan esos dos parámetros de
+  `/etc/kernel/cmdline` por SSH y se ejecuta `mkinitcpio -P`.
 
 `obsolete-system/` retira la copia duplicada de la regla ASI que quedó como
 `/etc/udev/rules.d/99-`, el antiguo `sshd_config.d/10-hardening.conf`, que

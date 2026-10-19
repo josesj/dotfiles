@@ -1,1 +1,1 @@
-root=PARTUUID=cc5e1648-e7e4-4a09-b2df-5230b5f4c48e zswap.enabled=0 rootflags=subvol=@ rw loglevel=3 quiet splash plymouth.use-simpledrm
+root=PARTUUID=cc5e1648-e7e4-4a09-b2df-5230b5f4c48e zswap.enabled=0 rootflags=subvol=@ rw loglevel=3 quiet splash plymouth.use-simpledrm video=DP-3:e drm.edid_firmware=DP-3:edid/lg-27up850.bin
