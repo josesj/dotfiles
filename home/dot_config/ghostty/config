@@ -1,6 +1,7 @@
 # Tipografía
-font-family = Iosevka Nerd Font
-font-size = 16
+font-family = JetBrainsMono Nerd Font
+font-style = Medium
+font-size = 15
 font-thicken = true
 
 # Catppuccin cambia automáticamente con la apariencia de macOS.

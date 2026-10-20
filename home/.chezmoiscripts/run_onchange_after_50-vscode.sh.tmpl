@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Catppuccin Latte/Mocha en Visual Studio Code, con detección automática del
-# modo claro/oscuro del sistema, y Iosevka Nerd Font Mono en el editor y el
-# terminal integrado a 16 px (Iosevka es más estrecha que JetBrains Mono).
+# modo claro/oscuro del sistema, y JetBrainsMono Nerd Font Mono en el editor y
+# el terminal integrado a 14 px (el peso Medium lo fija editor.fontWeight).
 # Además, la barra de título y el menú se excluyen de
 # Settings Sync: los valores de Arch no aplican en macOS.
 set -euo pipefail
@@ -32,10 +32,10 @@ sed \
   -e 's/"workbench.preferredLightColorTheme": "[^"]*"/"workbench.preferredLightColorTheme": "Catppuccin Latte"/' \
   -e 's/"workbench.preferredDarkColorTheme": "[^"]*"/"workbench.preferredDarkColorTheme": "Catppuccin Mocha"/' \
   -e 's/"catppuccin.accentColor": "[^"]*"/"catppuccin.accentColor": "blue"/' \
-  -e "s/\"editor.fontFamily\": \"[^\"]*\"/\"editor.fontFamily\": \"'Iosevka Nerd Font Mono', monospace\"/" \
-  -e "s/\"terminal.integrated.fontFamily\": \"[^\"]*\"/\"terminal.integrated.fontFamily\": \"'Iosevka Nerd Font Mono', monospace\"/" \
-  -e 's/"editor.fontSize": [0-9.]*/"editor.fontSize": 16/' \
-  -e 's/"terminal.integrated.fontSize": [0-9.]*/"terminal.integrated.fontSize": 16/' \
+  -e "s/\"editor.fontFamily\": \"[^\"]*\"/\"editor.fontFamily\": \"'JetBrainsMono Nerd Font Mono', monospace\"/" \
+  -e "s/\"terminal.integrated.fontFamily\": \"[^\"]*\"/\"terminal.integrated.fontFamily\": \"'JetBrainsMono Nerd Font Mono', monospace\"/" \
+  -e 's/"editor.fontSize": [0-9.]*/"editor.fontSize": 14/' \
+  -e 's/"terminal.integrated.fontSize": [0-9.]*/"terminal.integrated.fontSize": 14/' \
   "$settings" > "$temporary"
 if ! grep -Fq '"catppuccin.accentColor"' "$temporary"; then
   sed -i.bak '/"workbench.colorTheme"/i\
@@ -57,4 +57,4 @@ rm -f -- "$temporary.bak"
 {{- end }}
 cmp -s -- "$temporary" "$settings" || install -m600 -- "$temporary" "$settings"
 
-printf 'VS Code configurado con Catppuccin Latte/Mocha, detección automática e Iosevka.\n'
+printf 'VS Code configurado con Catppuccin Latte/Mocha, detección automática y JetBrains Mono.\n'

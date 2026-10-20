@@ -115,10 +115,10 @@ exporta `WORKSTATION_FLAVOUR`, que Vim también sigue. El prompt asigna colores 
 activa a ruta, estado de Git, errores, duración, trabajos y entornos virtuales.
 
 En Arch, fontconfig y Plasma usan Noto Sans para la interfaz, Noto Serif para
-serif e Iosevka Nerd Font Mono para monoespaciado; Noto CJK, Emoji y
+serif y JetBrainsMono Nerd Font Mono, en peso Medium, para monoespaciado; Noto CJK, Emoji y
 Symbols completan los glifos restantes. `~/.Xresources` añade los mismos ajustes
 de renderizado para las aplicaciones X11 y XWayland que leen la base de recursos
-mediante `xrdb`. En macOS, Ghostty usa Iosevka Nerd Font a 16 pt y sigue
+mediante `xrdb`. En macOS, Ghostty usa JetBrains Mono Nerd Font Medium a 15 pt y sigue
 la apariencia del sistema.
 
 Firefox y Chrome mantienen su interfaz oscura, pero informan a las páginas web
