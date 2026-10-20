@@ -104,9 +104,16 @@ pueden encenderse y usarse a distancia:
 
 ## Aspecto
 
-Catppuccin viste lo que muestra texto: Vim, Zsh, Kitty, Ghostty, Konsole, Kate y
-Visual Studio Code, con Latte en modo claro y Mocha en modo oscuro. El
-escritorio no: Plasma usa Breeze, su tema propio, y es quien dicta el modo. El
+Kitty, Vim y Visual Studio Code usan GitHub Light en modo claro y GitHub Dark
+Dimmed en modo oscuro, los tres con la paleta actual de Primer: mismo fondo,
+mismo texto y los colores con que GitHub resalta el código. En VS Code son
+«GitHub Light Default» y «GitHub Dark Dimmed» (los «GitHub Light/Dark» a secas
+son los de 2020). Vim no tiene un tema de GitHub actual fuera de Neovim, así
+que el repositorio trae uno propio, `github_primer` (`~/.vim/colors`, con su
+tema de lightline). Al tema claro de Kitty se le cambia el color del texto por
+el de Primer, el mismo de los otros dos. Catppuccin viste el resto de lo que muestra
+texto: Zsh, Ghostty, Konsole y Kate, con Latte en modo claro y Mocha en modo
+oscuro. El escritorio no: Plasma usa Breeze, su tema propio, y es quien dicta el modo. El
 sabor se detecta en el arranque del shell y al recuperar el foco en Vim: Plasma
 lo publica en `kdeglobals` y macOS sólo define `AppleInterfaceStyle` mientras el
 modo oscuro está activo. Por SSH manda el terminal local, no el escritorio
@@ -115,11 +122,12 @@ exporta `WORKSTATION_FLAVOUR`, que Vim también sigue. El prompt asigna colores 
 activa a ruta, estado de Git, errores, duración, trabajos y entornos virtuales.
 
 En Arch, fontconfig y Plasma usan Noto Sans para la interfaz, Noto Serif para
-serif y JetBrainsMono Nerd Font Mono para monoespaciado; Noto CJK, Emoji y
+serif e Iosevka Nerd Font Mono (paquete `ttf-iosevka-nerd`) para monoespaciado,
+también en Kitty, Konsole, Kate y VS Code; Noto CJK, Emoji y
 Symbols completan los glifos restantes. `~/.Xresources` añade los mismos ajustes
 de renderizado para las aplicaciones X11 y XWayland que leen la base de recursos
-mediante `xrdb`. En macOS, Ghostty usa JetBrains Mono Nerd Font a 15 pt y sigue
-la apariencia del sistema.
+mediante `xrdb`. En macOS, Ghostty usa Iosevka Nerd Font a 16 pt y sigue la
+apariencia del sistema.
 
 Firefox y Chrome mantienen su interfaz oscura, pero informan a las páginas web
 de una preferencia de color clara (`prefers-color-scheme: light`).
@@ -133,7 +141,7 @@ primer `apply` y se refrescan cada semana. `ZSH_CUSTOM` apunta a
 Zsh pueda reemplazarse entero sin arrastrar configuración propia.
 
 Los plugins de Vim son paquetes nativos en `~/.vim/pack/dotfiles/start`,
-también como externos: Catppuccin, Lightline, GitGutter, ALE, fzf.vim,
+también como externos: Lightline, GitGutter, ALE, fzf.vim,
 Commentary, Surround, Repeat y Tagbar. No hay gestor de plugins dentro de Vim:
 vim-plug quedó retirado. El resaltado de sintaxis es el que trae el runtime de
 Vim; vim-polyglot se retiró porque era el plugin más lento de cargar. `:Files`
@@ -264,11 +272,12 @@ es la lista mínima de la que dependen los archivos de este repositorio:
 
 ```bash
 sudo pacman -S --needed zsh vim git git-lfs gnupg chezmoi \
-  fzf ripgrep direnv python-uv nvm jbang kitty \
+  fzf ripgrep direnv python-uv nvm jbang kitty ttf-iosevka-nerd \
   clang pyright typescript-language-server
 ```
 
-`fzf` y `ripgrep` los necesitan `<Espacio>f` y `<Espacio>r` en Vim; `clang`,
+`ttf-iosevka-nerd` trae Iosevka Nerd Font, la monoespaciada de todo el
+escritorio. `fzf` y `ripgrep` los necesitan `<Espacio>f` y `<Espacio>r` en Vim; `clang`,
 `pyright` y `typescript-language-server` son tres de los cuatro servidores LSP
 que configura Kate. El cuarto, `jdtls`, está en AUR: `yay -S jdtls`.
 
