@@ -107,7 +107,6 @@ knighttime
 kompare
 konsole
 kpipewire
-krita-plugin-gmic
 kscreen
 kscreenlocker
 kseexpr
