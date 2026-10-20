@@ -22,6 +22,15 @@ resoluciones posibles son las de su EDID. La configuración común está descrit
 en el README principal. Para jugar conserva Steam, GameMode, MangoHud y el
 perfil Gaming de LACT, que se activa con GameMode.
 
+`autoshutdown.timer` ejecuta cada minuto `/usr/local/libexec/autoshutdown`
+(`libexec/autoshutdown`), que apaga el equipo tras `IDLE_MINUTES` (30) sin uso.
+Está en uso mientras haya una conexión SSH establecida, una sesión de NVENC
+(Sunshine emitiendo u OBS grabando), la GPU por encima de `GPU_THRESHOLD` (15 %)
+o un inhibidor de systemd que bloquee el apagado o la suspensión, como el de
+borgmatic durante una copia. Los dos umbrales están en `autoshutdown.conf`. La
+cuenta vive en `/run`, así que tras cada arranque hay 30 min para conectarse;
+el registro se ve con `journalctl -u autoshutdown`.
+
 El dongle es un Evanlak8K V2 en `HDMI-A-1`: 4K a 60 Hz, 1440p a 144 Hz, 1080p a
 144 y 120 Hz y 2560×1080 a 120 Hz, sin HDR. Las apps «Desktop» y «Steam Big
 Picture» de Sunshine lo ponen en el modo que pide Moonlight con

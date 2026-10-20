@@ -121,8 +121,11 @@ pero también se enciende y se usa a distancia.
   añade «VS Code», que abre el editor sin ligarlo a la sesión de Moonlight.
 - **Energía (Tycho).** Plasma no atenúa ni apaga la pantalla (Sunshine
   capturaría en negro) ni suspende por inactividad, porque SSH y los trabajos
-  largos no cuentan como actividad. Se suspende a mano con `systemctl suspend`.
-  Deimos conserva la energía de serie de Plasma.
+  largos no cuentan como actividad. En su lugar, `autoshutdown.timer` apaga
+  Tycho tras 30 min sin SSH, sin emitir con Sunshine (sin sesiones NVENC), con
+  la GPU por debajo del 15 % y sin inhibidores que bloqueen el apagado (como el
+  de borgmatic); se enciende de nuevo por WoL. Deimos conserva la energía de
+  serie de Plasma.
 - **Docker.** Los Mac tienen un contexto `deimos` que habla con su Docker por
   SSH (`run_onchange_after_55-docker-contexts.sh`). No pasa a ser el activo: se
   usa con `docker --context deimos …` o `docker context use deimos`.

@@ -45,6 +45,7 @@ resolved_changed=false
 networkmanager_changed=false
 dispatcher_changed=false
 firewalld_changed=false
+host_timers=()
 
 backup_target() {
   local target=$1 backup_path
@@ -191,6 +192,7 @@ if [[ -d "$host_dir/system" ]]; then
     target="/etc/$relative"
     validate_host_file "$source" "$relative"
     [[ $relative == conf.d/lm_sensors ]] && lm_sensors_managed=true
+    [[ $relative == systemd/system/*.timer ]] && host_timers+=("${relative##*/}")
     if ! cmp -s -- "$source" "$target"; then
       mark_changed_subsystem "$relative"
     fi
@@ -215,6 +217,15 @@ if [[ -d "$host_dir/firmware" ]]; then
     cmp -s -- "$source" "$target" || initramfs_changed=true
     deploy_file "$source" "$target"
   done < <(find "$host_dir/firmware" -type f -print0 | sort -z)
+fi
+
+# Programas por equipo bajo hosts/<equipo>/libexec, en /usr/local/libexec y
+# ejecutables (los usan las unidades de systemd del perfil, como autoshutdown).
+if [[ -d "$host_dir/libexec" ]]; then
+  while IFS= read -r -d '' source; do
+    relative=${source#"$host_dir/libexec/"}
+    deploy_file "$source" "/usr/local/libexec/$relative" 755
+  done < <(find "$host_dir/libexec" -type f -print0 | sort -z)
 fi
 
 # Files under obsolete-system are retired only while their installed contents
@@ -280,6 +291,11 @@ if ! $dry_run; then
     fi
   fi
   systemctl daemon-reload
+  # Los temporizadores del perfil del equipo (autoshutdown en tycho) quedan
+  # activos; enable --now no hace nada si ya lo están.
+  for timer in "${host_timers[@]}"; do
+    systemctl enable --now "$timer"
+  done
   if $lact_changed; then
     systemctl restart lactd.service
   fi
@@ -327,6 +343,9 @@ else
   if $lact_changed; then
     printf 'Reiniciaría lactd.service para recargar el selector de perfiles.\n'
   fi
+  for timer in "${host_timers[@]}"; do
+    printf 'Activaría %s.\n' "$timer"
+  done
   if $oomd_changed; then
     printf 'Reiniciaría systemd-oomd.service.\n'
   fi
