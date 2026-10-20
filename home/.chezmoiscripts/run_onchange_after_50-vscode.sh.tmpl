@@ -1,19 +1,17 @@
 #!/usr/bin/env bash
-# GitHub Light Default y GitHub Dark Dimmed en Visual Studio Code, con
-# detección automática del modo claro/oscuro del sistema: son los temas con la
-# paleta actual de Primer, la misma de Kitty y de github_primer en Vim («GitHub
-# Light/Dark» a secas son los de 2020). Iosevka Nerd Font Mono en el editor y
-# el terminal integrado a 16 px (Iosevka es más estrecha que JetBrains Mono).
+# Catppuccin Latte/Mocha en Visual Studio Code, con detección automática del
+# modo claro/oscuro del sistema, y Iosevka Nerd Font Mono en el editor y el
+# terminal integrado a 16 px (Iosevka es más estrecha que JetBrains Mono).
 # Además, la barra de título y el menú se excluyen de
 # Settings Sync: los valores de Arch no aplican en macOS.
 set -euo pipefail
 
 command -v code >/dev/null || {
-  printf 'Aviso: VS Code no está instalado; se omite el tema de GitHub.\n' >&2
+  printf 'Aviso: VS Code no está instalado; se omite Catppuccin.\n' >&2
   exit 0
 }
 
-code --install-extension GitHub.github-vscode-theme --force >/dev/null
+code --install-extension Catppuccin.catppuccin-vsc --force >/dev/null
 
 {{ if eq .chezmoi.os "darwin" -}}
 settings="$HOME/Library/Application Support/Code/User/settings.json"
@@ -21,7 +19,7 @@ settings="$HOME/Library/Application Support/Code/User/settings.json"
 settings="${XDG_CONFIG_HOME:-$HOME/.config}/Code/User/settings.json"
 {{- end }}
 [[ -f "$settings" ]] || {
-  printf 'Aviso: no existe %s; selecciona el tema de GitHub desde VS Code.\n' "$settings" >&2
+  printf 'Aviso: no existe %s; selecciona Catppuccin desde VS Code.\n' "$settings" >&2
   exit 0
 }
 
@@ -30,15 +28,21 @@ settings="${XDG_CONFIG_HOME:-$HOME/.config}/Code/User/settings.json"
 temporary=$(mktemp)
 trap 'rm -f -- "$temporary"' EXIT
 sed \
-  -e 's/"workbench.colorTheme": "[^"]*"/"workbench.colorTheme": "GitHub Dark Dimmed"/' \
-  -e 's/"workbench.preferredLightColorTheme": "[^"]*"/"workbench.preferredLightColorTheme": "GitHub Light Default"/' \
-  -e 's/"workbench.preferredDarkColorTheme": "[^"]*"/"workbench.preferredDarkColorTheme": "GitHub Dark Dimmed"/' \
-  -e '/"catppuccin.accentColor":/d' \
+  -e 's/"workbench.colorTheme": "[^"]*"/"workbench.colorTheme": "Catppuccin Mocha"/' \
+  -e 's/"workbench.preferredLightColorTheme": "[^"]*"/"workbench.preferredLightColorTheme": "Catppuccin Latte"/' \
+  -e 's/"workbench.preferredDarkColorTheme": "[^"]*"/"workbench.preferredDarkColorTheme": "Catppuccin Mocha"/' \
+  -e 's/"catppuccin.accentColor": "[^"]*"/"catppuccin.accentColor": "blue"/' \
   -e "s/\"editor.fontFamily\": \"[^\"]*\"/\"editor.fontFamily\": \"'Iosevka Nerd Font Mono', monospace\"/" \
   -e "s/\"terminal.integrated.fontFamily\": \"[^\"]*\"/\"terminal.integrated.fontFamily\": \"'Iosevka Nerd Font Mono', monospace\"/" \
   -e 's/"editor.fontSize": [0-9.]*/"editor.fontSize": 16/' \
   -e 's/"terminal.integrated.fontSize": [0-9.]*/"terminal.integrated.fontSize": 16/' \
   "$settings" > "$temporary"
+if ! grep -Fq '"catppuccin.accentColor"' "$temporary"; then
+  sed -i.bak '/"workbench.colorTheme"/i\
+  "catppuccin.accentColor": "blue",
+' "$temporary"
+  rm -f -- "$temporary.bak"
+fi
 # `settingsSync.ignoredSettings` también se sincroniza, así que basta con que
 # un equipo lo suba para que todos conserven sus valores locales.
 if ! grep -Fq '"settingsSync.ignoredSettings"' "$temporary"; then
@@ -53,4 +57,4 @@ rm -f -- "$temporary.bak"
 {{- end }}
 cmp -s -- "$temporary" "$settings" || install -m600 -- "$temporary" "$settings"
 
-printf 'VS Code configurado con GitHub Light Default y Dark Dimmed, detección automática e Iosevka.\n'
+printf 'VS Code configurado con Catppuccin Latte/Mocha, detección automática e Iosevka.\n'

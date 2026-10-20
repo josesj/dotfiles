@@ -15,7 +15,7 @@ for s:fzf_prefix in ['/opt/homebrew/opt/fzf', '/usr/local/opt/fzf']
 endfor
 {{ end }}
 " pack/*/start se carga después de vimrc; adelantarlo deja disponibles
-" lightline al elegir el tema más abajo. Los índices de la ayuda
+" Catppuccin y lightline al elegir el tema más abajo. Los índices de la ayuda
 " de los plugins los genera chezmoi al aplicar, no cada arranque de Vim.
 packloadall
 
@@ -50,12 +50,11 @@ silent! call mkdir(expand('~/.cache/vim/undo'), 'p')
 silent! call mkdir(expand('~/.cache/vim/swap'), 'p')
 silent! call mkdir(expand('~/.cache/vim/backup'), 'p')
 
-" Sigue el modo claro/oscuro del escritorio: GitHub Light o GitHub Dark, como
-" Kitty. Plasma lo publica en kdeglobals y deja la clave vacía mientras usa su
-" esquema de serie, Breeze claro; macOS sólo define AppleInterfaceStyle mientras
-" el modo oscuro está activo. Por SSH manda el terminal local: el prompt de Zsh
-" lo averigua y lo exporta como latte (claro) o mocha (oscuro).
-function! s:DesktopFlavour() abort
+" Sigue el modo claro/oscuro del escritorio. Plasma lo publica en kdeglobals y
+" deja la clave vacía mientras usa su esquema de serie, Breeze claro; macOS
+" sólo define AppleInterfaceStyle mientras el modo oscuro está activo. Por SSH
+" manda el terminal local: el prompt de Zsh lo averigua y lo exporta.
+function! s:CatppuccinFlavour() abort
   if !empty($SSH_CONNECTION) && $WORKSTATION_FLAVOUR =~# '^\(latte\|mocha\)$'
     return $WORKSTATION_FLAVOUR
   endif
@@ -71,37 +70,35 @@ function! s:DesktopFlavour() abort
 {{- end }}
 endfunction
 
-" github_primer (~/.vim/colors) elige la variante por 'background'.
-function! s:ApplyGithub() abort
-  let l:background = s:DesktopFlavour() ==# 'latte' ? 'light' : 'dark'
-  if get(g:, 'colors_name', '') ==# 'github_primer' && &background ==# l:background
+function! s:ApplyCatppuccin() abort
+  let l:flavour = s:CatppuccinFlavour()
+  let l:name = 'catppuccin_' . l:flavour
+  if get(g:, 'colors_name', '') ==# l:name
     return
   endif
-  execute 'set background=' . l:background
-  if empty(globpath(&runtimepath, 'colors/github_primer.vim'))
+  execute 'set background=' . (l:flavour ==# 'latte' ? 'light' : 'dark')
+  if empty(globpath(&runtimepath, 'colors/' . l:name . '.vim'))
     return
   endif
-  colorscheme github_primer
+  execute 'colorscheme ' . l:name
   let g:lightline = {
-        \ 'colorscheme': 'github_primer',
+        \ 'colorscheme': l:name,
         \ 'active': {
         \   'left': [['mode', 'paste'], ['readonly', 'filename', 'modified']],
         \   'right': [['lineinfo'], ['percent'], ['fileformat', 'fileencoding', 'filetype']]
         \ }
         \ }
   if exists('*lightline#init')
-    " lightline no relee la paleta si ya existe: se recalcula para 'background'.
-    runtime autoload/lightline/colorscheme/github_primer.vim
     call lightline#init()
     call lightline#colorscheme()
     call lightline#update()
   endif
 endfunction
 
-call s:ApplyGithub()
-augroup github_appearance
+call s:ApplyCatppuccin()
+augroup catppuccin_appearance
   autocmd!
-  autocmd FocusGained * call s:ApplyGithub()
+  autocmd FocusGained * call s:ApplyCatppuccin()
 augroup END
 
 let g:gitgutter_map_keys = 0
