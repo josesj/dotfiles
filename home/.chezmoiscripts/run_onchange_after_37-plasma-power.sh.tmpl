@@ -1,8 +1,9 @@
-{{- if eq .chezmoi.os "linux" -}}
+{{- if and (eq .chezmoi.os "linux") (ne .chezmoi.hostname "tycho") -}}
 #!/usr/bin/env bash
-# Tycho y Deimos son estaciones de trabajo: PowerDevil recupera sus valores de
-# serie (atenuar y apagar la pantalla por inactividad y suspender), que el uso
-# remoto con Sunshine había desactivado. Se borran las claves en lugar de fijar
+# Deimos es una estación de trabajo: PowerDevil recupera sus valores de serie
+# (atenuar y apagar la pantalla por inactividad y suspender), que el uso remoto
+# con Sunshine había desactivado; Tycho, en remoto, los fija en
+# 38-plasma-remote. Se borran las claves en lugar de fijar
 # valores, para seguir los que traiga Plasma.
 set -euo pipefail
 command -v kwriteconfig6 >/dev/null || exit 0

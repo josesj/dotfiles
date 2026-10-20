@@ -1,0 +1,60 @@
+#!/usr/bin/env python3
+# Sunshine reescribe apps.json desde su interfaz web, así que chezmoi sólo
+# retoca lo imprescindible y conserva el resto de apps y ajustes:
+# - retira "Low Res Desktop", que la plantilla de serie define con xrandr y no
+#   funciona en una sesión Wayland;
+# - añade «VS Code» para desarrollar: como «Desktop» (sin cmd, para que la transmisión
+#   dure hasta que se desconecte el cliente) pero abriendo VS Code al empezar,
+#   desligado de Sunshine: cerrar Moonlight no cierra el editor, y si ya había
+#   una ventana abierta, `code` sólo le pasa el encargo y termina;
+# - en los equipos con sunshine_display (hosts.yaml), "Desktop" y "Steam Big
+#   Picture" ajustan esa salida al modo del cliente con sunshine-display.
+{{- $vscode := true }}
+{{- $display := get (index .hosts .chezmoi.hostname) "sunshine_display" | default "" }}
+import json
+import sys
+
+DISPLAY = {{ $display | quote }}
+VSCODE = {{ if $vscode }}{
+    "name": "VS Code",
+    "detached": ["code --new-window"],
+    "image-path": "/usr/share/pixmaps/vscode.png",
+}{{ else }}None{{ end }}
+ADJUSTED = ("Desktop", "Steam Big Picture")
+
+# Sin apps.json (Sunshine recién instalado y aún sin arrancar), se parte de la
+# plantilla del paquete, con «Desktop» y «Steam Big Picture»: si no, Sunshine
+# encontraría el archivo ya creado y no pondría las suyas.
+text = sys.stdin.read().strip()
+if not text:
+    try:
+        with open("/usr/share/sunshine/apps.json", encoding="utf-8") as template:
+            text = template.read().strip()
+    except OSError:
+        pass
+config = json.loads(text) if text else {}
+config.setdefault("env", {}).setdefault("PATH", "$(PATH):$(HOME)/.local/bin")
+apps = [app for app in config.get("apps", []) if app.get("name") != "Low Res Desktop"]
+
+for app in apps:
+    if app.get("name") not in ADJUSTED:
+        continue
+    steps = [step for step in app.get("prep-cmd", [])
+             if "sunshine-display" not in step.get("do", "") + step.get("undo", "")]
+    if DISPLAY:
+        steps.insert(0, {
+            "do": f"sunshine-display apply {DISPLAY}",
+            "undo": f"sunshine-display restore {DISPLAY}",
+        })
+    if steps:
+        app["prep-cmd"] = steps
+    else:
+        app.pop("prep-cmd", None)
+
+if VSCODE:
+    apps = [app for app in apps if app.get("name") != VSCODE["name"]]
+    apps.append(VSCODE)
+
+config["apps"] = apps
+json.dump(config, sys.stdout, indent=2, ensure_ascii=False)
+sys.stdout.write("\n")

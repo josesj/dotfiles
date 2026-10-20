@@ -47,11 +47,18 @@
 .local/share/org.kde.syntax-highlighting
 {{- end }}
 
-{{- if ne .chezmoi.hostname "tycho" }}
-# --- Exclusivo de Tycho: FiiO K3, Edifier, mando Xbox ---
-.config/wireplumber/wireplumber.conf.d/51-fiio-k3.conf
-.config/wireplumber/wireplumber.conf.d/52-edifier-r1280db.conf
-.config/systemd/user/steam-big-picture-on-xbox.service
+{{- if eq .chezmoi.hostname "tycho" }}
+# --- Tycho se usa en remoto: sin reproductor, OBS ni LibreOffice ---
+.config/mpv
+.config/obs-studio
+.local/bin/libreoffice-kf6-x11
+{{- else }}
+# --- Sólo Tycho: Sunshine y el bloqueo al iniciar la sesión ---
+.config/autostart
+.config/sunshine
+.config/systemd/user/graphical-session.target.wants
+.local/bin/lock-after-sunshine
+.local/bin/sunshine-display
 {{- end }}
 
 {{- if ne .chezmoi.hostname "deimos" }}
