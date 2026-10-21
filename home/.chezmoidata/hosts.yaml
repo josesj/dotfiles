@@ -30,6 +30,16 @@ hosts:
       # Tope de bitrate (kbps) por encima de lo que pida Moonlight: 4K a 60 Hz en
       # HEVC va bien con 80 Mbps y el cliente elige el suyo por debajo.
       max_bitrate: 80000
+      # Medido con ffmpeg a 4K y 80 Mbps: HEVC por VA-API pasa de 100 fps con el
+      # preset por defecto o «speed» y baja a 88 con «quality»; H.264 se queda
+      # en 58 fps (no llega a 4K60, el cliente debe pedir HEVC), y Vulkan Video
+      # no mejora a VA-API. «speed» es el de menor espera por fotograma.
+      vaapi_quality: speed
+      vaapi_rc: cbr
+      # Desactivado a propósito: con su VBV de un fotograma, radeonsi mete NAL
+      # de relleno en H.264 y Sunshine no puede leer ese flujo al ajustar sus
+      # parámetros (errores en la prueba de h264_vaapi).
+      vaapi_strict_rc_buffer: disabled
     # sunshine-display ajusta el LG al modo del cliente durante la sesión.
     sunshine_display: DP-3
     # Sólo como estación de trabajo (remote: false).
