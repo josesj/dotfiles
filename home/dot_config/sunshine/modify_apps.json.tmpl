@@ -13,6 +13,7 @@
 {{- $vscode := true }}
 {{- $display := get (index .hosts .chezmoi.hostname) "sunshine_display" | default "" }}
 import json
+import shutil
 import sys
 
 DISPLAY = {{ $display | quote }}
@@ -23,19 +24,26 @@ VSCODE = {{ if $vscode }}{
 }{{ else }}None{{ end }}
 ADJUSTED = ("Desktop", "Steam Big Picture", "VS Code")
 
-# Sin apps.json (Sunshine recién instalado y aún sin arrancar), se parte de la
-# plantilla del paquete, con «Desktop» y «Steam Big Picture»: si no, Sunshine
-# encontraría el archivo ya creado y no pondría las suyas.
-text = sys.stdin.read().strip()
-if not text:
+# Las apps de serie salen de la plantilla del paquete. Sunshine sólo las pone
+# cuando apps.json no existe, y chezmoi puede crearlo antes de que Sunshine
+# esté instalado; por eso se añaden aquí las que falten, en cada aplicación:
+# «Desktop» siempre y «Steam Big Picture» sólo si Steam está instalado.
+def template_apps():
     try:
         with open("/usr/share/sunshine/apps.json", encoding="utf-8") as template:
-            text = template.read().strip()
-    except OSError:
-        pass
+            return json.load(template).get("apps", [])
+    except (OSError, ValueError):
+        return []
+
+text = sys.stdin.read().strip()
 config = json.loads(text) if text else {}
 config.setdefault("env", {}).setdefault("PATH", "$(PATH):$(HOME)/.local/bin")
 apps = [app for app in config.get("apps", []) if app.get("name") != "Low Res Desktop"]
+present = {app.get("name") for app in apps}
+missing = [app for app in template_apps()
+           if app.get("name") not in present | {"Low Res Desktop"}
+           and (app.get("name") != "Steam Big Picture" or shutil.which("steam"))]
+apps = missing + apps
 
 if VSCODE:
     apps = [app for app in apps if app.get("name") != VSCODE["name"]]
