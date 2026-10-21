@@ -5,6 +5,8 @@
 # desbloquea con la clave.
 Type=Application
 Name=Bloquear al iniciar la sesión
-Exec=sh -c 'exec "$HOME/.local/bin/lock-after-sunshine"'
+# Ruta absoluta: el generador de systemd para el autostart protege los "$", así
+# que un $HOME llegaba literal al shell y el bloqueo nunca se ejecutaba.
+Exec={{ .chezmoi.homeDir }}/.local/bin/lock-after-sunshine
 OnlyShowIn=KDE;
 NoDisplay=true
