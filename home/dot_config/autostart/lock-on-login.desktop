@@ -1,6 +1,6 @@
 [Desktop Entry]
-# Tycho inicia la sesión de jose sin contraseña para que Sunshine corra como
-# usuario desde el arranque (WoL). La pantalla se bloquea cuando
+# Los equipos remotos inician la sesión de jose sin contraseña para que
+# Sunshine corra como usuario desde el arranque (WoL). La pantalla se bloquea cuando
 # Sunshine ya está en marcha (lock-after-sunshine): quien conecte por Moonlight
 # desbloquea con la clave.
 Type=Application

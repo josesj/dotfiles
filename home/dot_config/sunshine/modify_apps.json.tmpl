@@ -7,8 +7,9 @@
 #   dure hasta que se desconecte el cliente) pero abriendo VS Code al empezar,
 #   desligado de Sunshine: cerrar Moonlight no cierra el editor, y si ya había
 #   una ventana abierta, `code` sólo le pasa el encargo y termina;
-# - en los equipos con sunshine_display (hosts.yaml), "Desktop" y "Steam Big
-#   Picture" ajustan esa salida al modo del cliente con sunshine-display.
+# - en los equipos con sunshine_display (hosts.yaml), "Desktop", "Steam Big
+#   Picture" y «VS Code» ajustan esa salida al modo del cliente con
+#   sunshine-display.
 {{- $vscode := true }}
 {{- $display := get (index .hosts .chezmoi.hostname) "sunshine_display" | default "" }}
 import json
@@ -20,7 +21,7 @@ VSCODE = {{ if $vscode }}{
     "detached": ["code --new-window"],
     "image-path": "/usr/share/pixmaps/vscode.png",
 }{{ else }}None{{ end }}
-ADJUSTED = ("Desktop", "Steam Big Picture")
+ADJUSTED = ("Desktop", "Steam Big Picture", "VS Code")
 
 # Sin apps.json (Sunshine recién instalado y aún sin arrancar), se parte de la
 # plantilla del paquete, con «Desktop» y «Steam Big Picture»: si no, Sunshine
@@ -36,6 +37,10 @@ config = json.loads(text) if text else {}
 config.setdefault("env", {}).setdefault("PATH", "$(PATH):$(HOME)/.local/bin")
 apps = [app for app in config.get("apps", []) if app.get("name") != "Low Res Desktop"]
 
+if VSCODE:
+    apps = [app for app in apps if app.get("name") != VSCODE["name"]]
+    apps.append(dict(VSCODE))
+
 for app in apps:
     if app.get("name") not in ADJUSTED:
         continue
@@ -50,10 +55,6 @@ for app in apps:
         app["prep-cmd"] = steps
     else:
         app.pop("prep-cmd", None)
-
-if VSCODE:
-    apps = [app for app in apps if app.get("name") != VSCODE["name"]]
-    apps.append(VSCODE)
 
 config["apps"] = apps
 json.dump(config, sys.stdout, indent=2, ensure_ascii=False)

@@ -1,9 +1,12 @@
-# Hardware de la flota que las plantillas necesitan: las claves de Sunshine de
-# Tycho, que se usa en remoto, y el decodificador de mpv y el codificador de OBS
-# de Deimos. Se lee mediante `index .hosts .chezmoi.hostname`. El sistema
-# operativo sale de .chezmoi.os; los equipos Mac no tienen claves.
+# Hardware y papel de cada equipo de la flota. Se lee mediante
+# `index .hosts .chezmoi.hostname`; el sistema operativo sale de .chezmoi.os.
+#
+# remote: el equipo Arch se usa en remoto con Sunshine: autologin con bloqueo,
+# energía sin apagar la pantalla ni suspender, y sin mpv, OBS ni LibreOffice.
+# Con false es una estación de trabajo y se usan mpv_hwdec y obs_encoder.
 hosts:
   tycho:
+    remote: true
     sunshine:
       # GeForce RTX 5080 (Blackwell): NVENC con H.264, HEVC y AV1.
       encoder: nvenc
@@ -13,6 +16,23 @@ hosts:
     # Evanlak8K V2 (4K a 60 Hz, 1440p a 144 Hz, 1080p a 144/120 Hz).
     sunshine_display: HDMI-A-1
   deimos:
+    remote: true
+    sunshine:
+      # Radeon RX 6600 (Navi 23), única GPU (el UHD 770 del i5 está
+      # desactivado), con Mesa/radeonsi: VA-API codifica H.264 y HEVC.
+      encoder: vaapi
+      adapter_name: /dev/dri/renderD128
+      # Monitor 0 de KMS: el LG 27UP850 (4K a 60 Hz) por DP-3, forzado con su
+      # EDID para que exista aunque esté apagado.
+      output_name: 0
+      # Navi 23 no codifica AV1: no se ofrece a Moonlight.
+      av1_mode: 1
+      # Tope de bitrate (kbps) por encima de lo que pida Moonlight: 4K a 60 Hz en
+      # HEVC va bien con 80 Mbps y el cliente elige el suyo por debajo.
+      max_bitrate: 80000
+    # sunshine-display ajusta el LG al modo del cliente durante la sesión.
+    sunshine_display: DP-3
+    # Sólo como estación de trabajo (remote: false).
     # Radeon RX 6600 (Navi 23) sobre Mesa/RADV: decodificación VA-API.
     mpv_hwdec: vaapi
     mpv_comment: "Deimos: Radeon RX 6600 (Navi 23), Mesa/RADV y Wayland."

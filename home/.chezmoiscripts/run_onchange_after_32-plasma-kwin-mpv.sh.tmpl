@@ -1,4 +1,4 @@
-{{- if and (eq .chezmoi.os "linux") (ne .chezmoi.hostname "tycho") -}}
+{{- if and (eq .chezmoi.os "linux") (not (get (index .hosts .chezmoi.hostname) "remote")) -}}
 #!/usr/bin/env bash
 # Regla de KWin que centra las ventanas de mpv. mpv.conf limita el tamaño al
 # 80 % del escritorio; fijar geometry allí anclaría la esquina superior

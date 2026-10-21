@@ -1,6 +1,7 @@
-{{- if eq .chezmoi.hostname "tycho" -}}
+{{- if get (index .hosts .chezmoi.hostname) "remote" -}}
 #!/usr/bin/env bash
-# Tycho se usa en remoto con Sunshine y se despierta por WoL. Si PowerDevil
+# Los equipos remotos (remote en hosts.yaml) se usan con Sunshine y se
+# despiertan por WoL. Si PowerDevil
 # apaga la salida de vídeo, Sunshine captura en negro; y si suspende por
 # inactividad, corta las sesiones SSH y los trabajos largos, que no cuentan como
 # actividad. Se suspende a mano.

@@ -5,7 +5,7 @@ Configuración de cuatro equipos gestionada con [chezmoi](https://chezmoi.io):
 | Equipo | Sistema | Papel |
 |---|---|---|
 | `tycho` | Arch Linux + Plasma | Remoto con Sunshine para desarrollar y jugar (Ryzen 7 9700X, RTX 5080) |
-| `deimos` | Arch Linux + Plasma | Estación de trabajo (i5-12600, RX 6600) |
+| `deimos` | Arch Linux + Plasma | Remoto con Sunshine para desarrollar, con su monitor (i5-12600, RX 6600) |
 | `phobos` | macOS | Portátil (MacBook Pro, M4 Pro, 24 GB) |
 | `janus` | macOS | Sobremesa (Mac Studio, M2 Max, 32 GB) |
 
@@ -22,7 +22,7 @@ aliases y comandos de mantenimiento.
 .chezmoiroot            -> "home": chezmoi sólo gestiona ese subárbol
 home/                   estado fuente de chezmoi ($HOME de los cuatro equipos)
   .chezmoi.toml.tmpl    configuración que genera `chezmoi init`
-  .chezmoidata/         hardware por equipo: Sunshine en Tycho, mpv y OBS en Deimos
+  .chezmoidata/         papel (remote) y hardware de cada equipo: claves de Sunshine
   .chezmoiignore        reparto de destinos por sistema operativo y por equipo
   .chezmoiexternal.toml.tmpl  Oh My Zsh, plugins de Zsh y de Vim (tabla destino-URL)
   .chezmoiscripts/      aprovisionamiento (Homebrew, Plasma, Kate, VS Code...)
@@ -55,8 +55,8 @@ explícita si no es uno de los cuatro conocidos. El primer `apply`:
 3. Escribe los archivos de configuración del equipo.
 4. En macOS instala Homebrew y el `Brewfile`, registra los JDK y aplica las
    preferencias del sistema; en Arch configura Plasma, Konsole, Kate, KWin,
-   Baloo y el atajo de Kitty; en Deimos, los lanzadores KF6/X11 de
-   LibreOffice, y en Tycho, la energía para el uso remoto.
+   Baloo y el atajo de Kitty; en los equipos remotos, la energía para el uso
+   remoto, y en una estación de trabajo, los lanzadores KF6/X11 de LibreOffice.
 
 Uso diario:
 
@@ -83,24 +83,27 @@ En Arch, el indexador de Baloo usa la plataforma Qt `offscreen` (drop-in de
 `kde-baloo.service`): arranca antes de que la sesión publique `WAYLAND_DISPLAY`
 y, sin pantalla, `baloo_file_extractor` abortaba en cada lote.
 
-Por equipo: Tycho añade Sunshine con NVENC, el inicio automático con bloqueo y
-la energía para el uso remoto. Deimos añade mpv con VA-API, OBS con VA-API,
-LibreOffice, la regla que evita la suspensión del nodo HDMI de AMD y
-`HSA_OVERRIDE_GFX_VERSION`, con la que ROCm trata la RX 6600 (gfx1032) como
-gfx1030.
+Por papel: los equipos con `remote: true` en `.chezmoidata/hosts.yaml` (hoy
+Tycho y Deimos) llevan Sunshine, el inicio automático con bloqueo y la energía
+para el uso remoto, y no instalan mpv, OBS ni LibreOffice; con `remote: false`
+un equipo Arch vuelve a ser estación de trabajo, con mpv y OBS según
+`mpv_hwdec` y `obs_encoder`. Por equipo: Sunshine codifica con NVENC en Tycho y
+con VA-API en Deimos, que añade además la regla que evita la suspensión del
+nodo HDMI de AMD y `HSA_OVERRIDE_GFX_VERSION`, con la que ROCm trata la RX 6600
+(gfx1032) como gfx1030.
 
 ## Acceso remoto en Arch
 
-Tycho se usa desde otros equipos con Moonlight o por SSH, para desarrollar y
-para jugar. No tiene nadie delante: un dongle HDMI Evanlak8K V2 hace de
-pantalla. Deimos es una estación de trabajo con su monitor y sus periféricos,
-pero también se enciende y se usa a distancia.
+Tycho y Deimos se usan desde otros equipos con Moonlight o por SSH. Tycho, para
+desarrollar y jugar, no tiene nadie delante: un dongle HDMI Evanlak8K V2 hace
+de pantalla. Deimos, para desarrollar, conserva su monitor LG 27UP850 y sus
+periféricos, y Sunshine lo ajusta al modo del cliente durante la sesión.
 
 - **WoL.** `system/NetworkManager/conf.d/wake-on-lan.conf` deja la Ethernet de
   los dos equipos esperando el paquete mágico al suspender o apagar. En la UEFI
   hay que activar «Power On By PCI-E» y desactivar ErP. Se comprueba con
   `ethtool <interfaz> | grep Wake-on`, que debe decir `g`.
-- **Sesión (Tycho).** `hosts/tycho/system/plasmalogin.conf.d/autologin.conf`
+- **Sesión.** `hosts/<equipo>/system/plasmalogin.conf.d/autologin.conf`
   abre la sesión Wayland de `jose` sin contraseña y el autostart
   `lock-on-login.desktop` la bloquea con `lock-after-sunshine` en cuanto
   Sunshine escucha (o a los 90 s si no arranca). Sunshine corre así como
@@ -108,32 +111,38 @@ pero también se enciende y se usa a distancia.
   se desbloquea con la contraseña desde Moonlight, o por SSH con
   `desktop-unlock`. KWallet no se abre con el inicio automático y pide su
   contraseña la primera vez que se usa.
-- **Sunshine (Tycho).** `sunshine-bin` (AUR) trae el servicio de usuario, que
+- **Sunshine.** `sunshine-bin` (AUR) trae el servicio de usuario, que
   chezmoi activa con un enlace en `graphical-session.target.wants`; el paquete
   concede a `/usr/bin/sunshine` `cap_sys_admin` (y `cap_sys_nice`) al instalarse
   y en cada actualización, que la captura KMS necesita. Un script
   `modify_` fija en `~/.config/sunshine/sunshine.conf` la captura KMS (la única
   que también ve la pantalla de bloqueo) y las claves de la GPU en
   `.chezmoidata/hosts.yaml`; el resto es de la interfaz web,
-  `https://tycho:47990`. Otro `modify_` de `apps.json` retira la app de serie
-  basada en `xrandr`, que no funciona en Wayland, hace que «Desktop» y «Steam
-  Big Picture» ajusten el dongle al modo del cliente con `sunshine-display` y
-  añade «VS Code», que abre el editor sin ligarlo a la sesión de Moonlight.
-- **Energía (Tycho).** Plasma no atenúa ni apaga la pantalla (Sunshine
+  `https://<equipo>:47990`. Otro `modify_` de `apps.json` retira la app de
+  serie basada en `xrandr`, que no funciona en Wayland, añade «VS Code», que
+  abre el editor sin ligarlo a la sesión de Moonlight, y hace que «Desktop»,
+  «Steam Big Picture» y «VS Code» ajusten la salida de `sunshine_display` (el
+  dongle en Tycho, el LG en Deimos) al modo del cliente con `sunshine-display`.
+  Si la salida no tiene ese modo (el LG sólo ofrece los 16:9 de su EDID),
+  Sunshine reescala. En Deimos, firewalld abre los puertos de Sunshine en la
+  zona `private`.
+- **Energía.** Plasma no atenúa ni apaga la pantalla (Sunshine
   capturaría en negro) ni suspende por inactividad, porque SSH y los trabajos
   largos no cuentan como actividad. En su lugar, `autoshutdown.timer` apaga
   Tycho tras 30 min sin SSH, sin emitir con Sunshine (sin sesiones NVENC), con
   la GPU por debajo del 15 % y sin inhibidores que bloqueen el apagado (como el
-  de borgmatic); se enciende de nuevo por WoL. Deimos conserva la energía de
-  serie de Plasma.
+  de borgmatic); se enciende de nuevo por WoL. Deimos no se apaga solo: tiene
+  Docker y copias de borgmatic cada seis horas.
 - **Docker.** Los Mac tienen un contexto `deimos` que habla con su Docker por
   SSH (`run_onchange_after_55-docker-contexts.sh`). No pasa a ser el activo: se
   usa con `docker --context deimos …` o `docker context use deimos`.
 
-`prune-packages.sh` hace el paso de Tycho una sola vez: instala Sunshine y
-retira lo que enumera `hosts/tycho/packages/retired.txt` (foto, vídeo,
-reproductores, ofimática, periféricos locales y accesorios de Plasma). Conserva
-Steam, GameMode, MangoHud, LACT y las herramientas de desarrollo. Marca los
+`prune-packages.sh` hace el paso a remoto una sola vez por equipo: instala
+Sunshine y retira lo que enumera `hosts/<equipo>/packages/retired.txt`. En
+Tycho, foto, vídeo, reproductores, ofimática, periféricos locales y accesorios
+de Plasma, y conserva Steam, GameMode, MangoHud, LACT y el desarrollo. En
+Deimos, además LaTeX, las aplicaciones de trabajo y de astronomía, LACT y el
+escáner, y conserva el desarrollo, la IA, la electrónica/IoT y los periféricos. Marca los
 paquetes como dependencias y deja que pacman quite los huérfanos, de modo que
 nada que siga haciendo falta se desinstala.
 
@@ -188,11 +197,11 @@ de dispositivo: un auricular Bluetooth fija su frecuencia al negociar el códec
 y es su propio nodo quien convierte. `pw-lowlatency` fuerza temporalmente otro quantum y `pw-normal`
 restaura los valores configurados.
 
-En Deimos, mpv limita la ventana al 80 % del escritorio, prioriza audio y subtítulos en
+En una estación de trabajo, mpv limita la ventana al 80 % del escritorio, prioriza audio y subtítulos en
 español, inglés e italiano y usa yt-dlp con los perfiles `stream-2k` y
 `stream-4k`. Una regla de KWin centra sus ventanas.
 
-OBS, también en Deimos, parte de un lienzo 4K y sale a 1440p60. Graba en HEVC con calidad constante
+OBS, también sólo en una estación de trabajo, parte de un lienzo 4K y sale a 1440p60. Graba en HEVC con calidad constante
 (CQP 20) en `~/Videos/OBS`, con tres pistas de audio: mezcla, micro y
 escritorio. Emite en H.264 CBR a 6000 kbps, reescalado a 1080p. OBS reescribe
 su perfil al salir, así que chezmoi usa scripts `modify_` que sólo fijan esas

@@ -1,8 +1,8 @@
-{{- if and (eq .chezmoi.os "linux") (ne .chezmoi.hostname "tycho") -}}
+{{- if and (eq .chezmoi.os "linux") (not (get (index .hosts .chezmoi.hostname) "remote")) -}}
 #!/usr/bin/env bash
-# Deimos es una estación de trabajo: PowerDevil recupera sus valores de serie
-# (atenuar y apagar la pantalla por inactividad y suspender), que el uso remoto
-# con Sunshine había desactivado; Tycho, en remoto, los fija en
+# Estación de trabajo (remote: false en hosts.yaml): PowerDevil recupera sus
+# valores de serie (atenuar y apagar la pantalla por inactividad y suspender),
+# que el uso remoto con Sunshine desactiva; los remotos los fijan en
 # 38-plasma-remote. Se borran las claves en lugar de fijar
 # valores, para seguir los que traiga Plasma.
 set -euo pipefail

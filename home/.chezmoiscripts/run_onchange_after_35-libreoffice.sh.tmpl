@@ -1,4 +1,4 @@
-{{- if and (eq .chezmoi.os "linux") (ne .chezmoi.hostname "tycho") -}}
+{{- if and (eq .chezmoi.os "linux") (not (get (index .hosts .chezmoi.hostname) "remote")) -}}
 #!/usr/bin/env bash
 # Linux (Tycho y Deimos): los lanzadores de LibreOffice usan el backend KF6 sobre XWayland
 # para mantener proporciones coherentes con el escalado fraccional de Plasma.

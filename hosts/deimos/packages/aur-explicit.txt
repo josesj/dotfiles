@@ -1,10 +1,8 @@
+antigravity-cli
 claude-code
-claude-desktop
-ds9
-google-chrome
 jbang
-jxplorer
 modbustools-git
-siril-git
+sunshine-bin
 visual-studio-code-bin
+wacomtablet
 yay
