@@ -20,6 +20,14 @@
 	colorMoved = default
 [merge]
 	conflictStyle = zdiff3
+{{- if eq .chezmoi.os "linux" }}
+	# git mergetool abre los conflictos en kdiff3 (fusión a tres bandas).
+	tool = kdiff3
+[mergetool]
+	# Sin copias *.orig de cada fichero en conflicto ni pregunta previa.
+	keepBackup = false
+	prompt = false
+{{- end }}
 [rerere]
 	enabled = true
 [filter "lfs"]
