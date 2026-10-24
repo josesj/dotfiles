@@ -34,6 +34,7 @@ breeze
 breeze-gtk
 breeze-plymouth
 btop
+btrfs-assistant
 btrfs-progs
 calcmysky
 ccache
@@ -44,6 +45,7 @@ cmake
 coin-or-mp
 cpupower
 cuda
+cups
 darktable
 dcraw
 digikam
@@ -60,6 +62,7 @@ dosfstools
 drkonqi
 duf
 dust
+easyeffects
 efibootmgr
 entr
 ethtool
@@ -121,6 +124,7 @@ i2c-tools
 imagemagick
 inetutils
 inkscape
+ipp-usb
 isoimagewriter
 java-rhino
 jdk-openjdk
@@ -136,18 +140,25 @@ kactivitymanagerd
 kamera
 kamoso
 kate
+kcachegrind
 kcalc
+kcharselect
 kcolorchooser
 kde-cli-tools
 kde-gtk-config
+kde-inotify-survey
 kdeconnect
 kdecoration
 kdegraphics-mobipocket
 kdegraphics-thumbnailers
 kdenetwork-filesharing
 kdenlive
+kdeplasma-addons
+kdesdk-thumbnailers
 kdialog
+kdiff3
 keditbookmarks
+kfind
 kglobalacceld
 kinfocenter
 kio-admin
@@ -180,6 +191,7 @@ kwalletmanager
 kwayland
 kwin
 kwrited
+labplot
 lact
 ladspa
 layer-shell-qt
@@ -216,6 +228,7 @@ linux-lts
 linux-lts-headers
 lostfiles
 lshw
+lsp-plugins
 lvm2
 man-db
 man-pages
@@ -292,6 +305,7 @@ plasma-login-manager
 plasma-nm
 plasma-pa
 plasma-systemmonitor
+plasma-vault
 plasma-workspace
 plocate
 plymouth
@@ -363,6 +377,7 @@ steam
 strace
 stress-ng
 sudo
+svgpart
 sweeper
 swig
 system-config-printer
