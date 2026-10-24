@@ -237,8 +237,14 @@ if [[ -d "$host_dir/obsolete-system" ]]; then
     [[ -f "$target" ]] || continue
     if diff -q -B --strip-trailing-cr -- "$source" "$target" >/dev/null; then
       if $dry_run; then
+        [[ $relative == systemd/system/*.timer ]] &&
+          printf 'Desactivaría %s.\n' "${relative##*/}"
         printf 'Retiraría configuración obsoleta: %s\n' "$target"
       else
+        # Un temporizador retirado se desactiva antes: si no, su enlace en
+        # timers.target.wants quedaría apuntando a una unidad que ya no existe.
+        [[ $relative == systemd/system/*.timer ]] &&
+          systemctl disable --now "${relative##*/}"
         backup_target "$target"
         printf 'Configuración obsoleta retirada: %s\n' "$target"
         is_initramfs_input "$relative" && initramfs_changed=true
@@ -248,6 +254,25 @@ if [[ -d "$host_dir/obsolete-system" ]]; then
       printf 'Conservado archivo obsoleto modificado localmente: %s\n' "$target"
     fi
   done < <(find "$host_dir/obsolete-system" -type f -print0 | sort -z)
+fi
+
+# Lo mismo para los programas retirados de /usr/local/libexec.
+if [[ -d "$host_dir/obsolete-libexec" ]]; then
+  while IFS= read -r -d '' source; do
+    relative=${source#"$host_dir/obsolete-libexec/"}
+    target="/usr/local/libexec/$relative"
+    [[ -f "$target" ]] || continue
+    if cmp -s -- "$source" "$target"; then
+      if $dry_run; then
+        printf 'Retiraría programa obsoleto: %s\n' "$target"
+      else
+        backup_target "$target"
+        printf 'Programa obsoleto retirado: %s\n' "$target"
+      fi
+    else
+      printf 'Conservado programa obsoleto modificado localmente: %s\n' "$target"
+    fi
+  done < <(find "$host_dir/obsolete-libexec" -type f -print0 | sort -z)
 fi
 
 while IFS= read -r -d '' source; do

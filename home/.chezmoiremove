@@ -39,8 +39,9 @@
 .config/systemd/user/graphical-session.target.wants/app-dev.lizardbyte.app.Sunshine.service
 {{- end }}
 
-{{- if eq .chezmoi.hostname "tycho" }}
-# Tycho no tiene periféricos locales: el mando y el audio llegan por Moonlight.
+{{- if and (eq .chezmoi.hostname "tycho") (get (index .hosts .chezmoi.hostname) "remote") }}
+# Tycho en remoto no tiene periféricos locales: el mando y el audio llegan por
+# Moonlight.
 .config/wireplumber/wireplumber.conf.d/51-fiio-k3.conf
 .config/wireplumber/wireplumber.conf.d/52-edifier-r1280db.conf
 .config/systemd/user/steam-big-picture-on-xbox.service

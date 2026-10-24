@@ -6,7 +6,7 @@
 # Con false es una estación de trabajo y se usan mpv_hwdec y obs_encoder.
 hosts:
   tycho:
-    remote: true
+    remote: false
     sunshine:
       # GeForce RTX 5080 (Blackwell): NVENC con H.264, HEVC y AV1.
       encoder: nvenc
@@ -30,8 +30,14 @@ hosts:
     # Salida que Sunshine ajusta al modo del cliente (apps.json): el dongle HDMI
     # Evanlak8K V2 (4K a 60 Hz, 1440p a 144 Hz, 1080p a 144/120 Hz).
     sunshine_display: HDMI-A-1
+    # Sólo como estación de trabajo (remote: false).
+    # GeForce RTX 5080 (Blackwell): decodificación NVDEC para mpv.
+    mpv_hwdec: nvdec
+    mpv_comment: "Tycho: GeForce RTX 5080 (Blackwell), NVIDIA y Wayland."
+    # OBS: NVENC (H.264 para emitir, HEVC para grabar).
+    obs_encoder: nvenc
   deimos:
-    remote: true
+    remote: false
     sunshine:
       # Radeon RX 6600 (Navi 23), única GPU (el UHD 770 del i5 está
       # desactivado), con Mesa/radeonsi: VA-API codifica H.264 y HEVC.

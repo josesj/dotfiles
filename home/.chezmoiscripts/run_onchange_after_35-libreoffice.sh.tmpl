@@ -1,5 +1,7 @@
 {{- if and (eq .chezmoi.os "linux") (not (get (index .hosts .chezmoi.hostname) "remote")) -}}
 #!/usr/bin/env bash
+# Se repite al volver de remoto a estación de trabajo (24-10-2026): el modo
+# remoto deshizo lo que este script configura.
 # Linux (Tycho y Deimos): los lanzadores de LibreOffice usan el backend KF6 sobre XWayland
 # para mantener proporciones coherentes con el escalado fraccional de Plasma.
 # El uso remoto retiró LibreOffice; al volver al escritorio se regeneran.
