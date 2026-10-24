@@ -1,6 +1,7 @@
 1password
 claude-code
 claude-desktop
+ds9
 jdtls
 visual-studio-code-bin
 yay
