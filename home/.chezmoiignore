@@ -54,7 +54,7 @@
 .local/bin/libreoffice-kf6-x11
 {{- else }}
 # --- Sólo los equipos remotos: Sunshine y el bloqueo al iniciar la sesión ---
-.config/autostart
+.config/autostart/lock-on-login.desktop
 .config/sunshine
 .config/systemd/user/graphical-session.target.wants
 .local/bin/lock-after-sunshine

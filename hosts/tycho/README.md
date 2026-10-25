@@ -6,7 +6,8 @@ Hardware auditado:
 - NVIDIA GeForce RTX 5080 (Blackwell) en `pci-0000_01_00.0`, con el módulo
   abierto de NVIDIA.
 - Audio HDMI NVIDIA en `pci-0000_01_00.1`, audio integrado Ryzen/Realtek en
-  `pci-0000_0d_00.6`, DAC USB FiiO K3 y webcam USB Logitech C920.
+  `pci-0000_0d_00.6`, DAC USB FiiO K3 y webcam USB Logitech C920 PRO (micrófono
+  estéreo a 48 kHz nativos).
 - Ethernet Realtek RTL8125 2.5GbE en `pci-0000_08_00.0`, gestionada por `r8169`.
 - Dos SSD Samsung 980 PRO NVMe, ambos con scheduler `none`.
 
@@ -19,11 +20,14 @@ suspensión por WoL por su RTL8125 (`enp8s0`).
 
 mpv usa `gpu-next` con Vulkan/Wayland y decodificación NVDEC. Esta combinación se
 validó reproduciendo H.264 mediante la RTX 5080. WirePlumber mantiene el FiiO K3
-en `S32LE`, con periodo 256 y sin suspensión.
+en `S32LE`, con periodo 256 y sin suspensión, y la salida analógica de la placa
+(los Edifier) con el mismo periodo y sin suspensión.
 PipeWire sigue la frecuencia del contenido (hasta 96 kHz, que el K3 admite) con
-quantum 256. El K3 es la salida predeterminada; la C920 es la entrada predeterminada. Las salidas
-analógica Ryzen y HDMI NVIDIA permanecen disponibles y no presentan el problema
-de duplicados de Deimos.
+quantum 256. El K3 es la salida predeterminada y, sin él, los Edifier; la C920
+PRO es la entrada predeterminada y graba a 48 kHz sin remuestrear. La salida
+HDMI NVIDIA permanece disponible y no presenta el problema de duplicados de
+Deimos. EasyEffects arranca con la sesión en modo servicio
+(`autostart/easyeffects-service.desktop`) para los efectos del micro.
 
 Los ficheros vacíos de `system/systemd/system/` enmascaran las mediciones de
 TPM de systemd (`systemd-pcrproduct`, `systemd-pcrlogin@` y

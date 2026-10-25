@@ -1,0 +1,11 @@
+[Desktop Entry]
+# EasyEffects en modo servicio desde el inicio de la sesión, sin ventana: sus
+# efectos (RNNoise en el micro) sólo se aplican mientras está en marcha.
+# TryExec lo omite en los equipos donde no está instalado.
+Type=Application
+Name=EasyEffects
+TryExec=easyeffects
+Exec=easyeffects --service-mode --hide-window
+OnlyShowIn=KDE;
+NoDisplay=true
+X-KDE-autostart-phase=2
