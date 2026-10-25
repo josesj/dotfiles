@@ -1,6 +1,0 @@
-{
-  "device": "alsa_input.usb-Sonix_Technology_Co.__Ltd._HD_Pro_Webcam_C920_SN0001-03.analog-stereo",
-  "device-description": "C920 PRO HD Webcam Analog Stereo",
-  "device-profile": "analog-input-mic",
-  "preset-name": "Micro"
-}

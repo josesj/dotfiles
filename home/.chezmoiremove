@@ -22,6 +22,11 @@
 .local/share/plasma/look-and-feel/local.catppuccin-latte-blue
 .local/share/plasma/look-and-feel/local.catppuccin-mocha-blue
 
+# EasyEffects se retiró: añadía latencia a todo el audio, también a la salida.
+.config/autostart/easyeffects-service.desktop
+.local/share/easyeffects/input/Micro.json
+.local/share/easyeffects/autoload/input/alsa_input.usb-Sonix_Technology_Co.__Ltd._HD_Pro_Webcam_C920_SN0001-03.analog-stereo:analog-input-mic.json
+
 {{- if get (index .hosts .chezmoi.hostname) "remote" }}
 # Equipo remoto (remote en hosts.yaml), con Sunshine: sin mpv ni LibreOffice.
 # La configuración de OBS se deja porque guarda escenas y perfiles propios.

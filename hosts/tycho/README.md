@@ -26,12 +26,7 @@ PipeWire sigue la frecuencia del contenido (hasta 96 kHz, que el K3 admite) con
 quantum 256. El K3 es la salida predeterminada y, sin él, los Edifier; la C920
 PRO es la entrada predeterminada y graba a 48 kHz sin remuestrear. La salida
 HDMI NVIDIA permanece disponible y no presenta el problema de duplicados de
-Deimos. EasyEffects arranca con la sesión en modo servicio
-(`autostart/easyeffects-service.desktop`) y carga solo, al aparecer la C920
-PRO, el preset de entrada «Micro» (`~/.local/share/easyeffects`): RNNoise con
-detección de voz, un compresor suave (3:1 desde −20 dB, +4 dB) y un limitador
-a −1 dB. Las aplicaciones graban de «Easy Effects Source», que pasa a ser la
-entrada predeterminada mientras EasyEffects está en marcha.
+Deimos.
 
 Los ficheros vacíos de `system/systemd/system/` enmascaran las mediciones de
 TPM de systemd (`systemd-pcrproduct`, `systemd-pcrlogin@` y
