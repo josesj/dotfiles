@@ -62,7 +62,6 @@ dosfstools
 drkonqi
 duf
 dust
-easyeffects
 efibootmgr
 entr
 ethtool
@@ -104,6 +103,7 @@ gst-plugins-ugly
 gtk3
 gtk4
 gvfs
+gvfs-mtp
 gwenview
 handbrake
 harvid
@@ -228,7 +228,6 @@ linux-lts
 linux-lts-headers
 lostfiles
 lshw
-lsp-plugins
 lvm2
 man-db
 man-pages
