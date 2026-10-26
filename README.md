@@ -256,7 +256,8 @@ aplicar, así que ya no hace falta un paso aparte.
 `install-system.sh` despliega mediante copias los archivos comunes de Pacman,
 paccache, journald, timesyncd, systemd-oomd, zram, sysctl, SSH, el WoL de
 NetworkManager y las reglas udev
-de schedulers y del receptor Logitech, más los específicos bajo
+de schedulers, del receptor Logitech y de la C920 (sin bajar de 30 fps con poca
+luz, para que el vídeo no se retrase respecto al audio, y antiparpadeo a 50 Hz), más los específicos bajo
 `hosts/<equipo>/system/`, conservando su ruta relativa dentro de `/etc`. Después valida y recarga únicamente los
 subsistemas afectados. Necesita privilegios administrativos y guarda los
 originales en `/var/lib/dotfiles-backup/`:

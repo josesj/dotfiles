@@ -1,0 +1,10 @@
+# Logitech C920 (046d:082d) and C920 PRO (046d:08e5): fixed frame rate and the
+# 50 Hz anti-flicker filter, applied every time the camera is connected.
+#
+# exposure_dynamic_framerate lets the camera lengthen the exposure in low light
+# and drop below 30 fps, which delays the video by a variable amount that no
+# fixed audio offset can compensate. The power line filter defaults to 60 Hz;
+# Europe's mains is 50 Hz, so artificial light flickers with the default.
+# power_line_frequency is a menu: 0 = disabled, 1 = 50 Hz, 2 = 60 Hz.
+# Only the capture node: the C920 also exposes a metadata node.
+ACTION=="add", SUBSYSTEM=="video4linux", ENV{ID_V4L_CAPABILITIES}=="*:capture:*", ATTRS{idVendor}=="046d", ATTRS{idProduct}=="082d|08e5", RUN+="/usr/bin/v4l2-ctl -d $devnode -c exposure_dynamic_framerate=0 -c power_line_frequency=1"

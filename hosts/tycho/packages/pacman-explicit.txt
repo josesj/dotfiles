@@ -422,6 +422,7 @@ union
 unrar
 unzip
 uv
+v4l-utils
 v4l2loopback-utils
 valgrind
 vdpauinfo

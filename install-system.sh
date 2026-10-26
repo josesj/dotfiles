@@ -45,6 +45,7 @@ resolved_changed=false
 networkmanager_changed=false
 dispatcher_changed=false
 firewalld_changed=false
+webcam_changed=false
 host_timers=()
 
 backup_target() {
@@ -148,6 +149,10 @@ deploy_file "$repo_dir/system/udev/rules.d/60-ioschedulers.rules" \
   "/etc/udev/rules.d/60-ioschedulers.rules"
 deploy_file "$repo_dir/system/udev/rules.d/90-logitech.rules" \
   "/etc/udev/rules.d/90-logitech.rules"
+cmp -s -- "$repo_dir/system/udev/rules.d/70-logitech-c920.rules" \
+  /etc/udev/rules.d/70-logitech-c920.rules || webcam_changed=true
+deploy_file "$repo_dir/system/udev/rules.d/70-logitech-c920.rules" \
+  "/etc/udev/rules.d/70-logitech-c920.rules"
 deploy_file "$repo_dir/system/ssh/sshd_config.d/99-workstation-hardening.conf" \
   "/etc/ssh/sshd_config.d/99-workstation-hardening.conf"
 validate_host_file "$repo_dir/system/sysctl.d/99-local.conf" sysctl.d/99-local.conf
@@ -354,6 +359,11 @@ if ! $dry_run; then
   systemctl reload sshd.service
   udevadm control --reload
   udevadm trigger --subsystem-match=block --action=change
+  # La regla de la C920 sólo actúa al conectarla: se reproduce ese evento para
+  # aplicarla a la que ya esté conectada.
+  if $webcam_changed; then
+    udevadm trigger --subsystem-match=video4linux --action=add
+  fi
   printf 'Configuración del sistema aplicada y servicios recargados.\n'
 else
   if $sysctl_changed; then
