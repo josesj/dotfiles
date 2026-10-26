@@ -28,6 +28,7 @@
 .Xresources
 .config/autostart
 .config/chrome-flags.conf
+.config/chromium-flags.conf
 .config/code-flags.conf
 .config/environment.d
 .config/fontconfig

@@ -176,8 +176,11 @@ de renderizado para las aplicaciones X11 y XWayland que leen la base de recursos
 mediante `xrdb`. En macOS, Ghostty usa JetBrains Mono Nerd Font Medium a 15 pt y sigue
 la apariencia del sistema.
 
-Firefox y Chrome mantienen su interfaz oscura, pero informan a las páginas web
-de una preferencia de color clara (`prefers-color-scheme: light`).
+Firefox mantiene su interfaz oscura, pero informa a las páginas web de una
+preferencia de color clara (`prefers-color-scheme: light`). Chrome y Chromium, con
+las mismas banderas (`chromium-flags.conf` enlaza a `chrome-flags.conf`), siguen
+el modo claro u oscuro del sistema en su interfaz y también dan a las páginas la
+preferencia clara.
 
 ## Zsh, Vim y sus complementos
 
