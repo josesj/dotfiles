@@ -8,5 +8,4 @@ jxplorer
 modbustools-git
 siril-git
 visual-studio-code-bin
-wacomtablet
 yay
