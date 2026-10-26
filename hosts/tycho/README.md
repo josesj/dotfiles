@@ -24,7 +24,12 @@ en `S32LE`, con periodo 256 y sin suspensión, y la salida analógica de la plac
 (los Edifier) con el mismo periodo y sin suspensión.
 PipeWire sigue la frecuencia del contenido (hasta 96 kHz, que el K3 admite) con
 quantum 256. El K3 es la salida predeterminada y, sin él, los Edifier; la C920
-PRO es la entrada predeterminada y graba a 48 kHz sin remuestrear. La salida
+PRO es la entrada predeterminada (`53-c920-default-source.conf` le da la
+prioridad más alta) y graba a 48 kHz sin remuestrear. Al grabar por la C920,
+los auriculares Bluetooth no pasan a manos libres en las llamadas. Los Nothing
+Ear usan AAC, su mejor códec, con el codificador en bitrate variable de máxima
+calidad (`54-bluetooth-aac.conf`); si se activa LDAC en la app Nothing X,
+PipeWire lo prefiere. La salida
 HDMI NVIDIA permanece disponible y no presenta el problema de duplicados de
 Deimos.
 
