@@ -1,3 +1,4 @@
+artcraft-launcher
 claude-code
 claude-desktop
 ds9
@@ -7,4 +8,5 @@ jxplorer
 modbustools-git
 siril-git
 visual-studio-code-bin
+wacomtablet
 yay

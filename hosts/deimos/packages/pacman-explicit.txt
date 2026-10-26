@@ -217,6 +217,7 @@ lazydocker
 lazygit
 lib32-mesa
 lib32-vulkan-radeon
+libc++
 libdvdcss
 libftdi
 libindi
@@ -272,6 +273,7 @@ mypy
 mythes-en
 mythes-es
 mythes-it
+namcap
 nano
 net-tools
 networkmanager
@@ -460,7 +462,6 @@ vlc-plugins-video-output
 vscode-json-languageserver
 vulkan-radeon
 vulkan-tools
-wacomtablet
 wayland-utils
 wget
 wireless_tools
