@@ -24,7 +24,7 @@ home/                   estado fuente de chezmoi ($HOME de los cuatro equipos)
   .chezmoi.toml.tmpl    configuración que genera `chezmoi init`
   .chezmoidata/         papel (remote) y hardware de cada equipo: claves de Sunshine
   .chezmoiignore        reparto de destinos por sistema operativo y por equipo
-  .chezmoiexternal.toml.tmpl  Oh My Zsh, plugins de Zsh y de Vim (tabla destino-URL)
+  .chezmoiexternal.toml.tmpl  Oh My Zsh, plugins de Zsh y de Vim y temas Catppuccin de btop
   .chezmoiscripts/      aprovisionamiento (Homebrew, Plasma, Kate, VS Code...)
   .chezmoiremove        restos de configuraciones retiradas que hay que borrar
   .chezmoitemplates/    fragmentos reutilizados (el user.js de Firefox)

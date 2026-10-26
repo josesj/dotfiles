@@ -38,3 +38,13 @@
     [{{ $target | quote }}.pull]
         args = ["--ff-only"]
 {{- end }}
+
+{{- /* Temas Catppuccin de btop (sólo Arch): se eligen en btop, en Options →
+       Color theme, como catppuccin_latte o catppuccin_mocha. */}}
+{{- range $flavour := list "latte" "mocha" }}
+
+[{{ printf ".config/btop/themes/catppuccin_%s.theme" $flavour | quote }}]
+    type = "file"
+    url = {{ printf "https://raw.githubusercontent.com/catppuccin/btop/main/themes/catppuccin_%s.theme" $flavour | quote }}
+    refreshPeriod = "168h"
+{{- end }}
