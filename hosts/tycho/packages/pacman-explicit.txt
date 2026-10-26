@@ -6,6 +6,7 @@ android-tools
 android-udev
 appmenu-gtk-module
 arch-audit
+ardour
 aria2
 ark
 atomicparsley
@@ -37,6 +38,7 @@ btop
 btrfs-assistant
 btrfs-progs
 calcmysky
+calf
 ccache
 ccid
 chezmoi
@@ -89,6 +91,7 @@ git-delta
 git-lfs
 github-cli
 gitui
+gmic
 gnuplot
 gocryptfs
 godot
@@ -110,6 +113,7 @@ harvid
 heaptrack
 hexyl
 htop
+httpie
 hugin
 hunspell-en_us
 hunspell-es_es
@@ -228,6 +232,7 @@ linux-lts
 linux-lts-headers
 lostfiles
 lshw
+lsp-plugins
 lvm2
 man-db
 man-pages
@@ -236,9 +241,11 @@ mangohud
 markdownpart
 maven
 mediainfo
+mediainfo-gui
 mesa-utils
 meson
 milou
+mkvtoolnix-gui
 mold
 movit
 mpv-mpris
@@ -279,6 +286,8 @@ opencamlib
 opencl-nvidia
 openscad
 optipng
+opus-tools
+oxipng
 oxygen
 oxygen-sounds
 pacman-contrib
@@ -371,6 +380,7 @@ sox
 spectacle
 speech-dispatcher
 spotify-launcher
+sqlitebrowser
 sshfs
 steam
 strace
@@ -431,6 +441,7 @@ wayland-utils
 wget
 wireless_tools
 wireplumber
+wireshark-qt
 wl-clipboard
 wpa_supplicant
 xdg-desktop-portal-kde

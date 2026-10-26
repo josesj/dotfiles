@@ -2,9 +2,11 @@
 ai.storyteller.lightcraft
 ai.storyteller.photocraft
 artcraft-launcher
+bruno-bin
 claude-code
 claude-desktop
 ds9
+hotspot
 jdtls
 visual-studio-code-bin
 yay

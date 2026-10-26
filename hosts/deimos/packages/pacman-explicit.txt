@@ -25,6 +25,7 @@ bat
 bcachefs-tools
 bigsh0t
 biome
+blender
 bluedevil
 bluez
 bluez-utils
@@ -38,6 +39,7 @@ breezy
 btop
 btrfs-progs
 calcmysky
+calf
 cargo-audit
 cargo-nextest
 ccache
@@ -104,6 +106,7 @@ github-cli
 gitui
 gjs
 glab
+gmic
 go
 gopls
 gperf
@@ -121,10 +124,12 @@ gst-plugins-ugly
 gwenview
 handbrake
 harvid
+heaptrack
 helm
 hexyl
 hiprt
 htop
+httpie
 hunspell-en_us
 hunspell-es_es
 hunspell-it
@@ -196,6 +201,7 @@ kpipewire
 krdc
 krdp
 krecorder
+krita
 kscreen
 kscreenlocker
 ksshaskpass
@@ -247,6 +253,7 @@ lldb-mi
 llvm
 lostfiles
 lshw
+lsp-plugins
 lvm2
 man-db
 man-pages
@@ -255,11 +262,13 @@ marksman
 mattermost-desktop
 maven
 mediainfo
+mediainfo-gui
 mercurial
 mermaid-cli
 mesa-utils
 meson
 milou
+mkvtoolnix-gui
 mlt
 mosquitto
 movit
@@ -305,6 +314,8 @@ opensc
 openscad
 opentofu
 optipng
+opus-tools
+oxipng
 oxygen
 oxygen-sounds
 pacman-contrib
@@ -401,10 +412,12 @@ snapper
 socat
 sof-firmware
 solaar
+sox
 spectacle
 speech-dispatcher
 spotify-launcher
 sqlfluff
+sqlitebrowser
 sshfs
 stellarium
 stern
@@ -432,6 +445,8 @@ tomlplusplus
 traceroute
 trash-cli
 trivy
+ttf-caladea
+ttf-carlito
 ttf-cascadia-code
 ttf-cascadia-code-nerd
 ttf-hack
@@ -466,6 +481,7 @@ wayland-utils
 wget
 wireless_tools
 wireplumber
+wireshark-qt
 wl-clipboard
 wpa_supplicant
 xdg-desktop-portal-kde
