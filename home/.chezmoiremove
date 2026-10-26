@@ -34,15 +34,10 @@
 # .chezmoiignore excluye, y en los remotos se excluyen para no volver a
 # crearlos; se borran a mano una vez.
 .local/share/applications/libreoffice-*.desktop
-{{- else }}
-# Estación de trabajo: fuera el bloqueo al iniciar la sesión, el ajuste de la
-# pantalla y el arranque de Sunshine. Se conserva ~/.config/sunshine, que
-# guarda los emparejamientos de Moonlight.
-.config/autostart/lock-on-login.desktop
-.local/bin/lock-after-sunshine
-.local/bin/sunshine-display
-.config/systemd/user/graphical-session.target.wants/app-dev.lizardbyte.app.Sunshine.service
 {{- end }}
+{{- /* En una estación de trabajo, los restos de Sunshine y del bloqueo al
+       iniciar la sesión los borra 37-plasma-power: .chezmoiignore los excluye
+       y chezmoi no borra lo que ignora. */}}
 
 {{- if and (eq .chezmoi.hostname "tycho") (get (index .hosts .chezmoi.hostname) "remote") }}
 # Tycho en remoto no tiene periféricos locales: el mando y el audio llegan por
