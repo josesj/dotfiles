@@ -137,6 +137,14 @@ uso remoto» abajo).
   la GPU por debajo del 15 % y sin inhibidores que bloqueen el apagado (como el
   de borgmatic); se enciende de nuevo por WoL. Deimos no se apaga solo: tiene
   Docker y copias de borgmatic cada seis horas.
+- **RDP (Deimos).** El escritorio remoto de KDE (`krdp`) arranca con la sesión
+  de Plasma (enlace en `plasma-workspace.target.wants`) y se entra con el
+  usuario y la contraseña del sistema. `39-krdp` fija `krdpserverrc` y genera
+  un certificado autofirmado de diez años (el de Plasma sólo vale un día), que
+  rehace si falta o caduca en menos de 30 días; la clave no se versiona. Tras
+  reiniciar no hay RDP hasta iniciar sesión en el equipo; con la pantalla
+  bloqueada, se desbloquea antes por SSH con `desktop-unlock` (`rdpunlock`).
+  firewalld abre RDP en la zona `private`.
 - **Docker.** Los Mac tienen un contexto `deimos` que habla con su Docker por
   SSH (`run_onchange_after_55-docker-contexts.sh`). No pasa a ser el activo: se
   usa con `docker --context deimos …` o `docker context use deimos`.

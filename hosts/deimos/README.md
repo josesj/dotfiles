@@ -30,7 +30,8 @@ También versiona el resto de su `/etc` propio:
   puede leerlos.
 - `lm_sensors`: etiquetas del chip NCT6798D de la ASUS PRIME B660M-A D4.
 - firewalld: `eno1` entera va a la zona `private`, que abre SSH, mDNS, LLMNR,
-  y RDP (el escritorio remoto de KDE). Deimos se usa desde varias redes, privadas
+  y RDP (el escritorio remoto de KDE, configurado desde chezmoi por
+  `run_after_39-krdp.sh.tmpl`). Deimos se usa desde varias redes, privadas
   y públicas, y el filtro por origen lo hace el cortafuegos corporativo. La
   zona de la interfaz la fija NetworkManager, no firewalld, y no se versiona
   porque la conexión guarda la IP estática:

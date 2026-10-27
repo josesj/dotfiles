@@ -74,7 +74,9 @@
 {{- end }}
 
 {{- if ne .chezmoi.hostname "deimos" }}
-# --- Exclusivo de Deimos: nodo HDMI AMD que se duplicaba al reconectar y ROCm para gfx1032 ---
+# --- Exclusivo de Deimos: nodo HDMI AMD que se duplicaba al reconectar, ROCm
+#     para gfx1032 y el escritorio remoto de KDE (KRDP) ---
 .config/wireplumber/wireplumber.conf.d/10-alsa.conf
 .config/environment.d/50-rocm.conf
+.config/systemd/user/plasma-workspace.target.wants
 {{- end }}
