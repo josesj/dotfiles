@@ -88,11 +88,15 @@ para el uso remoto, y no instalan mpv, OBS ni LibreOffice; con `remote: false`
 un equipo Arch vuelve a ser estación de trabajo, con mpv y OBS según
 `mpv_hwdec` y `obs_encoder`. Por equipo: como estación de trabajo, Tycho añade
 el DAC FiiO K3, los altavoces Edifier, el micrófono de la C920 como entrada
-predeterminada, AAC de máxima calidad para los auriculares Bluetooth y el
+predeterminada y el
 arranque de Steam Big Picture con el mando Xbox; en remoto, Sunshine codifica con NVENC en Tycho y con VA-API en
 Deimos. Deimos añade además la regla que evita la suspensión del
 nodo HDMI de AMD y `HSA_OVERRIDE_GFX_VERSION`, con la que ROCm trata la RX 6600
-(gfx1032) como gfx1030.
+(gfx1032) como gfx1030. En los dos, los auriculares Bluetooth (Nothing Ear)
+usan AAC con el codificador en bitrate variable de máxima calidad
+(`54-bluetooth-aac.conf`). WirePlumber restaura antes el último perfil elegido
+a mano: si vuelven en manos libres (HFP), basta elegir una vez «High Fidelity
+Playback».
 
 ## Acceso remoto en Arch
 

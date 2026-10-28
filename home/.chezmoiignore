@@ -65,11 +65,10 @@
 
 {{- if or (ne .chezmoi.hostname "tycho") (get (index .hosts .chezmoi.hostname) "remote") }}
 # --- Exclusivo de Tycho como estación de trabajo: FiiO K3, Edifier, micro de
-#     la C920, AAC de los Nothing Ear y mando Xbox ---
+#     la C920 y mando Xbox ---
 .config/wireplumber/wireplumber.conf.d/51-fiio-k3.conf
 .config/wireplumber/wireplumber.conf.d/52-edifier-r1280db.conf
 .config/wireplumber/wireplumber.conf.d/53-c920-default-source.conf
-.config/wireplumber/wireplumber.conf.d/54-bluetooth-aac.conf
 .config/systemd/user/steam-big-picture-on-xbox.service
 {{- end }}
 
