@@ -58,7 +58,7 @@ Quedan dependencias huérfanas (`pacman -Qdtq`) que se revisan a mano.
 | `36-baloo`, drop-in `kde-baloo.service.d` | retirar: `localsearch` solo indexa las carpetas XDG de serie, `~/Projects` y `~/tmp` ya quedan fuera |
 | `37-plasma-power` | `39-gnome-power` (hecho): valores de serie de GNOME |
 | `38-plasma-remote`, `.config/sunshine`, `sunshine-display`, `lock-after-sunshine`, servicio de Sunshine, bandera `remote` de `hosts.yaml` | retirar: ya no se usa Sunshine |
-| servicio `open_in_vscode` de KIO | script o extensión de Nautilus |
+| servicio `open_in_vscode` de KIO | script de Nautilus (hecho): `~/.local/share/nautilus/scripts/Open in Visual Studio Code`; el de KIO se retira con Dolphin |
 | `autostart/lock-on-login`, `desktop-unlock` | retirar con Sunshine (eran su flujo de bloqueo) |
 | `plasma-login-manager` y `obsolete-system/plasmalogin.conf.d` | GDM (`daemon.conf`) |
 | `xdg-desktop-portal-kde` | `xdg-desktop-portal-gnome` |

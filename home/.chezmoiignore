@@ -45,6 +45,7 @@
 .local/share/applications
 .local/share/kio
 .local/share/konsole
+.local/share/nautilus
 .local/share/org.kde.syntax-highlighting
 {{- end }}
 
