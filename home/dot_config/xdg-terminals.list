@@ -1,2 +1,4 @@
-# Default terminal for Plasma and desktop-neutral XDG callers.
+# Default terminal for GNOME, Plasma and desktop-neutral XDG callers. Kitty is
+# the fallback while Ghostty is not installed.
+com.mitchellh.ghostty.desktop
 kitty.desktop

@@ -85,6 +85,7 @@ fwupd
 fzf
 gamemode
 ghostscript
+ghostty
 gimp-plugin-gmic
 git
 git-delta
