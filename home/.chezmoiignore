@@ -35,6 +35,7 @@
 .config/mpv
 .config/obs-studio
 .config/pipewire
+.config/spotify-launcher.conf
 .config/systemd
 .config/wireplumber
 .config/xdg-terminals.list
