@@ -5,7 +5,9 @@
 # antiguas toman adw-gtk3 para parecerse a las GTK4/libadwaita; el modo claro u
 # oscuro se elige a mano en Ajustes y aquí no se toca. Un equipo que venga de
 # KDE conserva en dconf los iconos y el cursor breeze; con ese tema ya
-# desinstalado apuntarían a nada, así que se restablecen a los de GNOME.
+# desinstalado apuntarían a nada, así que se restablecen a los de GNOME. Lo mismo
+# con los botones de ventana: su `icon:minimize,maximize,close` pinta el icono de
+# la aplicación junto al primer botón de cada cabecera.
 # gnome-shell: {{ lookPath "gnome-shell" }}
 set -euo pipefail
 command -v gnome-shell >/dev/null || exit 0
@@ -18,6 +20,13 @@ for key in icon-theme cursor-theme; do
     printf 'GNOME: %s restablecido (era Breeze).\n' "$key"
   fi
 done
+
+wm=org.gnome.desktop.wm.preferences
+if gsettings writable "$wm" button-layout >/dev/null 2>&1 &&
+   [[ $(gsettings get "$wm" button-layout) == *icon:* ]]; then
+  gsettings reset "$wm" button-layout
+  printf 'GNOME: button-layout restablecido (tenía el icono de la aplicación).\n'
+fi
 
 if [[ -d /usr/share/themes/adw-gtk3 ]] &&
    gsettings writable org.gnome.desktop.interface gtk-theme >/dev/null 2>&1; then
