@@ -20,14 +20,14 @@ del inventario anterior a la migración está en `pre-gnome/`.
 `gnome-connections` `seahorse` `ghex` `bleachbit` `gpick` `gnome-font-viewer`
 `gnome-system-monitor` `gnome-firmware`
 
-**No están en los repositorios oficiales:** GSConnect
-(`gnome-shell-extension-gsconnect`, AUR) para sustituir a KDE Connect.
+**Sin sustituto, decidido:** KDE Connect se retira y no se usa GSConnect.
 
 ## 2. Se quedan (Qt sin equivalente GTK, decidido)
 `obs-studio` (ojo: hoy es solo dependencia; marcarlo explícito antes de limpiar)
 `vlc` `freecad` `openscad`
 
 ## 3. Decisiones tomadas
+- Sin Sunshine ni GSConnect. El uso remoto del equipo se abandona.
 - `kleopatra` fuera: las claves GPG se gestionan con Seahorse y `gpg` en terminal.
 - `kdenlive` fuera, sin sustituto. `bigsh0t` y `movit` solo se usaban con él:
   revisarlos al limpiar huérfanos.
@@ -56,14 +56,14 @@ Quedan dependencias huérfanas (`pacman -Qdtq`) que se revisan a mano.
 | `34-kate`, `dot_config/kate`, temas `org.kde.syntax-highlighting` | retirar |
 | `35-libreoffice`, `libreoffice-kf6-x11` | retirar: LibreOffice usa su plugin GTK |
 | `36-baloo`, drop-in `kde-baloo.service.d` | `localsearch`: excluir `~/Projects` y `~/tmp` |
-| `37-plasma-power` / `38-plasma-remote` | `org.gnome.settings-daemon.plugins.power` (`sleep-inactive-ac-type`) |
+| `37-plasma-power` | `org.gnome.settings-daemon.plugins.power` (valores de serie de GNOME) |
+| `38-plasma-remote`, `.config/sunshine`, `sunshine-display`, `lock-after-sunshine`, servicio de Sunshine, bandera `remote` de `hosts.yaml` | retirar: ya no se usa Sunshine |
 | servicio `open_in_vscode` de KIO | script o extensión de Nautilus |
-| `autostart/lock-on-login`, `desktop-unlock` | revisar con el flujo de Sunshine |
+| `autostart/lock-on-login`, `desktop-unlock` | retirar con Sunshine (eran su flujo de bloqueo) |
 | `plasma-login-manager` y `obsolete-system/plasmalogin.conf.d` | GDM (`daemon.conf`) |
 | `xdg-desktop-portal-kde` | `xdg-desktop-portal-gnome` |
 
 ## 6. Riesgos a vigilar
-- **Sunshine** en GNOME/Mutter: captura por PipeWire y portal; probar antes de depender de ello en remoto.
 - **NVIDIA:** `nvidia_drm modeset=1 fbdev=1` ya está; GDM usa Wayland.
 - **KWallet:** migrar los secretos a GNOME Keyring antes de retirar `kwallet-pam`.
 - **Deimos** comparte el repo: los scripts de Plasma se condicionan por equipo, no se borran hasta migrarlo.
