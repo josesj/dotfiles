@@ -5,9 +5,10 @@
 # antiguas toman adw-gtk3 para parecerse a las GTK4/libadwaita; el modo claro u
 # oscuro se elige a mano en Ajustes y aquí no se toca. Un equipo que venga de
 # KDE conserva en dconf los iconos y el cursor breeze; con ese tema ya
-# desinstalado apuntarían a nada, así que se restablecen a los de GNOME. Lo mismo
-# con los botones de ventana: su `icon:minimize,maximize,close` pinta el icono de
-# la aplicación junto al primer botón de cada cabecera.
+# desinstalado apuntarían a nada, así que se restablecen a los de GNOME. Los
+# botones de ventana de KDE (`icon:minimize,maximize,close`) pintan el icono de la
+# aplicación junto al primer botón de cada cabecera: se conservan minimizar y
+# maximizar, pero sin el icono.
 # gnome-shell: {{ lookPath "gnome-shell" }}
 set -euo pipefail
 command -v gnome-shell >/dev/null || exit 0
@@ -24,9 +25,17 @@ done
 wm=org.gnome.desktop.wm.preferences
 if gsettings writable "$wm" button-layout >/dev/null 2>&1 &&
    [[ $(gsettings get "$wm" button-layout) == *icon:* ]]; then
-  gsettings reset "$wm" button-layout
-  printf 'GNOME: button-layout restablecido (tenía el icono de la aplicación).\n'
+  gsettings set "$wm" button-layout 'appmenu:minimize,maximize,close'
+  printf 'GNOME: button-layout con minimizar y maximizar y sin el icono de la aplicación.\n'
 fi
+
+# Otros valores que KDE sincroniza con dconf y que GNOME no usa: el estilo de las
+# barras de herramientas GTK3 (sólo texto), el parpadeo del cursor y el factor de
+# escala entera, que fuerza 1 en lugar de dejarlo automático.
+for key in toolbar-style cursor-blink-time scaling-factor; do
+  gsettings writable org.gnome.desktop.interface "$key" >/dev/null 2>&1 &&
+    gsettings reset org.gnome.desktop.interface "$key"
+done
 
 if [[ -d /usr/share/themes/adw-gtk3 ]] &&
    gsettings writable org.gnome.desktop.interface gtk-theme >/dev/null 2>&1; then
