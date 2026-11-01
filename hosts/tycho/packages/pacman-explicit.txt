@@ -94,7 +94,6 @@ gnome-calculator
 gnome-calendar
 gnome-characters
 gnome-chess
-gnome-clocks
 gnome-connections
 gnome-contacts
 gnome-control-center
@@ -360,6 +359,9 @@ task
 tcpdump
 tealdeer
 terminus-font
+thunderbird
+thunderbird-i18n-en-us
+thunderbird-i18n-es-es
 tmux
 traceroute
 trash-cli
