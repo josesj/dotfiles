@@ -2,8 +2,9 @@
 # Catppuccin Latte/Mocha en Visual Studio Code, con detección automática del
 # modo claro/oscuro del sistema, y JetBrainsMono Nerd Font Mono en el editor y
 # el terminal integrado a 14 px (el peso Medium lo fija editor.fontWeight).
-# Además, la barra de título y el menú se excluyen de
-# Settings Sync: los valores de Arch no aplican en macOS.
+# En Arch, los diálogos son los de VS Code: los nativos son de GTK, ajenos a
+# Plasma. La barra de título, el menú y los diálogos se excluyen de Settings
+# Sync: los valores de Arch no aplican en macOS.
 set -euo pipefail
 
 command -v code >/dev/null || {
@@ -47,13 +48,23 @@ fi
 # un equipo lo suba para que todos conserven sus valores locales.
 if ! grep -Fq '"settingsSync.ignoredSettings"' "$temporary"; then
   sed -i.bak '/"workbench.colorTheme"/i\
-  "settingsSync.ignoredSettings": ["window.titleBarStyle", "window.menuStyle"],
+  "settingsSync.ignoredSettings": ["window.titleBarStyle", "window.menuStyle", "window.dialogStyle"],
 ' "$temporary"
   rm -f -- "$temporary.bak"
 fi
-{{- if eq .chezmoi.os "darwin" }}
-sed -i.bak -e '/"window.titleBarStyle"[[:space:]]*:/d' -e '/"window.menuStyle"[[:space:]]*:/d' "$temporary"
+sed -i.bak 's/"settingsSync.ignoredSettings": \["window.titleBarStyle", "window.menuStyle"\]/"settingsSync.ignoredSettings": ["window.titleBarStyle", "window.menuStyle", "window.dialogStyle"]/' "$temporary"
 rm -f -- "$temporary.bak"
+{{- if eq .chezmoi.os "darwin" }}
+sed -i.bak -e '/"window.titleBarStyle"[[:space:]]*:/d' -e '/"window.menuStyle"[[:space:]]*:/d' \
+  -e '/"window.dialogStyle"[[:space:]]*:/d' "$temporary"
+rm -f -- "$temporary.bak"
+{{- else }}
+if ! grep -q '"window.dialogStyle"[[:space:]]*:' "$temporary"; then
+  sed -i.bak '/"workbench.colorTheme"/i\
+  "window.dialogStyle": "custom",
+' "$temporary"
+  rm -f -- "$temporary.bak"
+fi
 {{- end }}
 cmp -s -- "$temporary" "$settings" || install -m600 -- "$temporary" "$settings"
 

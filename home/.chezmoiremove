@@ -34,6 +34,7 @@
 .local/bin/sunshine-display
 .local/share/applications/kitty.desktop
 .local/share/applications/libreoffice-*.desktop
+.config/systemd/user/plasma-workspace.target.wants/app-org.kde.krdpserver.service
 .local/share/konsole
 .local/share/kio/servicemenus/open_in_vscode.desktop
 .local/share/org.kde.syntax-highlighting
