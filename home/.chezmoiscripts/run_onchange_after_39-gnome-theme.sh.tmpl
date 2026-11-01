@@ -2,13 +2,17 @@
 #!/usr/bin/env bash
 # GNOME usa su tema propio, Adwaita, y Catppuccin se conserva donde se lee
 # texto —Ghostty, Vim y VS Code— pero no en el escritorio. Las aplicaciones GTK3
-# antiguas toman adw-gtk3 para parecerse a las GTK4/libadwaita; el modo claro u
-# oscuro se elige a mano en Ajustes y aquí no se toca. Un equipo que venga de
-# KDE conserva en dconf los iconos y el cursor breeze; con ese tema ya
-# desinstalado apuntarían a nada, así que se restablecen a los de GNOME. Los
-# botones de ventana de KDE (`icon:minimize,maximize,close`) pintan el icono de la
-# aplicación junto al primer botón de cada cabecera: se conservan minimizar y
-# maximizar, pero sin el icono.
+# (Spotify, Meld, GParted…) toman adw-gtk3 para parecerse a las GTK4/libadwaita.
+# GTK3 no sigue el color-scheme de GNOME por sí solo: ~/.config/gtk-3.0/settings.ini
+# fija gtk-application-prefer-dark-theme=0 y la barra de título se quedaba clara con
+# el escritorio en oscuro. Por eso se elige la variante adw-gtk3 o adw-gtk3-dark
+# según el modo activo al ejecutarse; si cambias de modo en Ajustes, hay que
+# repetirlo: gsettings set org.gnome.desktop.interface gtk-theme adw-gtk3[-dark].
+# Un equipo que venga de KDE conserva en dconf los iconos y el cursor breeze; con
+# ese tema ya desinstalado apuntarían a nada, así que se restablecen a los de
+# GNOME. Los botones de ventana de KDE (`icon:minimize,maximize,close`) pintan el
+# icono de la aplicación junto al primer botón de cada cabecera: se conservan
+# minimizar y maximizar, pero sin el icono.
 # gnome-shell: {{ lookPath "gnome-shell" }}
 set -euo pipefail
 command -v gnome-shell >/dev/null || exit 0
@@ -37,9 +41,12 @@ for key in toolbar-style cursor-blink-time scaling-factor; do
     gsettings reset org.gnome.desktop.interface "$key"
 done
 
-if [[ -d /usr/share/themes/adw-gtk3 ]] &&
+gtk_theme=adw-gtk3
+[[ $(gsettings get org.gnome.desktop.interface color-scheme 2>/dev/null) == *prefer-dark* ]] &&
+  gtk_theme=adw-gtk3-dark
+if [[ -d /usr/share/themes/$gtk_theme ]] &&
    gsettings writable org.gnome.desktop.interface gtk-theme >/dev/null 2>&1; then
-  gsettings set org.gnome.desktop.interface gtk-theme adw-gtk3
-  printf 'Tema GTK3 de GNOME: adw-gtk3.\n'
+  gsettings set org.gnome.desktop.interface gtk-theme "$gtk_theme"
+  printf 'Tema GTK3 de GNOME: %s.\n' "$gtk_theme"
 fi
 {{- end -}}
