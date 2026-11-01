@@ -132,6 +132,8 @@ printf 'Aplicando configuración del sistema para: %s\n' "$host_name"
 deploy_file "$repo_dir/system/pacman/pacman.conf" "/etc/pacman.conf"
 deploy_file "$repo_dir/system/systemd/journald.conf.d/90-local.conf" \
   "/etc/systemd/journald.conf.d/90-local.conf"
+deploy_file "$repo_dir/system/systemd/coredump.conf.d/90-local.conf" \
+  "/etc/systemd/coredump.conf.d/90-local.conf"
 deploy_file "$repo_dir/system/systemd/timesyncd.conf.d/90-workstation.conf" \
   "/etc/systemd/timesyncd.conf.d/90-workstation.conf"
 deploy_file "$repo_dir/system/systemd/system/paccache.service.d/10-workstation.conf" \
