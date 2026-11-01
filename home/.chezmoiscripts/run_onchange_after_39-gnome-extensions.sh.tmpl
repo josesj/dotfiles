@@ -1,0 +1,21 @@
+{{- if eq .chezmoi.os "linux" -}}
+#!/usr/bin/env bash
+# Extensiones de GNOME Shell: iconos de bandeja (AppIndicator), Caffeine para
+# evitar la suspensión y Vitals con CPU, memoria y temperaturas en la barra.
+# GNOME Shell no ve una extensión recién instalada hasta el siguiente inicio de
+# sesión; el texto de abajo cambia cuando aparece una, para que chezmoi vuelva a
+# ejecutar este script.
+# extensiones: {{ glob "/usr/share/gnome-shell/extensions/*" | join "," | sha256sum }}
+set -euo pipefail
+command -v gnome-extensions >/dev/null || exit 0
+command -v gnome-shell >/dev/null || exit 0
+
+available=$(gnome-extensions list 2>/dev/null || true)
+for uuid in \
+  appindicatorsupport@rgcjonas.gmail.com \
+  caffeine@patapon.info \
+  Vitals@CoreCoding.com; do
+  grep -Fqx -- "$uuid" <<< "$available" || continue
+  gnome-extensions enable "$uuid" && printf 'Extensión activada: %s\n' "$uuid"
+done
+{{- end -}}
