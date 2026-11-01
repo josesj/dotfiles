@@ -1,7 +1,0 @@
-[Unit]
-Description=Apagar Tycho si lleva un rato sin uso
-Documentation=file:///usr/local/libexec/autoshutdown
-
-[Service]
-Type=oneshot
-ExecStart=/usr/local/libexec/autoshutdown
