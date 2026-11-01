@@ -1,0 +1,27 @@
+{{- if eq .chezmoi.os "linux" -}}
+#!/usr/bin/env bash
+# GNOME usa su tema propio, Adwaita, y Catppuccin se conserva donde se lee
+# texto —Ghostty, Vim y VS Code— pero no en el escritorio, igual que con
+# Breeze en Plasma. Las aplicaciones GTK3 antiguas toman adw-gtk3 para
+# parecerse a las GTK4/libadwaita; el modo claro u oscuro se elige a mano en
+# Ajustes y aquí no se toca. Plasma sincroniza sus iconos y cursor (breeze) con
+# dconf; al retirar Breeze esos valores apuntarían a temas que ya no existen,
+# así que se restablecen a los de GNOME.
+set -euo pipefail
+command -v gnome-shell >/dev/null || exit 0
+command -v gsettings >/dev/null || exit 0
+
+for key in icon-theme cursor-theme; do
+  if gsettings writable org.gnome.desktop.interface "$key" >/dev/null 2>&1 &&
+     [[ $(gsettings get org.gnome.desktop.interface "$key") == \'breeze* ]]; then
+    gsettings reset org.gnome.desktop.interface "$key"
+    printf 'GNOME: %s restablecido (era Breeze).\n' "$key"
+  fi
+done
+
+if [[ -d /usr/share/themes/adw-gtk3 ]] &&
+   gsettings writable org.gnome.desktop.interface gtk-theme >/dev/null 2>&1; then
+  gsettings set org.gnome.desktop.interface gtk-theme adw-gtk3
+  printf 'Tema GTK3 de GNOME: adw-gtk3.\n'
+fi
+{{- end -}}

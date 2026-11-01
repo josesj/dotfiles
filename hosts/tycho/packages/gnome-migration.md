@@ -49,14 +49,14 @@ Quedan dependencias huérfanas (`pacman -Qdtq`) que se revisan a mano.
 
 | Hoy (Plasma) | En GNOME |
 |---|---|
-| `30-plasma-fonts` | `gsettings`: `font-name`, `monospace-font-name`, antialiasing/hinting |
-| `31-plasma-theme`, perfiles Konsole | `color-scheme`; Catppuccin se queda en Ghostty, Vim y VS Code |
-| `32-plasma-kwin-mpv` | `org.gnome.mutter center-new-windows true` |
-| `33-plasma-kitty` | `xdg-terminals.list` (hecho) y atajo `Ctrl+Alt+T` por `dconf` |
+| `30-plasma-fonts` | `39-gnome-fonts` (hecho) |
+| `31-plasma-theme`, perfiles Konsole | `39-gnome-theme` (hecho): adw-gtk3 y restablece iconos y cursor de Breeze; Catppuccin se queda en Ghostty, Vim y VS Code |
+| `32-plasma-kwin-mpv` | retirar: no se migra el centrado de mpv |
+| `33-plasma-kitty` | `xdg-terminals.list` (hecho); sin atajo propio, se usa el de GNOME |
 | `34-kate`, `dot_config/kate`, temas `org.kde.syntax-highlighting` | retirar |
 | `35-libreoffice`, `libreoffice-kf6-x11` | retirar: LibreOffice usa su plugin GTK |
-| `36-baloo`, drop-in `kde-baloo.service.d` | `localsearch`: excluir `~/Projects` y `~/tmp` |
-| `37-plasma-power` | `org.gnome.settings-daemon.plugins.power` (valores de serie de GNOME) |
+| `36-baloo`, drop-in `kde-baloo.service.d` | retirar: `localsearch` solo indexa las carpetas XDG de serie, `~/Projects` y `~/tmp` ya quedan fuera |
+| `37-plasma-power` | `39-gnome-power` (hecho): valores de serie de GNOME |
 | `38-plasma-remote`, `.config/sunshine`, `sunshine-display`, `lock-after-sunshine`, servicio de Sunshine, bandera `remote` de `hosts.yaml` | retirar: ya no se usa Sunshine |
 | servicio `open_in_vscode` de KIO | script o extensión de Nautilus |
 | `autostart/lock-on-login`, `desktop-unlock` | retirar con Sunshine (eran su flujo de bloqueo) |
