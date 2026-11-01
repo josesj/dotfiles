@@ -15,7 +15,11 @@ El perfil de sistema configura `lm_sensors` con `i2c_piix4`, `nct6775` y
 `k10temp`, y carga `nct6775` al arrancar para el chip Nuvoton NCT6799. También
 activa KMS temprano de NVIDIA y conserva la VRAM durante suspensión. Además,
 mantiene despiertos el audio Ryzen/NVIDIA y el adaptador Bluetooth ASUS USB-BT500,
-y desactiva el wake-up del receptor Logitech Bolt. Se enciende o sale de la
+y desactiva el wake-up del receptor Logitech Bolt. Los buses I2C pasan al grupo
+`i2c` (`61-i2c-group.rules`) para que powerdevil controle el brillo del monitor
+por DDC/CI sin errores `EACCES` tras suspender; el usuario debe estar en ese
+grupo. La C920 cuelga de los hubs del monitor y no se suspende
+(`71-c920-power.rules`): con el autosuspend se reseteaba al despertar. Se enciende o sale de la
 suspensión por WoL por su RTL8125 (`enp8s0`).
 
 mpv usa `gpu-next` con Vulkan/Wayland y decodificación NVDEC. Esta combinación se

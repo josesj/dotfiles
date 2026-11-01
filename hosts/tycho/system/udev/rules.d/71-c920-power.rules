@@ -1,0 +1,4 @@
+# Keep the Logitech C920 PRO awake. It hangs off the monitor's cascaded USB hubs
+# and, with the default 2 s autosuspend, reset itself when resuming
+# ("reset high-speed USB device", "cannot get freq at ep 0x84").
+ACTION=="add", SUBSYSTEM=="usb", ATTR{idVendor}=="046d", ATTR{idProduct}=="08e5", TEST=="power/control", ATTR{power/control}="on"
