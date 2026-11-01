@@ -4,8 +4,8 @@ Configuración de cuatro equipos gestionada con [chezmoi](https://chezmoi.io):
 
 | Equipo | Sistema | Papel |
 |---|---|---|
-| `tycho` | Arch Linux + Plasma | Estación de trabajo (Ryzen 7 9700X, RTX 5080) |
-| `deimos` | Arch Linux + Plasma | Estación de trabajo (i5-12600, RX 6600) |
+| `tycho` | Arch Linux + GNOME | Estación de trabajo (Ryzen 7 9700X, RTX 5080) |
+| `deimos` | Arch Linux + GNOME | Estación de trabajo (i5-12600, RX 6600) |
 | `phobos` | macOS | Portátil (MacBook Pro, M4 Pro, 24 GB) |
 | `janus` | macOS | Sobremesa (Mac Studio, M2 Max, 32 GB) |
 
@@ -22,10 +22,10 @@ aliases y comandos de mantenimiento.
 .chezmoiroot            -> "home": chezmoi sólo gestiona ese subárbol
 home/                   estado fuente de chezmoi ($HOME de los cuatro equipos)
   .chezmoi.toml.tmpl    configuración que genera `chezmoi init`
-  .chezmoidata/         papel (remote) y hardware de cada equipo: claves de Sunshine
+  .chezmoidata/         hardware de cada equipo: decodificación de mpv y codificador de OBS
   .chezmoiignore        reparto de destinos por sistema operativo y por equipo
   .chezmoiexternal.toml.tmpl  Oh My Zsh, plugins de Zsh y de Vim y temas Catppuccin de btop
-  .chezmoiscripts/      aprovisionamiento (Homebrew, Plasma, Kate, VS Code...)
+  .chezmoiscripts/      aprovisionamiento (Homebrew, GNOME, VS Code...)
   .chezmoiremove        restos de configuraciones retiradas que hay que borrar
   .chezmoitemplates/    fragmentos reutilizados (el user.js de Firefox)
 system/                 archivos de /etc comunes a los dos equipos Arch
@@ -53,9 +53,8 @@ explícita si no es uno de los cuatro conocidos. El primer `apply`:
 2. Clona Oh My Zsh, los tres plugins de Zsh y los nueve plugins de Vim.
 3. Escribe los archivos de configuración del equipo.
 4. En macOS instala Homebrew y el `Brewfile`, registra los JDK y aplica las
-   preferencias del sistema; en Arch configura Plasma, Konsole, Kate, KWin,
-   Baloo y el atajo de Kitty; en los equipos remotos, la energía para el uso
-   remoto, y en una estación de trabajo, los lanzadores KF6/X11 de LibreOffice.
+   preferencias del sistema; en Arch fija con `gsettings` las fuentes, el tema
+   GTK y la energía de GNOME.
 
 Uso diario:
 
@@ -74,102 +73,44 @@ chezmoi update          # git pull + apply
 Añadir un equipo es añadir su entrada en esa tabla y en la lista de
 `home/.chezmoi.toml.tmpl` y, si hace falta, una regla en `.chezmoiignore`.
 
-Sólo en Arch: Kitty, Plasma, Konsole, Kate, Dolphin, PipeWire,
-WirePlumber, fontconfig, Xresources, `environment.d` y las banderas de Chrome y
-VS Code. Sólo en macOS: Ghostty, `.zprofile` y el `Brewfile`.
+Sólo en Arch: Kitty, PipeWire, WirePlumber, fontconfig, Xresources,
+`environment.d`, las banderas de Chrome y VS Code y el script de Nautilus.
+Sólo en macOS: `.zprofile` y el `Brewfile`. Ghostty está en los cuatro, con
+plantilla para cada sistema.
 
-En Arch, el indexador de Baloo usa la plataforma Qt `offscreen` (drop-in de
-`kde-baloo.service`): arranca antes de que la sesión publique `WAYLAND_DISPLAY`
-y, sin pantalla, `baloo_file_extractor` abortaba en cada lote.
-
-Por papel: los equipos con `remote: true` en `.chezmoidata/hosts.yaml` (hoy
-ninguno: Tycho y Deimos son estaciones de trabajo) llevan Sunshine, el inicio automático con bloqueo y la energía
-para el uso remoto, y no instalan mpv, OBS ni LibreOffice; con `remote: false`
-un equipo Arch vuelve a ser estación de trabajo, con mpv y OBS según
-`mpv_hwdec` y `obs_encoder`. Por equipo: como estación de trabajo, Tycho añade
-el DAC FiiO K3, los altavoces Edifier, el micrófono de la C920 como entrada
-predeterminada, AAC de máxima calidad para los auriculares Bluetooth y el
-arranque de Steam Big Picture con el mando Xbox; en remoto, Sunshine codifica con NVENC en Tycho y con VA-API en
-Deimos. Deimos añade además la regla que evita la suspensión del
-nodo HDMI de AMD y `HSA_OVERRIDE_GFX_VERSION`, con la que ROCm trata la RX 6600
-(gfx1032) como gfx1030.
+Por equipo: mpv y OBS usan `mpv_hwdec` y `obs_encoder` de
+`.chezmoidata/hosts.yaml`. Tycho añade el DAC FiiO K3, los altavoces Edifier, el
+micrófono de la C920 como entrada predeterminada, AAC de máxima calidad para los
+auriculares Bluetooth y el arranque de Steam Big Picture con el mando Xbox.
+Deimos añade la regla que evita la suspensión del nodo HDMI de AMD y
+`HSA_OVERRIDE_GFX_VERSION`, con la que ROCm trata la RX 6600 (gfx1030 en lugar
+de gfx1032).
 
 ## Acceso remoto en Arch
 
-Tycho y Deimos son estaciones de trabajo, pero se encienden y se usan a
-distancia por WoL y SSH. El modo remoto con Sunshine (Moonlight para
-desarrollar o jugar, Tycho headless con un dongle HDMI Evanlak8K V2) sigue en
-el repositorio: el papel lo decide `remote` en `hosts.yaml`, y lo que no
-depende de él vive en `obsolete-system/` mientras no se usa (ver «Volver al
-uso remoto» abajo).
+Tycho y Deimos se encienden y se usan a distancia por WoL y SSH.
 
 - **WoL.** `system/NetworkManager/conf.d/wake-on-lan.conf` deja la Ethernet de
   los dos equipos esperando el paquete mágico al suspender o apagar. En la UEFI
   hay que activar «Power On By PCI-E» y desactivar ErP. Se comprueba con
   `ethtool <interfaz> | grep Wake-on`, que debe decir `g`.
-- **Sesión (remoto).** `plasmalogin.conf.d/autologin.conf`
-  abre la sesión Wayland de `jose` sin contraseña y el autostart
-  `lock-on-login.desktop` la bloquea con `lock-after-sunshine` en cuanto
-  Sunshine escucha (o a los 90 s si no arranca). Sunshine corre así como
-  usuario, con su PipeWire y su KWin, y el escritorio queda protegido:
-  se desbloquea con la contraseña desde Moonlight, o por SSH con
-  `desktop-unlock`. KWallet no se abre con el inicio automático y pide su
-  contraseña la primera vez que se usa.
-- **Sunshine (remoto).** `sunshine-bin` (AUR) trae el servicio de usuario, que
-  chezmoi activa con un enlace en `graphical-session.target.wants`; el paquete
-  concede a `/usr/bin/sunshine` `cap_sys_admin` (y `cap_sys_nice`) al instalarse
-  y en cada actualización, que la captura KMS necesita. Un script
-  `modify_` fija en `~/.config/sunshine/sunshine.conf` la captura KMS (la única
-  que también ve la pantalla de bloqueo) y las claves de la GPU en
-  `.chezmoidata/hosts.yaml`; el resto es de la interfaz web,
-  `https://<equipo>:47990`. Otro `modify_` de `apps.json` retira la app de
-  serie basada en `xrandr`, que no funciona en Wayland, añade «VS Code», que
-  abre el editor sin ligarlo a la sesión de Moonlight, y hace que «Desktop»,
-  «Steam Big Picture» y «VS Code» ajusten la salida de `sunshine_display` (el
-  dongle en Tycho, el LG en Deimos) al modo del cliente con `sunshine-display`.
-  Si la salida no tiene ese modo (el LG sólo ofrece los 16:9 de su EDID),
-  Sunshine reescala. En Deimos, firewalld abre los puertos de Sunshine en la
-  zona `private`.
-- **Energía (remoto).** Plasma no atenúa ni apaga la pantalla (Sunshine
-  capturaría en negro) ni suspende por inactividad, porque SSH y los trabajos
-  largos no cuentan como actividad. En su lugar, `autoshutdown.timer` apaga
-  Tycho tras 30 min sin SSH, sin emitir con Sunshine (sin sesiones NVENC), con
-  la GPU por debajo del 15 % y sin inhibidores que bloqueen el apagado (como el
-  de borgmatic); se enciende de nuevo por WoL. Deimos no se apaga solo: tiene
-  Docker y copias de borgmatic cada seis horas.
 - **Docker.** Los Mac tienen un contexto `deimos` que habla con su Docker por
   SSH (`run_onchange_after_55-docker-contexts.sh`). No pasa a ser el activo: se
   usa con `docker --context deimos …` o `docker context use deimos`.
 
-Como estación de trabajo, Plasma recupera su energía de serie
-(`37-plasma-power`): atenúa y apaga la pantalla y suspende por inactividad.
-
-### Volver al uso remoto
-
-1. `remote: true` en `.chezmoidata/hosts.yaml` para el equipo.
-2. De `hosts/<equipo>/obsolete-system/` a `system/`: el autologin y, en Tycho,
-   `autoshutdown` (con `obsolete-libexec/autoshutdown` a `libexec/`); en Deimos,
-   `firewalld/services/sunshine.xml` y el servicio `sunshine` en la zona
-   `private`. En Tycho, las reglas de sus periféricos van al revés.
-3. `prune-packages.sh` y las listas `retired.txt` salieron del repositorio con
-   la vuelta al escritorio (24-10-2026): se recuperan de su historial
-   (`git show 69b5856:prune-packages.sh`, `git show 69b5856:hosts/tycho/packages/retired.txt`,
-   `git show aa81301:hosts/deimos/packages/retired.txt`).
-4. `chezmoi apply` y `sudo ./install-system.sh`.
-
 ## Aspecto
 
-Catppuccin viste lo que muestra texto: Vim, Zsh, Kitty, Ghostty, Konsole, Kate y
+Catppuccin viste lo que muestra texto: Vim, Zsh, Kitty, Ghostty y
 Visual Studio Code, con Latte en modo claro y Mocha en modo oscuro. El
-escritorio no: Plasma usa Breeze, su tema propio, y es quien dicta el modo. El
-sabor se detecta en el arranque del shell y al recuperar el foco en Vim: Plasma
-lo publica en `kdeglobals` y macOS sólo define `AppleInterfaceStyle` mientras el
+escritorio no: GNOME usa Adwaita, su tema propio, y es quien dicta el modo. El
+sabor se detecta en el arranque del shell y al recuperar el foco en Vim: GNOME
+lo publica en la clave `color-scheme` de `gsettings` y macOS sólo define `AppleInterfaceStyle` mientras el
 modo oscuro está activo. Por SSH manda el terminal local, no el escritorio
 remoto: el prompt pregunta a Kitty o Ghostty su color de fondo (OSC 11) y
 exporta `WORKSTATION_FLAVOUR`, que Vim también sigue. El prompt asigna colores semánticos de la variante
 activa a ruta, estado de Git, errores, duración, trabajos y entornos virtuales.
 
-En Arch, fontconfig y Plasma usan Noto Sans para la interfaz, Noto Serif para
+En Arch, fontconfig y GNOME usan Noto Sans para la interfaz, Noto Serif para
 serif y JetBrainsMono Nerd Font Mono, en peso Medium, para monoespaciado; Noto CJK, Emoji y
 Symbols completan los glifos restantes. `~/.Xresources` añade los mismos ajustes
 de renderizado para las aplicaciones X11 y XWayland que leen la base de recursos
@@ -213,7 +154,7 @@ restaura los valores configurados.
 
 En una estación de trabajo, mpv limita la ventana al 80 % del escritorio, prioriza audio y subtítulos en
 español, inglés e italiano y usa yt-dlp con los perfiles `stream-2k` y
-`stream-4k`. Una regla de KWin centra sus ventanas.
+`stream-4k`.
 
 OBS, también sólo en una estación de trabajo, parte de un lienzo 4K y sale a 1440p60. Graba en HEVC con calidad constante
 (CQP 20) en `~/Videos/OBS`, con tres pistas de audio: mezcla, micro y
@@ -323,7 +264,7 @@ sudo pacman -S --needed zsh vim git git-lfs gnupg chezmoi \
 
 `fzf` y `ripgrep` los necesitan `<Espacio>f` y `<Espacio>r` en Vim; `clang`,
 `pyright` y `typescript-language-server` son tres de los cuatro servidores LSP
-que configura Kate. El cuarto, `jdtls`, está en AUR: `yay -S jdtls`.
+que usan los editores. El cuarto, `jdtls`, está en AUR: `yay -S jdtls`.
 
 ### Inventario de paquetes
 

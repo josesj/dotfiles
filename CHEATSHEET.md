@@ -32,7 +32,6 @@ cargados como paquetes nativos desde `~/.vim/pack/dotfiles/start`.
 
 | Teclas | Acción |
 |---|---|
-| `Ctrl+Alt+T` | Abrir Kitty desde cualquier aplicación de Plasma |
 | `Ctrl+Shift+T` | Nueva pestaña |
 | `Ctrl+Shift+W` | Cerrar pestaña |
 | `Ctrl+Tab` / `Ctrl+Shift+Tab` | Pestaña siguiente/anterior |
@@ -54,10 +53,14 @@ cargados como paquetes nativos desde `~/.vim/pack/dotfiles/start`.
 | `Ctrl+Shift+P` + `F`/`L`/`H` | Copiar ruta/línea/hash visible con hints |
 
 La ventana abre a `100×29`, con margen de 4 px, y no recuerda su tamaño.
-Si un comando tarda más de 15 s y Kitty no tiene el foco, avisa por Plasma.
+Si un comando tarda más de 15 s y Kitty no tiene el foco, avisa por el escritorio.
 Kitty usa Catppuccin Latte en modo claro y Mocha en modo oscuro.
 
 ## Ghostty (macOS)
+
+En Linux Ghostty usa sus atajos predeterminados, que coinciden con los de
+Kitty: `Ctrl+Shift+T/W/N`, `Ctrl+Shift+O/E` para dividir, `Ctrl+Alt+flechas` y
+`Alt+1..9`.
 
 | Teclas | Acción |
 |---|---|
@@ -106,7 +109,7 @@ Latte/Mocha e instala su propio terminfo en los servidores al conectar por SSH.
 El prompt, las sugerencias y el resaltado de comandos usan la variante Catppuccin
 activa; verde indica éxito, rojo errores, amarillo cambios o duración, azul y
 cian contexto/rutas, y púrpura entornos Python y estado Git. El escritorio de
-Plasma usa Breeze y es quien decide si toca Latte o Mocha.
+GNOME usa Adwaita y es quien decide si toca Latte o Mocha.
 
 ## Git
 

@@ -15,10 +15,7 @@ El perfil de sistema configura `lm_sensors` con `i2c_piix4`, `nct6775` y
 `k10temp`, y carga `nct6775` al arrancar para el chip Nuvoton NCT6799. También
 activa KMS temprano de NVIDIA y conserva la VRAM durante suspensión. Además,
 mantiene despiertos el audio Ryzen/NVIDIA y el adaptador Bluetooth ASUS USB-BT500,
-y desactiva el wake-up del receptor Logitech Bolt. Los buses I2C pasan al grupo
-`i2c` (`61-i2c-group.rules`) para que powerdevil controle el brillo del monitor
-por DDC/CI sin errores `EACCES` tras suspender; el usuario debe estar en ese
-grupo. La C920 cuelga de los hubs del monitor y no se suspende
+y desactiva el wake-up del receptor Logitech Bolt. La C920 cuelga de los hubs del monitor y no se suspende
 (`71-c920-power.rules`): con el autosuspend se reseteaba al despertar. Se enciende o sale de la
 suspensión por WoL por su RTL8125 (`enp8s0`).
 
@@ -48,14 +45,3 @@ Un fichero de unidad vacío equivale a un enlace a `/dev/null`.
 
 Docker arranca bajo demanda con `docker.socket` en lugar de `docker.service`:
 `sudo systemctl disable --now docker.service && sudo systemctl enable --now docker.socket`.
-
-## Modo remoto (en reserva)
-
-Como equipo remoto (`remote: true`), Tycho se usa headless con un dongle HDMI
-Evanlak8K V2 en `HDMI-A-1` (4K a 60 Hz, 1440p a 144 Hz, 1080p a 144 y 120 Hz,
-sin HDR), que `sunshine-display` pone en el modo que pide Moonlight. Sunshine
-captura el monitor 0 de KMS: con otro monitor por DisplayPort, el dongle pasa a
-ser el 1. `obsolete-libexec/autoshutdown` y sus unidades en `obsolete-system/`
-lo apagan tras 30 min sin SSH, sin emitir y con la GPU en reposo; como
-estación de trabajo apagaría el equipo con alguien delante, así que
-`install-system.sh` desactiva el temporizador y lo retira.

@@ -30,7 +30,7 @@ También versiona el resto de su `/etc` propio:
   puede leerlos.
 - `lm_sensors`: etiquetas del chip NCT6798D de la ASUS PRIME B660M-A D4.
 - firewalld: `eno1` entera va a la zona `private`, que abre SSH, mDNS, LLMNR,
-  y RDP (el escritorio remoto de KDE). Deimos se usa desde varias redes, privadas
+  y RDP. Deimos se usa desde varias redes, privadas
   y públicas, y el filtro por origen lo hace el cortafuegos corporativo. La
   zona de la interfaz la fija NetworkManager, no firewalld, y no se versiona
   porque la conexión guarda la IP estática:
@@ -40,7 +40,7 @@ También versiona el resto de su `/etc` propio:
   `firmware/edid/lg-27up850.bin`, que `install-system.sh` copia a
   `/usr/lib/firmware/edid` y `mkinitcpio.conf` mete en la UKI. El LG, al salir
   de su reposo profundo tras apagarse la pantalla por inactividad, se desconecta
-  entero (DisplayPort y su hub USB); sin el conector forzado KWin perdía la
+  entero (DisplayPort y su hub USB); sin el conector forzado el compositor perdía la
   salida y la sesión se quedaba en negro. También cubre arrancar con el monitor
   apagado. Si el arranque se queda sin vídeo, se quitan esos dos parámetros de
   `/etc/kernel/cmdline` por SSH y se ejecuta `mkinitcpio -P`.
@@ -54,15 +54,13 @@ También versiona el resto de su `/etc` propio:
 `obsolete-system/` retira la copia duplicada de la regla ASI que quedó como
 `/etc/udev/rules.d/99-`, el antiguo `sshd_config.d/10-hardening.conf`, que
 sólo admitía clave pública y, al leerse antes, anulaba la política SSH común,
-y lo que deja el modo remoto: el inicio automático de la sesión y el servicio de
-Sunshine en firewalld. `modprobe.d/99-amdgpu-overdrive.conf` desbloquea
+y los restos del antiguo modo remoto: el inicio automático de la sesión y el
+servicio de Sunshine en firewalld. `modprobe.d/99-amdgpu-overdrive.conf` desbloquea
 OverDrive en `amdgpu` para LACT.
 
 Deimos es una estación de trabajo con el monitor LG 27UP850 y sus periféricos
 (Bluetooth, webcam e impresora), y se enciende por WoL por su Intel I219
-(`eno1`, `e1000e`). En modo remoto (`remote: true`), Sunshine (VA-API) captura
-el LG por DP-3 y lo ajusta al modo del cliente durante la sesión. También
-conserva la
+(`eno1`, `e1000e`). También conserva la
 electrónica/IoT; de la astronomía sólo quedan las bibliotecas (INDI, CCfits,
 Astropy) y la regla udev de las cámaras ASI. WirePlumber evita la suspensión
 del nodo HDMI AMD que provocaba duplicados al reconectar el monitor.
