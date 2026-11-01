@@ -1,13 +1,21 @@
+{{- $mac := eq .chezmoi.os "darwin" -}}
 # Tipografía
 font-family = JetBrainsMono Nerd Font
 font-style = Medium
+{{- if $mac }}
 font-size = 15
 font-thicken = true
+{{- else }}
+# Mismo tamaño que Kitty en Arch.
+font-size = 11
+{{- end }}
 
-# Catppuccin cambia automáticamente con la apariencia de macOS.
+# Catppuccin cambia automáticamente con la apariencia del sistema.
 theme = light:catppuccin-latte,dark:catppuccin-mocha
 window-theme = system
+{{- if $mac }}
 window-colorspace = srgb
+{{- end }}
 
 # Cursor
 cursor-style-blink = true
@@ -17,7 +25,9 @@ resize-overlay = never
 minimum-contrast = 1.1
 # La ventana abre siempre a 100x29 y deja la colocación al gestor de ventanas,
 # igual que `remember_window_size no` en la configuración de Kitty en Arch.
+{{- if $mac }}
 window-save-state = never
+{{- end }}
 window-padding-x = 10
 window-padding-y = 8
 window-width = 100
@@ -27,8 +37,13 @@ tab-inherit-working-directory = true
 split-inherit-working-directory = true
 
 # Comportamiento
+{{- if $mac }}
 # Equivale a `copy_on_select clipboard` en Kitty.
 copy-on-select = true
+{{- else }}
+# Como `copy_on_select clipboard` en Kitty: copia también al portapapeles.
+copy-on-select = clipboard
+{{- end }}
 selection-clear-on-copy = false
 scrollback-limit = 33554432
 scrollbar = never
@@ -46,6 +61,7 @@ term = xterm-ghostty
 
 # Shell integration
 shell-integration-features = cursor,sudo,title,ssh-env,ssh-terminfo
+{{- if $mac }}
 
 # macOS: Option como Alt (necesario para keybindings de zsh)
 macos-option-as-alt = left
@@ -58,3 +74,11 @@ keybind = cmd+alt+equal=equalize_splits
 
 # Terminal desplegable desde cualquier app (requiere permiso de Accesibilidad).
 keybind = global:cmd+grave_accent=toggle_quick_terminal
+{{- else }}
+
+# Atajos. Los predeterminados de Ghostty en Linux ya coinciden con los de
+# Kitty: Ctrl+Shift+T/W/N (pestaña/cerrar/ventana), Ctrl+Shift+O/E (divisiones),
+# Ctrl+Alt+flechas (moverse entre divisiones) y Alt+1..9 (pestañas).
+keybind = ctrl+shift+r=reset
+keybind = ctrl+alt+equal=equalize_splits
+{{- end }}

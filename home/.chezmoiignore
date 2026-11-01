@@ -6,7 +6,6 @@
 {{- if ne .chezmoi.os "darwin" }}
 # --- Exclusivo de macOS (phobos, janus) ---
 .zprofile
-.config/ghostty
 .config/dotfiles/Brewfile
 .gnupg/gpg-agent.conf
 {{- end }}
