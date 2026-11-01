@@ -6,8 +6,6 @@
 user_pref("widget.use-xdg-desktop-portal.file-picker", 1);
 user_pref("widget.use-xdg-desktop-portal.mime-handler", 1);
 user_pref("widget.use-xdg-desktop-portal.settings", 1);
-// Plasma supplies the scrollbar style; avoid GTK overlay scrollbars in Firefox.
-user_pref("widget.gtk.overlay-scrollbars.enabled", false);
 
 // Keep scrolling behavior explicit while rendering, WebRender, DMABUF and
 // hardware video decoding remain automatic.

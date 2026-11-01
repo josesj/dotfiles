@@ -23,16 +23,16 @@ function workstation_ssh_flavour() {
 }
 
 # Otherwise follow the desktop's current mode at shell startup: Latte for
-# light, Mocha for dark. Plasma reports it through kdeglobals and leaves the
-# key unset while it uses its default, Breeze Light; macOS only defines
+# light, Mocha for dark. GNOME reports it in the color-scheme gsettings key
+# (prefer-dark, prefer-light or default, which is light); macOS only defines
 # AppleInterfaceStyle while dark mode is active, so its absence means light.
 typeset workstation_color_scheme='Mocha'
 if workstation_ssh_flavour; then
   export WORKSTATION_FLAVOUR=$REPLY
   workstation_color_scheme=${(C)REPLY}
-elif (( $+commands[kreadconfig6] )); then
-  workstation_color_scheme=$(kreadconfig6 --file kdeglobals --group General --key ColorScheme 2>/dev/null)
-  : ${workstation_color_scheme:=BreezeLight}
+elif (( $+commands[gsettings] )); then
+  [[ $(gsettings get org.gnome.desktop.interface color-scheme 2>/dev/null) == *prefer-dark* ]] \
+    && workstation_color_scheme='Mocha' || workstation_color_scheme='Latte'
 elif [[ $OSTYPE == darwin* ]]; then
   defaults read -g AppleInterfaceStyle &>/dev/null || workstation_color_scheme='Latte'
 fi
