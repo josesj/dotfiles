@@ -3,6 +3,7 @@
 # Fuentes de GNOME, las mismas que fija 30-plasma-fonts: Noto Sans para la
 # interfaz y los documentos, JetBrainsMono Nerd Font Mono Medium para la
 # monoespaciada. Sólo actúa donde está instalado GNOME Shell.
+# gnome-shell: {{ lookPath "gnome-shell" }}
 set -euo pipefail
 command -v gnome-shell >/dev/null || exit 0
 command -v gsettings >/dev/null || exit 0

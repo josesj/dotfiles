@@ -7,6 +7,7 @@
 # Ajustes y aquí no se toca. Plasma sincroniza sus iconos y cursor (breeze) con
 # dconf; al retirar Breeze esos valores apuntarían a temas que ya no existen,
 # así que se restablecen a los de GNOME.
+# gnome-shell: {{ lookPath "gnome-shell" }}
 set -euo pipefail
 command -v gnome-shell >/dev/null || exit 0
 command -v gsettings >/dev/null || exit 0

@@ -67,3 +67,42 @@ Quedan dependencias huérfanas (`pacman -Qdtq`) que se revisan a mano.
 - **NVIDIA:** `nvidia_drm modeset=1 fbdev=1` ya está; GDM usa Wayland.
 - **KWallet:** migrar los secretos a GNOME Keyring antes de retirar `kwallet-pam`.
 - **Deimos** comparte el repo: los scripts de Plasma se condicionan por equipo, no se borran hasta migrarlo.
+
+## 7. Prueba de GNOME junto a Plasma
+
+`gnome-install.txt` es la lista de instalación: 52 paquetes, 133 con
+dependencias (216 MiB), simulada con `pacman -Sp` sin conflictos. Excluye
+`polkit-gnome` (GNOME Shell trae su agente) y `gnome-power-manager` (solo sirve
+con batería). Incluye `ghostty`.
+
+```bash
+cd ~/.local/share/chezmoi
+sudo pacman -S --needed $(cat hosts/tycho/packages/gnome-install.txt)
+sudo pacman -D --asexplicit obs-studio
+```
+
+`snap-pac` crea una instantánea de Btrfs antes y después. `pacman` no habilita
+GDM: Plasma Login Manager sigue siendo el gestor de acceso.
+
+**Probar.** Cierra la sesión y elige «GNOME» en el gestor de acceso. Si no
+aparece (hoy solo hay `plasma.desktop` en `/usr/share/wayland-sessions`):
+
+```bash
+sudo systemctl disable plasmalogin && sudo systemctl enable gdm   # probar
+sudo systemctl disable gdm && sudo systemctl enable plasmalogin   # volver
+```
+
+**Comprobar dentro de GNOME**
+1. `echo $XDG_SESSION_TYPE $XDG_CURRENT_DESKTOP` da `wayland GNOME`, y
+   `nvidia-smi` ve la RTX 5080.
+2. `chezmoi apply` ejecuta los tres `39-gnome-*`; `gsettings get
+   org.gnome.desktop.interface font-name` da `'Noto Sans 10'`.
+3. Ghostty abre como terminal predeterminado; el script «Open in Visual Studio
+   Code» aparece en Nautilus › Scripts.
+4. Suspender y reanudar (S3 con NVIDIA), audio, Bluetooth, mando Xbox y la
+   C920 en el hub del monitor.
+5. `/mnt/shared` por NFS desde Nautilus, Steam y LACT.
+
+**Pérdidas conocidas.** GNOME no regula el brillo del monitor por DDC/CI (la
+regla `61-i2c-group` deja de hacer falta salvo que se instale una extensión) y
+los secretos de KWallet no pasan solos a GNOME Keyring.
