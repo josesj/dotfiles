@@ -1,69 +1,13 @@
 # Hardware y papel de cada equipo de la flota. Se lee mediante
 # `index .hosts .chezmoi.hostname`; el sistema operativo sale de .chezmoi.os.
-#
-# remote: el equipo Arch se usa en remoto con Sunshine: autologin con bloqueo,
-# energía sin apagar la pantalla ni suspender, y sin mpv, OBS ni LibreOffice.
-# Con false es una estación de trabajo y se usan mpv_hwdec y obs_encoder.
 hosts:
   tycho:
-    remote: false
-    sunshine:
-      # GeForce RTX 5080 (Blackwell): NVENC con H.264, HEVC y AV1.
-      encoder: nvenc
-      # Ajustes de NVENC para la menor latencia, fijados para que la interfaz
-      # web no los cambie sin que se note. Preset P1, el más rápido; las
-      # superiores comprimen mejor a costa de latencia, y se gana lo mismo
-      # subiendo el bitrate.
-      nvenc_preset: 1
-      # Pasada previa a un cuarto de resolución: reparte mejor el bitrate y evita
-      # picos que acaban en paquetes perdidos, con poco coste.
-      nvenc_twopass: quarter_res
-      # Reparte cada fotograma entre los codificadores NVENC de la tarjeta. Por
-      # defecto sólo a 4K; aquí también a 1440p y 1080p a 144 Hz, para jugar.
-      nvenc_split_encode: enabled
-      # Pide el reloj máximo de la GPU mientras emite.
-      nvenc_latency_over_power: enabled
-      # Spatial AQ sólo compensa con bitrates bajos.
-      nvenc_spatial_aq: disabled
-      # Sin output_name: headless, el dongle HDMI es el monitor 0 de KMS, el de
-      # serie. Si se conecta otro monitor por DisplayPort, pasa a ser el 1.
-    # Salida que Sunshine ajusta al modo del cliente (apps.json): el dongle HDMI
-    # Evanlak8K V2 (4K a 60 Hz, 1440p a 144 Hz, 1080p a 144/120 Hz).
-    sunshine_display: HDMI-A-1
-    # Sólo como estación de trabajo (remote: false).
     # GeForce RTX 5080 (Blackwell): decodificación NVDEC para mpv.
     mpv_hwdec: nvdec
     mpv_comment: "Tycho: GeForce RTX 5080 (Blackwell), NVIDIA y Wayland."
     # OBS: NVENC (H.264 para emitir, HEVC para grabar).
     obs_encoder: nvenc
   deimos:
-    remote: false
-    sunshine:
-      # Radeon RX 6600 (Navi 23), única GPU (el UHD 770 del i5 está
-      # desactivado), con Mesa/radeonsi: VA-API codifica H.264 y HEVC.
-      encoder: vaapi
-      adapter_name: /dev/dri/renderD128
-      # Monitor 0 de KMS: el LG 27UP850 (4K a 60 Hz) por DP-3, forzado con su
-      # EDID para que exista aunque esté apagado.
-      output_name: 0
-      # Navi 23 no codifica AV1: no se ofrece a Moonlight.
-      av1_mode: 1
-      # Tope de bitrate (kbps) por encima de lo que pida Moonlight: 4K a 60 Hz en
-      # HEVC va bien con 80 Mbps y el cliente elige el suyo por debajo.
-      max_bitrate: 80000
-      # Medido con ffmpeg a 4K y 80 Mbps: HEVC por VA-API pasa de 100 fps con el
-      # preset por defecto o «speed» y baja a 88 con «quality»; H.264 se queda
-      # en 58 fps (no llega a 4K60, el cliente debe pedir HEVC), y Vulkan Video
-      # no mejora a VA-API. «speed» es el de menor espera por fotograma.
-      vaapi_quality: speed
-      vaapi_rc: cbr
-      # Desactivado a propósito: con su VBV de un fotograma, radeonsi mete NAL
-      # de relleno en H.264 y Sunshine no puede leer ese flujo al ajustar sus
-      # parámetros (errores en la prueba de h264_vaapi).
-      vaapi_strict_rc_buffer: disabled
-    # sunshine-display ajusta el LG al modo del cliente durante la sesión.
-    sunshine_display: DP-3
-    # Sólo como estación de trabajo (remote: false).
     # Radeon RX 6600 (Navi 23) sobre Mesa/RADV: decodificación VA-API.
     mpv_hwdec: vaapi
     mpv_comment: "Deimos: Radeon RX 6600 (Navi 23), Mesa/RADV y Wayland."

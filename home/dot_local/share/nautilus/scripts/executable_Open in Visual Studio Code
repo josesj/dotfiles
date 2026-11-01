@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
-# Equivale al menú contextual "Open in Visual Studio Code" de Dolphin (KIO):
-# abre en una ventana nueva cada carpeta seleccionada en Nautilus o, si no hay
-# selección, la carpeta que se está viendo. Nautilus lo muestra en Scripts.
+# Abre en una ventana nueva de VS Code cada carpeta seleccionada en Nautilus o,
+# si no hay selección, la carpeta que se está viendo. Nautilus lo muestra en
+# Scripts.
 set -euo pipefail
 
 folders=()

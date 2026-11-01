@@ -1,9 +1,8 @@
 {{- if eq .chezmoi.os "linux" -}}
 #!/usr/bin/env bash
-# Energía de la estación de trabajo: GNOME recupera sus valores de serie
-# (atenuar y apagar la pantalla por inactividad y suspender), como hace
-# 37-plasma-power con PowerDevil. Se borran las claves en lugar de fijar
-# valores, para seguir los que traiga GNOME.
+# Energía de la estación de trabajo: GNOME usa sus valores de serie (atenuar y
+# apagar la pantalla por inactividad y suspender). Se borran las claves en
+# lugar de fijar valores, para seguir los que traiga GNOME.
 # gnome-shell: {{ lookPath "gnome-shell" }}
 set -euo pipefail
 command -v gnome-shell >/dev/null || exit 0

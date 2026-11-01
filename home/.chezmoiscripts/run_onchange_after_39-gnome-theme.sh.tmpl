@@ -1,12 +1,11 @@
 {{- if eq .chezmoi.os "linux" -}}
 #!/usr/bin/env bash
 # GNOME usa su tema propio, Adwaita, y Catppuccin se conserva donde se lee
-# texto —Ghostty, Vim y VS Code— pero no en el escritorio, igual que con
-# Breeze en Plasma. Las aplicaciones GTK3 antiguas toman adw-gtk3 para
-# parecerse a las GTK4/libadwaita; el modo claro u oscuro se elige a mano en
-# Ajustes y aquí no se toca. Plasma sincroniza sus iconos y cursor (breeze) con
-# dconf; al retirar Breeze esos valores apuntarían a temas que ya no existen,
-# así que se restablecen a los de GNOME.
+# texto —Ghostty, Vim y VS Code— pero no en el escritorio. Las aplicaciones GTK3
+# antiguas toman adw-gtk3 para parecerse a las GTK4/libadwaita; el modo claro u
+# oscuro se elige a mano en Ajustes y aquí no se toca. Un equipo que venga de
+# KDE conserva en dconf los iconos y el cursor breeze; con ese tema ya
+# desinstalado apuntarían a nada, así que se restablecen a los de GNOME.
 # gnome-shell: {{ lookPath "gnome-shell" }}
 set -euo pipefail
 command -v gnome-shell >/dev/null || exit 0

@@ -25,14 +25,12 @@
 {{- if ne .chezmoi.os "linux" }}
 # --- Exclusivo de Arch Linux (tycho, deimos) ---
 .Xresources
-.config/autostart
 .config/btop/themes
 .config/chrome-flags.conf
 .config/chromium-flags.conf
 .config/code-flags.conf
 .config/environment.d
 .config/fontconfig
-.config/kate
 .config/kitty
 .config/mpv
 .config/obs-studio
@@ -40,32 +38,12 @@
 .config/systemd
 .config/wireplumber
 .config/xdg-terminals.list
-.local/bin/desktop-unlock
-.local/bin/libreoffice-kf6-x11
-.local/share/applications
-.local/share/kio
-.local/share/konsole
 .local/share/nautilus
-.local/share/org.kde.syntax-highlighting
 {{- end }}
 
-{{- if get (index .hosts .chezmoi.hostname) "remote" }}
-# --- Equipos remotos (remote en hosts.yaml): sin reproductor, OBS ni LibreOffice ---
-.config/mpv
-.config/obs-studio
-.local/bin/libreoffice-kf6-x11
-{{- else }}
-# --- Sólo los equipos remotos: Sunshine y el bloqueo al iniciar la sesión ---
-.config/autostart/lock-on-login.desktop
-.config/sunshine
-.config/systemd/user/graphical-session.target.wants
-.local/bin/lock-after-sunshine
-.local/bin/sunshine-display
-{{- end }}
-
-{{- if or (ne .chezmoi.hostname "tycho") (get (index .hosts .chezmoi.hostname) "remote") }}
-# --- Exclusivo de Tycho como estación de trabajo: FiiO K3, Edifier, micro de
-#     la C920, AAC de los Nothing Ear y mando Xbox ---
+{{- if ne .chezmoi.hostname "tycho" }}
+# --- Exclusivo de Tycho: FiiO K3, Edifier, micro de la C920, AAC de los Nothing
+#     Ear y mando Xbox ---
 .config/wireplumber/wireplumber.conf.d/51-fiio-k3.conf
 .config/wireplumber/wireplumber.conf.d/52-edifier-r1280db.conf
 .config/wireplumber/wireplumber.conf.d/53-c920-default-source.conf
