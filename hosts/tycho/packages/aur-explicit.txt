@@ -2,11 +2,13 @@
 ai.storyteller.lightcraft
 ai.storyteller.photocraft
 artcraft-launcher
-bruno-bin
+bambustudio-bin
 claude-code
 claude-desktop
+coros-link-bin
 ds9
-hotspot
+google-chrome
+io.tangencylabs.solidcraft
 jdtls
 visual-studio-code-bin
 yay
