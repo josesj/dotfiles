@@ -1,8 +1,8 @@
 {{- if eq .chezmoi.os "linux" -}}
 #!/usr/bin/env bash
-# Extensiones de GNOME Shell: iconos de bandeja (AppIndicator), Caffeine para
-# evitar la suspensión, Vitals con CPU, memoria y temperaturas en la barra, y
-# Dash to Dock.
+# Extensiones de GNOME Shell que se activan solas: iconos de bandeja (AppIndicator)
+# y Dash to Dock. Caffeine y Vitals están instaladas pero se dejan inactivas a
+# propósito; se activan a mano desde Extension Manager.
 # GNOME Shell no ve una extensión recién instalada hasta el siguiente inicio de
 # sesión; el texto de abajo cambia cuando aparece una, para que chezmoi vuelva a
 # ejecutar este script.
@@ -14,9 +14,7 @@ command -v gnome-shell >/dev/null || exit 0
 available=$(gnome-extensions list 2>/dev/null || true)
 for uuid in \
   appindicatorsupport@rgcjonas.gmail.com \
-  caffeine@patapon.info \
-  dash-to-dock@micxgx.gmail.com \
-  Vitals@CoreCoding.com; do
+  dash-to-dock@micxgx.gmail.com; do
   grep -Fqx -- "$uuid" <<< "$available" || continue
   gnome-extensions enable "$uuid" && printf 'Extensión activada: %s\n' "$uuid"
 done
