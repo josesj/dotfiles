@@ -41,8 +41,10 @@ split-inherit-working-directory = true
 # Equivale a `copy_on_select clipboard` en Kitty.
 copy-on-select = true
 {{- else }}
-# Como `copy_on_select clipboard` en Kitty: copia también al portapapeles.
-copy-on-select = clipboard
+# Copia al portapapeles y a la selección primaria: Ctrl+Shift+V pega del primero
+# y el botón central de la segunda. Con `clipboard` sólo se llenaba el primero y
+# el botón central no pegaba nada.
+copy-on-select = both
 {{- end }}
 selection-clear-on-copy = false
 scrollback-limit = 33554432
