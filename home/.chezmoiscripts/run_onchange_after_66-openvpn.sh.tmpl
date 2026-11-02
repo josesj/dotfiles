@@ -1,0 +1,24 @@
+{{- if eq .chezmoi.hostname "tycho" -}}
+#!/usr/bin/env bash
+# Importa a NetworkManager los perfiles de OpenVPN de TNG (FGG y TNG), que
+# `chezmoi apply` descifra en ~/.local/share/dotfiles/vpn/tng. Quedan sin
+# autoconexión: se activan con `nmcli connection up FGG`. Si ya había una conexión
+# con ese nombre se sustituye, y con ella las credenciales que NetworkManager
+# hubiera guardado. Se vuelve a ejecutar cuando cambia el contenido de los
+# perfiles cifrados:
+# FGG: {{ include "dot_local/share/dotfiles/private_vpn/private_tng/encrypted_private_FGG.ovpn.asc" | sha256sum }}
+# TNG: {{ include "dot_local/share/dotfiles/private_vpn/private_tng/encrypted_private_TNG.ovpn.asc" | sha256sum }}
+set -euo pipefail
+command -v nmcli >/dev/null || exit 0
+
+vpn_dir=$HOME/.local/share/dotfiles/vpn/tng
+
+for name in FGG TNG; do
+  source=$vpn_dir/$name.ovpn
+  [[ -r $source ]] || { printf 'Aviso: falta %s.\n' "$source" >&2; continue; }
+  nmcli connection delete "$name" >/dev/null 2>&1 || true
+  nmcli connection import type openvpn file "$source" >/dev/null
+  nmcli connection modify "$name" connection.autoconnect no
+  printf 'Perfil OpenVPN importado: %s\n' "$name"
+done
+{{- end -}}

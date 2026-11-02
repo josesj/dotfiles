@@ -344,8 +344,15 @@ precompartida; las dos variantes de un cliente comparten claves, así que sólo
 puede estar activa una a la vez.
 
 `chezmoi apply` los descifra en `~/.local/share/dotfiles/vpn/` (directorios en
-`700`, archivos en `600`) y, como el resto de `.local/share/dotfiles`, sólo en
-los Mac. Para añadir o actualizar uno:
+`700`, archivos en `600`). Cada equipo recibe una parte:
+
+- **Los Mac (phobos y janus):** todo, incluidos los perfiles `.mobileconfig`.
+- **Deimos:** los WireGuard de `phobos`, que `65-wireguard` importa a
+  NetworkManager como `lodero-full` y `lodero-home`.
+- **Tycho:** sólo los OpenVPN de TNG, que `66-openvpn` importa a NetworkManager
+  como `FGG` y `TNG`, sin autoconexión (`nmcli connection up FGG`).
+
+Para añadir o actualizar uno:
 
 ```bash
 chezmoi add --encrypt ~/.local/share/dotfiles/vpn/lodero/phobos-full.conf
