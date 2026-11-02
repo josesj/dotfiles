@@ -12,6 +12,9 @@
 # Gradle vuelve a su home por defecto (~/.gradle), donde está gradle.properties;
 # ~/.cache/gradle era un segundo home con cachés y daemons duplicados.
 .cache/gradle
+
+# Ghostty 1.4 prefiere config.ghostty; el nombre antiguo `config` se retira.
+.config/ghostty/config
 {{- if eq .chezmoi.os "linux" }}
 # JBang usa JBANG_DIR también fuera de Zsh (environment.d); ~/.jbang es un resto.
 .jbang
