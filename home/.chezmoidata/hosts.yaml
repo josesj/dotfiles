@@ -7,9 +7,9 @@ hosts:
     mpv_comment: "Tycho: GeForce RTX 5080 (Blackwell), NVIDIA y Wayland."
     # OBS: NVENC (H.264 para emitir, HEVC para grabar).
     obs_encoder: nvenc
-    # Suspende por inactividad con los valores de serie de GNOME, en la sesión
-    # y en la pantalla de acceso; se despierta por WoL. Sin la clave, el equipo
-    # no suspende solo (deimos: Docker, borgmatic y acceso remoto).
+    # Suspende por inactividad con los valores de serie de PowerDevil; se despierta
+    # por WoL. Sin la clave, el equipo no suspende solo en corriente (deimos:
+    # Docker, borgmatic y acceso remoto). Lo aplica 37-plasma-power.
     idle_suspend: true
   deimos:
     # Radeon RX 6600 (Navi 23) sobre Mesa/RADV: decodificación VA-API.

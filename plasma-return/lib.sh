@@ -23,7 +23,7 @@ for arg in "$@"; do
     --yes) ASSUME_YES=true ;;
     --allow-session) ALLOW_SESSION=true ;;
     -h|--help) sed -n '2,/^$/p' "${BASH_SOURCE[1]}" | sed 's/^# \{0,1\}//'; exit 0 ;;
-    *) printf 'Opción desconocida: %s\n' "$arg" >&2; exit 2 ;;
+    *) [[ ${PR_ALLOW_UNKNOWN:-0} == 1 ]] || { printf 'Opción desconocida: %s\n' "$arg" >&2; exit 2; } ;;
   esac
 done
 
