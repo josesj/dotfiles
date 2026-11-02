@@ -73,7 +73,7 @@ chezmoi update          # git pull + apply
 Añadir un equipo es añadir su entrada en esa tabla y en la lista de
 `home/.chezmoi.toml.tmpl` y, si hace falta, una regla en `.chezmoiignore`.
 
-Sólo en Arch: Kitty, PipeWire, WirePlumber, fontconfig, Xresources,
+Sólo en Arch: PipeWire, WirePlumber,
 `environment.d`, las banderas de Chrome y VS Code y el script de Nautilus.
 Sólo en macOS: `.zprofile` y el `Brewfile`. Ghostty está en los cuatro, con
 plantilla para cada sistema.
@@ -97,27 +97,35 @@ Tycho y Deimos se encienden y se usan a distancia por WoL y SSH.
   los dos equipos esperando el paquete mágico al suspender o apagar. En la UEFI
   hay que activar «Power On By PCI-E» y desactivar ErP. Se comprueba con
   `ethtool <interfaz> | grep Wake-on`, que debe decir `g`.
+- **Suspensión.** Tycho suspende por inactividad con los valores de serie de
+  GNOME (`idle_suspend` en `hosts.yaml`) y se despierta por WoL. Deimos no:
+  ni la sesión (`39-gnome-power`) ni la pantalla de acceso de GDM lo
+  suspenden, porque SSH, Docker y los trabajos largos no cuentan como
+  actividad. Para GDM, `hosts/deimos/system/dconf` añade la base de datos
+  `gdm.d` a su perfil e `install-system.sh` la compila con `dconf update`. La
+  pantalla se apaga en los dos.
 - **Docker.** Los Mac tienen un contexto `deimos` que habla con su Docker por
   SSH (`run_onchange_after_55-docker-contexts.sh`). No pasa a ser el activo: se
   usa con `docker --context deimos …` o `docker context use deimos`.
 
 ## Aspecto
 
-Catppuccin viste lo que muestra texto: Vim, Zsh, Kitty, Ghostty y
+Catppuccin viste lo que muestra texto: Vim, Zsh, Ghostty y
 Visual Studio Code, con Latte en modo claro y Mocha en modo oscuro. El
 escritorio no: GNOME usa Adwaita, su tema propio, y es quien dicta el modo. El
 sabor se detecta en el arranque del shell y al recuperar el foco en Vim: GNOME
 lo publica en la clave `color-scheme` de `gsettings` y macOS sólo define `AppleInterfaceStyle` mientras el
 modo oscuro está activo. Por SSH manda el terminal local, no el escritorio
-remoto: el prompt pregunta a Kitty o Ghostty su color de fondo (OSC 11) y
+remoto: el prompt pregunta a Ghostty su color de fondo (OSC 11) y
 exporta `WORKSTATION_FLAVOUR`, que Vim también sigue. El prompt asigna colores semánticos de la variante
 activa a ruta, estado de Git, errores, duración, trabajos y entornos virtuales.
 
-En Arch, fontconfig y GNOME usan Noto Sans para la interfaz, Noto Serif para
-serif y JetBrainsMono Nerd Font Mono, en peso Medium, para monoespaciado; Noto CJK, Emoji y
-Symbols completan los glifos restantes. `~/.Xresources` añade los mismos ajustes
-de renderizado para las aplicaciones X11 y XWayland que leen la base de recursos
-mediante `xrdb`. En macOS, Ghostty usa JetBrains Mono Nerd Font Medium a 15 pt y sigue
+En Arch, las fuentes son las de GNOME: Adwaita Sans a 11 pt (12 en documentos),
+con el renderizado automático (GTK decide el suavizado y el hinting según la
+resolución); la monoespaciada de GNOME es JetBrainsMono Nerd Font Mono Medium a
+11 pt, la misma que fijan Ghostty y VS Code en sus propios ajustes. fontconfig se
+queda con los valores del sistema (Noto para las familias genéricas, suavizado y
+hinting ligero). En macOS, Ghostty usa JetBrains Mono Nerd Font Medium a 15 pt y sigue
 la apariencia del sistema.
 
 Firefox mantiene su interfaz oscura, pero informa a las páginas web de una
@@ -261,7 +269,7 @@ es la lista mínima de la que dependen los archivos de este repositorio:
 
 ```bash
 sudo pacman -S --needed zsh vim git git-lfs gnupg chezmoi \
-  fzf ripgrep direnv python-uv nvm jbang kitty \
+  fzf ripgrep direnv python-uv nvm jbang ghostty \
   clang pyright typescript-language-server
 ```
 

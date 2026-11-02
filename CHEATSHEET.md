@@ -28,39 +28,26 @@ Vim usa números de línea absolutos, Catppuccin Latte/Mocha, Lightline,
 GitGutter, ALE, fzf.vim, Commentary, Surround, Repeat y Tagbar,
 cargados como paquetes nativos desde `~/.vim/pack/dotfiles/start`.
 
-## Kitty (Arch)
+## Ghostty
+
+En Linux Ghostty usa sus atajos predeterminados: `Ctrl+Shift+T/W/N`,
+`Ctrl+Shift+O/E` para dividir, `Ctrl+Alt+flechas` y `Alt+1..9`. Además:
 
 | Teclas | Acción |
 |---|---|
-| `Ctrl+Shift+T` | Nueva pestaña |
-| `Ctrl+Shift+W` | Cerrar pestaña |
-| `Ctrl+Tab` / `Ctrl+Shift+Tab` | Pestaña siguiente/anterior |
-| `Alt+1…8` / `Alt+9` | Ir a pestaña / última pestaña |
-| `Ctrl+Shift+N` | Nueva ventana |
-| `Ctrl+Shift+O` | División vertical |
-| `Ctrl+Shift+E` | División horizontal |
-| `Ctrl+Alt+←/→/↑/↓` | Moverse entre divisiones |
-| `Ctrl+Shift+Enter` | Ampliar/restaurar división |
-| `Ctrl+Shift+X` | Cerrar división |
-| `Ctrl+Shift+C/V` | Copiar/pegar |
-| `Ctrl++` / `Ctrl+-` / `Ctrl+0` | Aumentar/reducir/restaurar fuente |
-| `Ctrl+Shift+F` | Buscar en el terminal |
-| `Ctrl+Shift+PageUp/PageDown` | Prompt anterior/siguiente |
-| `F11` | Pantalla completa |
-| `Ctrl+,` | Abrir configuración |
-| `Ctrl+Shift+,` | Recargar configuración |
-| `Ctrl+Shift+F1` | Paleta de comandos |
-| `Ctrl+Shift+P` + `F`/`L`/`H` | Copiar ruta/línea/hash visible con hints |
+| `Ctrl+Shift+F` | Buscar en la pantalla y el historial (`Esc` termina) |
+| `Ctrl+Shift+↑/↓` | Saltar al prompt anterior / siguiente |
+| `Ctrl+Shift+P` | Paleta de comandos |
+| `Ctrl+Shift+Enter` | Ampliar o restaurar la división actual |
+| `Ctrl+Shift+J` | Pegar la ruta de un archivo con el contenido de la pantalla |
+| `Ctrl+Shift+R` | Reiniciar el terminal |
+| `Ctrl+Alt+=` | Igualar el tamaño de las divisiones |
 
-La ventana abre a `100×29`, con margen de 4 px, y no recuerda su tamaño.
-Si un comando tarda más de 15 s y Kitty no tiene el foco, avisa por el escritorio.
-Kitty usa Catppuccin Latte en modo claro y Mocha en modo oscuro.
+Los comandos de más de 10 s que terminan con la ventana sin foco avisan con una
+notificación. `ghostty +ssh-cache` lista los servidores con el terminfo de
+Ghostty instalado (`--clear` lo vacía).
 
-## Ghostty (macOS)
-
-En Linux Ghostty usa sus atajos predeterminados, que coinciden con los de
-Kitty: `Ctrl+Shift+T/W/N`, `Ctrl+Shift+O/E` para dividir, `Ctrl+Alt+flechas` y
-`Alt+1..9`.
+En macOS:
 
 | Teclas | Acción |
 |---|---|
@@ -102,7 +89,6 @@ Latte/Mocha e instala su propio terminfo en los servidores al conectar por SSH.
 | `psfind patrón` | Buscar procesos por nombre o argumentos |
 | `mkcd dir` | Crear un directorio y entrar en él |
 | `serve [puerto]` | Servidor HTTP estático en el directorio actual |
-| `rdpunlock` | Desbloquear la sesión gráfica antes de entrar por RDP (Arch) |
 | `pw-lowlatency [64\|128\|256\|512]` | Forzar temporalmente 48 kHz y otro quantum (Arch) |
 | `pw-normal` | Restaurar el perfil persistente de audio |
 

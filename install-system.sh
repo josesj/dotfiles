@@ -46,6 +46,7 @@ networkmanager_changed=false
 dispatcher_changed=false
 firewalld_changed=false
 webcam_changed=false
+dconf_changed=false
 host_timers=()
 
 backup_target() {
@@ -124,6 +125,7 @@ mark_changed_subsystem() {
     NetworkManager/conf.d/*) networkmanager_changed=true ;;
     NetworkManager/dispatcher.d/*) dispatcher_changed=true ;;
     firewalld/*) firewalld_changed=true ;;
+    dconf/*) dconf_changed=true ;;
   esac
 }
 
@@ -352,6 +354,11 @@ if ! $dry_run; then
     firewall-cmd --check-config
     firewall-cmd --reload
   fi
+  # El perfil gdm de deimos añade la base de datos de sistema gdm.d al
+  # greeter; dconf update la compila (también al retirarla de otro equipo). GDM la lee al mostrar de nuevo la pantalla de acceso.
+  if $dconf_changed; then
+    dconf update
+  fi
   # live-restore mantiene los contenedores en marcha durante el reinicio.
   if $docker_changed; then
     systemctl try-restart docker.service
@@ -397,6 +404,9 @@ else
   fi
   if $firewalld_changed; then
     printf 'Validaría y recargaría firewalld.\n'
+  fi
+  if $dconf_changed; then
+    printf 'Compilaría las bases de datos de dconf con dconf update.\n'
   fi
   if $docker_changed; then
     printf 'Reiniciaría docker.service si está en marcha.\n'

@@ -33,9 +33,17 @@
 .local/bin/lock-after-sunshine
 .local/bin/sunshine-display
 .local/share/applications/kitty.desktop
+.config/kitty
+.terminfo/kitty.terminfo
+.terminfo/x/xterm-kitty
 .local/share/applications/libreoffice-*.desktop
 .config/systemd/user/plasma-workspace.target.wants/app-org.kde.krdpserver.service
 .local/share/konsole
 .local/share/kio/servicemenus/open_in_vscode.desktop
 .local/share/org.kde.syntax-highlighting
+
+# Fuentes: GNOME y los valores de fontconfig del sistema bastan. GNOME publica
+# también el renderizado para XWayland (XSETTINGS), así que ~/.Xresources sobra.
+.config/fontconfig/fonts.conf
+.Xresources
 {{- end }}

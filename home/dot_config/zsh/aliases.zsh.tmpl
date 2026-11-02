@@ -37,12 +37,6 @@ alias hidefiles='defaults write com.apple.finder AppleShowAllFiles -bool false &
 # --- Arch Linux ---
 alias localip='ip -4 -brief address show scope global'
 alias audio-status='wpctl status'
-alias rdpunlock='desktop-unlock'
 alias borgmount='borgmatic-mount'
 alias borgumount='borgmatic-umount'
-
-# El wrapper SSH de Kitty instala el terminfo xterm-kitty en el servidor remoto.
-if [[ -n "$KITTY_WINDOW_ID" ]] && (( $+commands[kitten] )); then
-  alias ssh='kitten ssh'
-fi
 {{- end }}

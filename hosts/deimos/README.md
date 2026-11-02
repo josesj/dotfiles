@@ -29,12 +29,22 @@ También versiona el resto de su `/etc` propio:
   (`/usr/local/libexec/borgmatic-failure-notify`) no se versionan: sólo root
   puede leerlos.
 - `lm_sensors`: etiquetas del chip NCT6798D de la ASUS PRIME B660M-A D4.
+- Escritorio remoto: inicio de sesión remoto por RDP con GNOME Remote Desktop
+  en modo sistema. GDM acepta la conexión y abre una sesión nueva, así que
+  funciona tras reiniciar sin nadie conectado. Se configura con
+  `sudo hosts/deimos/remote-login.sh`, que genera un certificado autofirmado
+  de diez años y pide el usuario y la contraseña de RDP (no se versionan;
+  `--credentials` los cambia).
 - firewalld: `eno1` entera va a la zona `private`, que abre SSH, mDNS, LLMNR,
   y RDP. Deimos se usa desde varias redes, privadas
   y públicas, y el filtro por origen lo hace el cortafuegos corporativo. La
   zona de la interfaz la fija NetworkManager, no firewalld, y no se versiona
   porque la conexión guarda la IP estática:
   `nmcli connection modify "deimos static" connection.zone private`.
+- Pantalla de acceso: `xdg/monitors.xml` es la configuración de monitores de
+  sistema, que mutter usa en GDM y para cualquier usuario sin la suya: el LG a
+  3840×2160 con escala 1.5, como en la sesión. Si se cambia la escala en
+  Ajustes, se vuelve a copiar `~/.config/monitors.xml` aquí.
 - Pantalla: `DP-3` va forzado (`video=DP-3:e` y `drm.edid_firmware` en
   `kernel/cmdline`) con el EDID del LG 27UP850 guardado en
   `firmware/edid/lg-27up850.bin`, que `install-system.sh` copia a
