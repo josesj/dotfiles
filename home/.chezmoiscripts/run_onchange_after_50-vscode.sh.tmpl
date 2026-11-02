@@ -2,9 +2,9 @@
 # Catppuccin Latte/Mocha en Visual Studio Code, con detección automática del
 # modo claro/oscuro del sistema, y JetBrainsMono Nerd Font Mono en el editor y
 # el terminal integrado a 14 px (el peso Medium lo fija editor.fontWeight).
-# Los diálogos y los menús son los nativos de cada sistema (en Arch, los del
-# portal de GNOME). La barra de título, el menú y los diálogos se excluyen de
-# Settings Sync: los valores de Arch no aplican en macOS.
+# En Arch, los diálogos son los de VS Code: los nativos son de GTK, ajenos a
+# Plasma. La barra de título, el menú y los diálogos se excluyen de Settings
+# Sync: los valores de Arch no aplican en macOS.
 set -euo pipefail
 
 command -v code >/dev/null || {
@@ -59,10 +59,12 @@ sed -i.bak -e '/"window.titleBarStyle"[[:space:]]*:/d' -e '/"window.menuStyle"[[
   -e '/"window.dialogStyle"[[:space:]]*:/d' "$temporary"
 rm -f -- "$temporary.bak"
 {{- else }}
-# Los diálogos y menús personalizados que fijaba la configuración de Plasma se
-# retiran: en GNOME los nativos encajan.
-sed -i.bak -e '/"window.menuStyle"[[:space:]]*:/d' -e '/"window.dialogStyle"[[:space:]]*:/d' "$temporary"
-rm -f -- "$temporary.bak"
+if ! grep -q '"window.dialogStyle"[[:space:]]*:' "$temporary"; then
+  sed -i.bak '/"workbench.colorTheme"/i\
+  "window.dialogStyle": "custom",
+' "$temporary"
+  rm -f -- "$temporary.bak"
+fi
 {{- end }}
 cmp -s -- "$temporary" "$settings" || install -m600 -- "$temporary" "$settings"
 

@@ -1,0 +1,34 @@
+{{- if and (eq .chezmoi.os "linux") (not (get (index .hosts .chezmoi.hostname) "remote")) -}}
+#!/usr/bin/env bash
+# Estación de trabajo (remote: false en hosts.yaml): PowerDevil recupera sus
+# valores de serie (atenuar y apagar la pantalla por inactividad y suspender),
+# que el uso remoto con Sunshine desactiva; los remotos los fijan en
+# 38-plasma-remote. Se borran las claves en lugar de fijar
+# valores, para seguir los que traiga Plasma.
+set -euo pipefail
+
+# Restos del uso remoto. No sirve .chezmoiremove: en una estación de trabajo
+# .chezmoiignore excluye estos destinos, y chezmoi no borra lo que ignora. El
+# autostart es el que importa: sin Sunshine, bloquearía la sesión a los 90 s.
+rm -f -- \
+  "$HOME/.config/autostart/lock-on-login.desktop" \
+  "$HOME/.local/bin/lock-after-sunshine" \
+  "$HOME/.local/bin/sunshine-display" \
+  "$HOME/.config/systemd/user/graphical-session.target.wants/app-dev.lizardbyte.app.Sunshine.service"
+rmdir --ignore-fail-on-non-empty -- \
+  "$HOME/.config/systemd/user/graphical-session.target.wants" 2>/dev/null || true
+
+command -v kwriteconfig6 >/dev/null || exit 0
+
+kwriteconfig6 --file powerdevilrc --group AC --group Display \
+  --key DimDisplayWhenIdle --delete
+kwriteconfig6 --file powerdevilrc --group AC --group Display \
+  --key TurnOffDisplayWhenIdle --delete
+kwriteconfig6 --file powerdevilrc --group AC --group SuspendAndShutdown \
+  --key AutoSuspendAction --delete
+
+command -v qdbus6 >/dev/null && {
+  qdbus6 org.kde.Solid.PowerManagement /org/kde/Solid/PowerManagement \
+    org.kde.Solid.PowerManagement.refreshStatus >/dev/null 2>&1 || true
+}
+{{- end -}}

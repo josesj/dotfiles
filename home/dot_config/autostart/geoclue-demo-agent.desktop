@@ -1,6 +1,0 @@
-[Desktop Entry]
-Type=Application
-Name=Geoclue Demo agent
-# Oculta la entrada de /etc/xdg/autostart: no se usa en este equipo.
-Hidden=true
-X-GNOME-Autostart-enabled=false

@@ -4,8 +4,8 @@ Configuración de cuatro equipos gestionada con [chezmoi](https://chezmoi.io):
 
 | Equipo | Sistema | Papel |
 |---|---|---|
-| `tycho` | Arch Linux + GNOME | Estación de trabajo (Ryzen 7 9700X, RTX 5080) |
-| `deimos` | Arch Linux + GNOME | Estación de trabajo (i5-12600, RX 6600) |
+| `tycho` | Arch Linux + Plasma | Estación de trabajo (Ryzen 7 9700X, RTX 5080) |
+| `deimos` | Arch Linux + Plasma | Estación de trabajo (i5-12600, RX 6600) |
 | `phobos` | macOS | Portátil (MacBook Pro, M4 Pro, 24 GB) |
 | `janus` | macOS | Sobremesa (Mac Studio, M2 Max, 32 GB) |
 
@@ -25,11 +25,12 @@ home/                   estado fuente de chezmoi ($HOME de los cuatro equipos)
   .chezmoidata/         hardware de cada equipo: decodificación de mpv y codificador de OBS
   .chezmoiignore        reparto de destinos por sistema operativo y por equipo
   .chezmoiexternal.toml.tmpl  Oh My Zsh, plugins de Zsh y de Vim y temas Catppuccin de btop
-  .chezmoiscripts/      aprovisionamiento (Homebrew, GNOME, VS Code...)
+  .chezmoiscripts/      aprovisionamiento (Homebrew, Plasma, Kate, VS Code...)
   .chezmoiremove        restos de configuraciones retiradas que hay que borrar
   .chezmoitemplates/    fragmentos reutilizados (el user.js de Firefox)
 system/                 archivos de /etc comunes a los dos equipos Arch
 hosts/<equipo>/         /etc e inventario de paquetes por equipo Arch
+plasma-return/          scripts para dejar el sistema sin escritorio y volver a Plasma
 install-system.sh       instalador de /etc (Arch, como root)
 update-state.sh         actualiza el inventario de paquetes del equipo actual
 ```
@@ -53,8 +54,9 @@ explícita si no es uno de los cuatro conocidos. El primer `apply`:
 2. Clona Oh My Zsh, los tres plugins de Zsh y los nueve plugins de Vim.
 3. Escribe los archivos de configuración del equipo.
 4. En macOS instala Homebrew y el `Brewfile`, registra los JDK y aplica las
-   preferencias del sistema; en Arch fija con `gsettings` las fuentes, el tema
-   GTK y la energía de GNOME.
+   preferencias del sistema; en Arch configura Plasma, Konsole, Kate, KWin,
+   Baloo y el atajo de Kitty; en los equipos remotos, la energía para el uso
+   remoto, y en una estación de trabajo, los lanzadores KF6/X11 de LibreOffice.
 
 Uso diario:
 
@@ -73,21 +75,22 @@ chezmoi update          # git pull + apply
 Añadir un equipo es añadir su entrada en esa tabla y en la lista de
 `home/.chezmoi.toml.tmpl` y, si hace falta, una regla en `.chezmoiignore`.
 
-Sólo en Arch: PipeWire, WirePlumber,
-`environment.d`, las banderas de VS Code y el script de Nautilus.
-Sólo en macOS: `.zprofile` y el `Brewfile`. Ghostty está en los cuatro, con
-plantilla para cada sistema.
+Sólo en Arch: Kitty, Plasma, Konsole, Kate, Dolphin, PipeWire,
+WirePlumber, fontconfig, Xresources, `environment.d` y las banderas de Chrome y
+VS Code. Sólo en macOS: Ghostty, `.zprofile` y el `Brewfile`.
+
+En Arch, el indexador de Baloo usa la plataforma Qt `offscreen` (drop-in de
+`kde-baloo.service`): arranca antes de que la sesión publique `WAYLAND_DISPLAY`
+y, sin pantalla, `baloo_file_extractor` abortaba en cada lote.
 
 Por equipo: mpv y OBS usan `mpv_hwdec` y `obs_encoder` de
 `.chezmoidata/hosts.yaml`. Tycho añade el DAC FiiO K3, los altavoces Edifier, el
-micrófono de la C920 como entrada predeterminada y el arranque de Steam Big
-Picture con el mando Xbox. Deimos añade la regla que evita la suspensión del
-nodo HDMI de AMD y `HSA_OVERRIDE_GFX_VERSION`, con la que ROCm trata la RX 6600
-(gfx1030 en lugar de gfx1032). En los dos, los auriculares Bluetooth (Nothing
-Ear) usan AAC con el codificador en bitrate variable de máxima calidad
-(`54-bluetooth-aac.conf`). WirePlumber restaura antes el último perfil elegido
-a mano: si vuelven en manos libres (HFP), basta elegir una vez «High Fidelity
-Playback».
+micrófono de la C920 como entrada predeterminada, AAC de máxima calidad para los
+auriculares Bluetooth y el arranque de Steam Big Picture con el mando Xbox. Deimos
+añade la regla que evita la suspensión del nodo HDMI de AMD y
+`HSA_OVERRIDE_GFX_VERSION`, con la que ROCm trata la RX 6600 (gfx1030 en lugar de
+gfx1032). En los dos, los auriculares Bluetooth (Nothing Ear) usan AAC con el
+codificador en bitrate variable de máxima calidad (`54-bluetooth-aac.conf`).
 
 ## Acceso remoto en Arch
 
@@ -97,39 +100,42 @@ Tycho y Deimos se encienden y se usan a distancia por WoL y SSH.
   los dos equipos esperando el paquete mágico al suspender o apagar. En la UEFI
   hay que activar «Power On By PCI-E» y desactivar ErP. Se comprueba con
   `ethtool <interfaz> | grep Wake-on`, que debe decir `g`.
-- **Suspensión.** Tycho suspende por inactividad con los valores de serie de
-  GNOME (`idle_suspend` en `hosts.yaml`) y se despierta por WoL. Deimos no:
-  ni la sesión (`39-gnome-power`) ni la pantalla de acceso de GDM lo
-  suspenden, porque SSH, Docker y los trabajos largos no cuentan como
-  actividad. Para GDM, `hosts/deimos/system/dconf` añade la base de datos
-  `gdm.d` a su perfil e `install-system.sh` la compila con `dconf update`. La
-  pantalla se apaga en los dos.
+- **RDP (Deimos).** El escritorio remoto de KDE (`krdp`) arranca con la sesión
+  de Plasma (enlace en `plasma-workspace.target.wants`) y se entra con el
+  usuario y la contraseña del sistema. `39-krdp` fija `krdpserverrc` y genera
+  un certificado autofirmado de diez años (el de Plasma sólo vale un día), que
+  rehace si falta o caduca en menos de 30 días; la clave no se versiona. Tras
+  reiniciar no hay RDP hasta iniciar sesión en el equipo; con la pantalla
+  bloqueada, se desbloquea antes por SSH con `desktop-unlock` (`rdpunlock`).
+  firewalld abre RDP en la zona `private`.
 - **Docker.** Los Mac tienen un contexto `deimos` que habla con su Docker por
   SSH (`run_onchange_after_55-docker-contexts.sh`). No pasa a ser el activo: se
   usa con `docker --context deimos …` o `docker context use deimos`.
 
 ## Aspecto
 
-Catppuccin viste lo que muestra texto: Vim, Zsh, Ghostty y
+Catppuccin viste lo que muestra texto: Vim, Zsh, Kitty, Ghostty, Konsole, Kate y
 Visual Studio Code, con Latte en modo claro y Mocha en modo oscuro. El
-escritorio no: GNOME usa Adwaita, su tema propio, y es quien dicta el modo. El
-sabor se detecta en el arranque del shell y al recuperar el foco en Vim: GNOME
-lo publica en la clave `color-scheme` de `gsettings` y macOS sólo define `AppleInterfaceStyle` mientras el
+escritorio no: Plasma usa Breeze, su tema propio, y es quien dicta el modo. El
+sabor se detecta en el arranque del shell y al recuperar el foco en Vim: Plasma
+lo publica en `kdeglobals` y macOS sólo define `AppleInterfaceStyle` mientras el
 modo oscuro está activo. Por SSH manda el terminal local, no el escritorio
-remoto: el prompt pregunta a Ghostty su color de fondo (OSC 11) y
+remoto: el prompt pregunta a Kitty o Ghostty su color de fondo (OSC 11) y
 exporta `WORKSTATION_FLAVOUR`, que Vim también sigue. El prompt asigna colores semánticos de la variante
 activa a ruta, estado de Git, errores, duración, trabajos y entornos virtuales.
 
-En Arch, las fuentes son las de GNOME: Adwaita Sans a 11 pt (12 en documentos),
-con el renderizado automático (GTK decide el suavizado y el hinting según la
-resolución); la monoespaciada de GNOME es JetBrainsMono Nerd Font Mono Medium a
-11 pt, la misma que fijan Ghostty y VS Code en sus propios ajustes. fontconfig se
-queda con los valores del sistema (Noto para las familias genéricas, suavizado y
-hinting ligero). En macOS, Ghostty usa JetBrains Mono Nerd Font Medium a 15 pt y sigue
+En Arch, fontconfig y Plasma usan Noto Sans para la interfaz, Noto Serif para
+serif y JetBrainsMono Nerd Font Mono, en peso Medium, para monoespaciado; Noto CJK, Emoji y
+Symbols completan los glifos restantes. `~/.Xresources` añade los mismos ajustes
+de renderizado para las aplicaciones X11 y XWayland que leen la base de recursos
+mediante `xrdb`. En macOS, Ghostty usa JetBrains Mono Nerd Font Medium a 15 pt y sigue
 la apariencia del sistema.
 
 Firefox mantiene su interfaz oscura, pero informa a las páginas web de una
-preferencia de color clara (`prefers-color-scheme: light`).
+preferencia de color clara (`prefers-color-scheme: light`). Chrome y Chromium, con
+las mismas banderas (`chromium-flags.conf` enlaza a `chrome-flags.conf`), siguen
+el modo claro u oscuro del sistema en su interfaz y también dan a las páginas la
+preferencia clara.
 
 ## Zsh, Vim y sus complementos
 
@@ -162,7 +168,7 @@ restaura los valores configurados.
 
 En una estación de trabajo, mpv limita la ventana al 80 % del escritorio, prioriza audio y subtítulos en
 español, inglés e italiano y usa yt-dlp con los perfiles `stream-2k` y
-`stream-4k`.
+`stream-4k`. Una regla de KWin centra sus ventanas.
 
 OBS, también sólo en una estación de trabajo, parte de un lienzo 4K y sale a 1440p60. Graba en HEVC con calidad constante
 (CQP 20) en `~/Videos/OBS`, con tres pistas de audio: mezcla, micro y
@@ -266,13 +272,13 @@ es la lista mínima de la que dependen los archivos de este repositorio:
 
 ```bash
 sudo pacman -S --needed zsh vim git git-lfs gnupg chezmoi \
-  fzf ripgrep direnv python-uv nvm jbang ghostty \
+  fzf ripgrep direnv python-uv nvm jbang kitty \
   clang pyright typescript-language-server
 ```
 
 `fzf` y `ripgrep` los necesitan `<Espacio>f` y `<Espacio>r` en Vim; `clang`,
 `pyright` y `typescript-language-server` son tres de los cuatro servidores LSP
-que usan los editores. El cuarto, `jdtls`, está en AUR: `yay -S jdtls`.
+que configura Kate. El cuarto, `jdtls`, está en AUR: `yay -S jdtls`.
 
 ### Inventario de paquetes
 

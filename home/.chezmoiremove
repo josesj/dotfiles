@@ -12,43 +12,38 @@
 # Gradle vuelve a su home por defecto (~/.gradle), donde está gradle.properties;
 # ~/.cache/gradle era un segundo home con cachés y daemons duplicados.
 .cache/gradle
-
-# Ghostty 1.4 prefiere config.ghostty; el nombre antiguo `config` se retira.
-.config/ghostty/config
 {{- if eq .chezmoi.os "linux" }}
 # JBang usa JBANG_DIR también fuera de Zsh (environment.d); ~/.jbang es un resto.
 .jbang
+
+# Catppuccin salió del escritorio: restos del tema anterior.
+.local/share/color-schemes/CatppuccinLatteBlue.colors
+.local/share/color-schemes/CatppuccinMochaBlue.colors
+.local/share/plasma/look-and-feel/local.catppuccin-latte-blue
+.local/share/plasma/look-and-feel/local.catppuccin-mocha-blue
 
 # EasyEffects se retiró: añadía latencia a todo el audio, también a la salida.
 .config/autostart/easyeffects-service.desktop
 .local/share/easyeffects/input/Micro.json
 .local/share/easyeffects/autoload/input/alsa_input.usb-Sonix_Technology_Co.__Ltd._HD_Pro_Webcam_C920_SN0001-03.analog-stereo:analog-input-mic.json
 
-# Plasma y Sunshine se retiraron al pasar a GNOME: chezmoi no borra por su
-# cuenta lo que deja de gestionar.
-.config/kate
-.config/sunshine
-.config/autostart/lock-on-login.desktop
-.config/systemd/user/kde-baloo.service.d
-.config/systemd/user/graphical-session.target.wants/app-dev.lizardbyte.app.Sunshine.service
-.local/bin/desktop-unlock
-.local/bin/libreoffice-kf6-x11
-.local/bin/lock-after-sunshine
-.local/bin/sunshine-display
-.local/share/applications/kitty.desktop
-.config/kitty
-.terminfo/kitty.terminfo
-.terminfo/x/xterm-kitty
+{{- if get (index .hosts .chezmoi.hostname) "remote" }}
+# Equipo remoto (remote en hosts.yaml), con Sunshine: sin mpv ni LibreOffice.
+# La configuración de OBS se deja porque guarda escenas y perfiles propios.
+# ~/.config/mpv y libreoffice-kf6-x11 no van aquí: chezmoi no borra lo que
+# .chezmoiignore excluye, y en los remotos se excluyen para no volver a
+# crearlos; se borran a mano una vez.
 .local/share/applications/libreoffice-*.desktop
-.config/systemd/user/plasma-workspace.target.wants/app-org.kde.krdpserver.service
-.config/chrome-flags.conf
-.config/chromium-flags.conf
-.local/share/konsole
-.local/share/kio/servicemenus/open_in_vscode.desktop
-.local/share/org.kde.syntax-highlighting
+{{- end }}
+{{- /* En una estación de trabajo, los restos de Sunshine y del bloqueo al
+       iniciar la sesión los borra 37-plasma-power: .chezmoiignore los excluye
+       y chezmoi no borra lo que ignora. */}}
 
-# Fuentes: GNOME y los valores de fontconfig del sistema bastan. GNOME publica
-# también el renderizado para XWayland (XSETTINGS), así que ~/.Xresources sobra.
-.config/fontconfig/fonts.conf
-.Xresources
+{{- if and (eq .chezmoi.hostname "tycho") (get (index .hosts .chezmoi.hostname) "remote") }}
+# Tycho en remoto no tiene periféricos locales: el mando y el audio llegan por
+# Moonlight.
+.config/wireplumber/wireplumber.conf.d/51-fiio-k3.conf
+.config/wireplumber/wireplumber.conf.d/52-edifier-r1280db.conf
+.config/systemd/user/steam-big-picture-on-xbox.service
+{{- end }}
 {{- end }}

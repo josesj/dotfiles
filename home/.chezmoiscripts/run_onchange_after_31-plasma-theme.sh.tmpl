@@ -1,0 +1,56 @@
+{{- if eq .chezmoi.os "linux" -}}
+#!/usr/bin/env bash
+# Plasma usa su tema propio, Breeze. Catppuccin se conserva donde se lee texto
+# —Konsole, Kate, Kitty, Vim y VS Code— pero no en el escritorio.
+#
+# Este script tiene dos trabajos: devolver a Breeze los equipos donde todavía
+# esté aplicado el Catppuccin anterior, y mantener el perfil de Konsole alineado
+# con el modo claro u oscuro activo.
+# Konsole sha256: {{ include "dot_local/share/konsole/CatppuccinLatte.profile" | sha256sum }}{{ include "dot_local/share/konsole/CatppuccinMocha.profile" | sha256sum }}
+set -euo pipefail
+command -v kwriteconfig6 >/dev/null || exit 0
+
+current_scheme=$(kreadconfig6 --file kdeglobals --group General --key ColorScheme 2>/dev/null || true)
+case $current_scheme in
+  *Latte*|*Light*) flavour=latte ;;
+  *)               flavour=mocha ;;
+esac
+
+kwriteconfig6 --file kdeglobals --group KDE --key widgetStyle Breeze
+kwriteconfig6 --file kdeglobals --group General --key DefaultLightLookAndFeel \
+  org.kde.breeze.desktop
+kwriteconfig6 --file kdeglobals --group General --key DefaultDarkLookAndFeel \
+  org.kde.breezedark.desktop
+
+# Sólo se toca el aspecto del escritorio si sigue siendo el nuestro: un tema
+# elegido a mano después no se pisa.
+current_look=$(kreadconfig6 --file kdeglobals --group KDE --key LookAndFeelPackage 2>/dev/null || true)
+if [[ $current_look == local.catppuccin-* ]]; then
+  if [[ $flavour == latte ]]; then
+    breeze_look=org.kde.breeze.desktop
+    breeze_scheme=BreezeLight
+  else
+    breeze_look=org.kde.breezedark.desktop
+    breeze_scheme=BreezeDark
+  fi
+  if command -v plasma-apply-lookandfeel >/dev/null; then
+    plasma-apply-lookandfeel --apply "$breeze_look" >/dev/null
+  else
+    kwriteconfig6 --file kdeglobals --group KDE --key LookAndFeelPackage "$breeze_look"
+  fi
+  if command -v plasma-apply-colorscheme >/dev/null; then
+    plasma-apply-colorscheme "$breeze_scheme" >/dev/null
+  fi
+  printf 'Escritorio devuelto a Breeze (%s).\n' "$breeze_scheme"
+fi
+
+# Konsole sí conserva Catppuccin: los perfiles y esquemas los instala chezmoi
+# en ~/.local/share/konsole y aquí sólo se elige el que toca.
+if [[ $flavour == latte ]]; then
+  kwriteconfig6 --file konsolerc --group 'Desktop Entry' --key DefaultProfile CatppuccinLatte.profile
+else
+  kwriteconfig6 --file konsolerc --group 'Desktop Entry' --key DefaultProfile CatppuccinMocha.profile
+fi
+
+command -v qdbus6 >/dev/null && qdbus6 org.kde.KWin /KWin reconfigure >/dev/null 2>&1 || true
+{{- end -}}

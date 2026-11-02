@@ -1,0 +1,10 @@
+! Renderizado de fuentes para aplicaciones X11 y XWayland, alineado con
+! fontconfig y con Plasma. Las aplicaciones lo leen a través de xrdb.
+!
+! Los recursos de XTerm y UXTerm se retiraron al comprobar que xterm no está
+! instalado: eran cien de las ciento cuatro líneas de este archivo y obligaban
+! a generarlo como plantilla para elegir el sabor Catppuccin activo.
+Xft.antialias: true
+Xft.hinting: true
+Xft.hintstyle: hintslight
+Xft.rgba: none

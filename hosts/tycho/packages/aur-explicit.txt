@@ -7,7 +7,7 @@ claude-code
 claude-desktop
 coros-link-bin
 ds9
-gnome-shell-extension-dash-to-dock
+google-chrome
 io.tangencylabs.solidcraft
 jdtls
 visual-studio-code-bin

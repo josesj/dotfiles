@@ -1,4 +1,2 @@
-# Terminal por defecto para GNOME y demás llamadas XDG (aplicaciones con
-# Terminal=true, «Abrir en una terminal»). La lee xdg-terminal-exec: sin él,
-# GIO usa su propia lista y abre Ptyxis.
-com.mitchellh.ghostty.desktop
+# Default terminal for Plasma and desktop-neutral XDG callers.
+kitty.desktop

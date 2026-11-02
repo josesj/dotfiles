@@ -1,0 +1,25 @@
+{{- if eq .chezmoi.os "linux" -}}
+#!/usr/bin/env bash
+# Baloo indexa el contenido de los documentos, no el código: ~/Projects y ~/tmp
+# reunían casi todos los archivos del índice (fuentes y artefactos de
+# compilación) y el código ya se busca con ripgrep, fzf y los IDE.
+#
+# La base de datos LMDB de Baloo nunca encoge al excluir carpetas, así que tras
+# cambiar la lista se purga una vez y se reconstruye con lo que queda.
+set -euo pipefail
+command -v balooctl6 >/dev/null || exit 0
+
+excluded=$(balooctl6 config show excludeFolders 2>/dev/null || true)
+changed=false
+for folder in "$HOME/Projects/" "$HOME/tmp/"; do
+  if ! grep -Fq -- "${folder%/}" <<< "$excluded"; then
+    balooctl6 config add excludeFolders "$folder" >/dev/null
+    changed=true
+  fi
+done
+
+if $changed && balooctl6 status 2>/dev/null | grep -q 'is running'; then
+  balooctl6 purge >/dev/null
+  printf 'Baloo: excluidos ~/Projects y ~/tmp; índice purgado y en reconstrucción.\n'
+fi
+{{- end -}}

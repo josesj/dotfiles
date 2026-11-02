@@ -3,8 +3,8 @@ zmodload zsh/datetime
 zmodload zsh/parameter
 
 # Over SSH the palette must match the local terminal, not the remote desktop:
-# ask the terminal for its background colour (OSC 11, answered by Ghostty)
-# and pick the flavour by luminance. The result is exported so Vim
+# ask the terminal for its background colour (OSC 11, answered by Kitty and
+# Ghostty) and pick the flavour by luminance. The result is exported so Vim
 # can follow it too. Terminals that do not answer time out after 0.3 s.
 function workstation_ssh_flavour() {
   [[ -n $SSH_CONNECTION && -t 0 && -t 1 ]] || return 1
@@ -23,16 +23,16 @@ function workstation_ssh_flavour() {
 }
 
 # Otherwise follow the desktop's current mode at shell startup: Latte for
-# light, Mocha for dark. GNOME reports it in the color-scheme gsettings key
-# (prefer-dark, prefer-light or default, which is light); macOS only defines
+# light, Mocha for dark. Plasma reports it through kdeglobals and leaves the
+# key unset while it uses its default, Breeze Light; macOS only defines
 # AppleInterfaceStyle while dark mode is active, so its absence means light.
 typeset workstation_color_scheme='Mocha'
 if workstation_ssh_flavour; then
   export WORKSTATION_FLAVOUR=$REPLY
   workstation_color_scheme=${(C)REPLY}
-elif (( $+commands[gsettings] )); then
-  [[ $(gsettings get org.gnome.desktop.interface color-scheme 2>/dev/null) == *prefer-dark* ]] \
-    && workstation_color_scheme='Mocha' || workstation_color_scheme='Latte'
+elif (( $+commands[kreadconfig6] )); then
+  workstation_color_scheme=$(kreadconfig6 --file kdeglobals --group General --key ColorScheme 2>/dev/null)
+  : ${workstation_color_scheme:=BreezeLight}
 elif [[ $OSTYPE == darwin* ]]; then
   defaults read -g AppleInterfaceStyle &>/dev/null || workstation_color_scheme='Latte'
 fi

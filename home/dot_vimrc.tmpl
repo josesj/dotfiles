@@ -50,9 +50,9 @@ silent! call mkdir(expand('~/.cache/vim/undo'), 'p')
 silent! call mkdir(expand('~/.cache/vim/swap'), 'p')
 silent! call mkdir(expand('~/.cache/vim/backup'), 'p')
 
-" Sigue el modo claro/oscuro del escritorio. GNOME lo publica en la clave
-" color-scheme de gsettings (prefer-dark, prefer-light o default, que es claro);
-" macOS sólo define AppleInterfaceStyle mientras el modo oscuro está activo. Por SSH
+" Sigue el modo claro/oscuro del escritorio. Plasma lo publica en kdeglobals y
+" deja la clave vacía mientras usa su esquema de serie, Breeze claro; macOS
+" sólo define AppleInterfaceStyle mientras el modo oscuro está activo. Por SSH
 " manda el terminal local: el prompt de Zsh lo averigua y lo exporta.
 function! s:CatppuccinFlavour() abort
   if !empty($SSH_CONNECTION) && $WORKSTATION_FLAVOUR =~# '^\(latte\|mocha\)$'
@@ -62,11 +62,11 @@ function! s:CatppuccinFlavour() abort
   call system('defaults read -g AppleInterfaceStyle')
   return v:shell_error == 0 ? 'mocha' : 'latte'
 {{- else }}
-  if !executable('gsettings')
+  if !executable('kreadconfig6')
     return 'mocha'
   endif
-  let l:scheme = system('gsettings get org.gnome.desktop.interface color-scheme')
-  return l:scheme =~# 'prefer-dark' ? 'mocha' : 'latte'
+  let l:scheme = system('kreadconfig6 --file kdeglobals --group General --key ColorScheme')
+  return l:scheme =~# 'Latte\|Light' || empty(trim(l:scheme)) ? 'latte' : 'mocha'
 {{- end }}
 endfunction
 

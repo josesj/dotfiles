@@ -1,0 +1,35 @@
+{{- if eq .chezmoi.hostname "deimos" -}}
+#!/usr/bin/env bash
+# Escritorio remoto de KDE (KRDP) en Deimos: se entra con el usuario y la
+# contraseña del sistema (SystemUserEnabled), sin otra clave guardada. El
+# servicio arranca con la sesión de Plasma (enlace en
+# plasma-workspace.target.wants), así que tras reiniciar no hay RDP hasta que
+# se inicia sesión en el equipo; si la pantalla está bloqueada, se desbloquea
+# antes por SSH con desktop-unlock (rdpunlock).
+#
+# El certificado que genera Plasma sólo vale un día. Éste es autofirmado, de
+# diez años, y se rehace si falta o caduca en menos de 30 días; la clave no se
+# versiona. Se ejecuta en cada chezmoi apply porque comprobarlo es barato.
+set -euo pipefail
+
+dir="${XDG_DATA_HOME:-$HOME/.local/share}/krdpserver"
+cert="$dir/krdp.crt"
+key="$dir/krdp.key"
+
+if ! openssl x509 -in "$cert" -noout -checkend $((30 * 86400)) >/dev/null 2>&1; then
+  mkdir -p "$dir"
+  (umask 077 && openssl req -x509 -newkey rsa:3072 -nodes -sha256 -days 3650 \
+    -subj "/CN={{ .chezmoi.hostname }}" \
+    -addext "subjectAltName=DNS:{{ .chezmoi.hostname }},DNS:{{ .chezmoi.hostname }}.local" \
+    -keyout "$key" -out "$cert" 2>/dev/null)
+  chmod 644 "$cert"
+  echo "KRDP: certificado nuevo, válido hasta $(openssl x509 -in "$cert" -noout -enddate | cut -d= -f2)"
+  systemctl --user try-restart app-org.kde.krdpserver.service 2>/dev/null || true
+fi
+
+command -v kwriteconfig6 >/dev/null || exit 0
+kwriteconfig6 --file krdpserverrc --group General --key Autostart true
+kwriteconfig6 --file krdpserverrc --group General --key SystemUserEnabled true
+kwriteconfig6 --file krdpserverrc --group General --key Certificate "$cert"
+kwriteconfig6 --file krdpserverrc --group General --key CertificateKey "$key"
+{{- end -}}
