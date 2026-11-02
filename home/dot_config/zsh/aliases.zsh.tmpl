@@ -21,7 +21,9 @@ alias py='python3'
 alias venv='python3 -m venv .venv'
 alias 'j!'=jbang
 
-alias ip='curl -fsS https://ifconfig.me'
+# Dirección IP pública. No se llama «ip»: taparía el comando ip de iproute2
+# (ip route, ip addr) y rompería el alias localip.
+alias myip='curl -fsS https://ifconfig.me'
 {{ if $darwin }}
 # --- macOS ---
 alias localip='ipconfig getifaddr en0'

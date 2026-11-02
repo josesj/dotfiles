@@ -79,6 +79,7 @@ En macOS es la misma configuración: además de estos atajos valen los de Kitty 
 | `flushdns` | Vaciar la caché DNS (macOS) |
 | `showfiles` / `hidefiles` | Mostrar u ocultar archivos ocultos en Finder (macOS) |
 | `localip` | Dirección IP local |
+| `myip` | Dirección IP pública |
 | `psfind patrón` | Buscar procesos por nombre o argumentos |
 | `mkcd dir` | Crear un directorio y entrar en él |
 | `serve [puerto]` | Servidor HTTP estático en el directorio actual |
