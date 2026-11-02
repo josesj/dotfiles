@@ -45,10 +45,4 @@ if [[ -d /usr/share/nvm ]]; then
 fi
 
 command -v systemctl >/dev/null && systemctl --user daemon-reload || true
-
-# Xresources lo genera chezmoi con el sabor Catppuccin activo; cargarlo en la
-# sesión X/XWayland en marcha evita tener que reiniciarla.
-if command -v xrdb >/dev/null && [[ -n "${DISPLAY:-}" && -r "$HOME/.Xresources" ]]; then
-  xrdb -merge "$HOME/.Xresources"
-fi
 {{- end }}

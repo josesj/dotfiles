@@ -73,7 +73,7 @@ chezmoi update          # git pull + apply
 Añadir un equipo es añadir su entrada en esa tabla y en la lista de
 `home/.chezmoi.toml.tmpl` y, si hace falta, una regla en `.chezmoiignore`.
 
-Sólo en Arch: Kitty, PipeWire, WirePlumber, fontconfig, Xresources,
+Sólo en Arch: Kitty, PipeWire, WirePlumber,
 `environment.d`, las banderas de Chrome y VS Code y el script de Nautilus.
 Sólo en macOS: `.zprofile` y el `Brewfile`. Ghostty está en los cuatro, con
 plantilla para cada sistema.
@@ -113,11 +113,12 @@ remoto: el prompt pregunta a Kitty o Ghostty su color de fondo (OSC 11) y
 exporta `WORKSTATION_FLAVOUR`, que Vim también sigue. El prompt asigna colores semánticos de la variante
 activa a ruta, estado de Git, errores, duración, trabajos y entornos virtuales.
 
-En Arch, fontconfig y GNOME usan Noto Sans para la interfaz, Noto Serif para
-serif y JetBrainsMono Nerd Font Mono, en peso Medium, para monoespaciado; Noto CJK, Emoji y
-Symbols completan los glifos restantes. `~/.Xresources` añade los mismos ajustes
-de renderizado para las aplicaciones X11 y XWayland que leen la base de recursos
-mediante `xrdb`. En macOS, Ghostty usa JetBrains Mono Nerd Font Medium a 15 pt y sigue
+En Arch, las fuentes son las de GNOME: Adwaita Sans a 11 pt (12 en documentos),
+con el renderizado automático (GTK decide el suavizado y el hinting según la
+resolución); la monoespaciada de GNOME es JetBrainsMono Nerd Font Mono Medium a
+11 pt, la misma que fijan Ghostty y VS Code en sus propios ajustes. fontconfig se
+queda con los valores del sistema (Noto para las familias genéricas, suavizado y
+hinting ligero). En macOS, Ghostty usa JetBrains Mono Nerd Font Medium a 15 pt y sigue
 la apariencia del sistema.
 
 Firefox mantiene su interfaz oscura, pero informa a las páginas web de una
