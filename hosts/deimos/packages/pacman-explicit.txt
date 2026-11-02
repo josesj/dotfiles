@@ -114,7 +114,6 @@ gnome-calculator
 gnome-calendar
 gnome-characters
 gnome-chess
-gnome-clocks
 gnome-connections
 gnome-contacts
 gnome-control-center
