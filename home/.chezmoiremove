@@ -38,6 +38,8 @@
 .terminfo/x/xterm-kitty
 .local/share/applications/libreoffice-*.desktop
 .config/systemd/user/plasma-workspace.target.wants/app-org.kde.krdpserver.service
+.config/chrome-flags.conf
+.config/chromium-flags.conf
 .local/share/konsole
 .local/share/kio/servicemenus/open_in_vscode.desktop
 .local/share/org.kde.syntax-highlighting

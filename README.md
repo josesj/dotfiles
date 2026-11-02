@@ -74,7 +74,7 @@ Añadir un equipo es añadir su entrada en esa tabla y en la lista de
 `home/.chezmoi.toml.tmpl` y, si hace falta, una regla en `.chezmoiignore`.
 
 Sólo en Arch: PipeWire, WirePlumber,
-`environment.d`, las banderas de Chrome y VS Code y el script de Nautilus.
+`environment.d`, las banderas de VS Code y el script de Nautilus.
 Sólo en macOS: `.zprofile` y el `Brewfile`. Ghostty está en los cuatro, con
 plantilla para cada sistema.
 
@@ -129,10 +129,7 @@ hinting ligero). En macOS, Ghostty usa JetBrains Mono Nerd Font Medium a 15 pt y
 la apariencia del sistema.
 
 Firefox mantiene su interfaz oscura, pero informa a las páginas web de una
-preferencia de color clara (`prefers-color-scheme: light`). Chrome y Chromium, con
-las mismas banderas (`chromium-flags.conf` enlaza a `chrome-flags.conf`), siguen
-el modo claro u oscuro del sistema en su interfaz y también dan a las páginas la
-preferencia clara.
+preferencia de color clara (`prefers-color-scheme: light`).
 
 ## Zsh, Vim y sus complementos
 
