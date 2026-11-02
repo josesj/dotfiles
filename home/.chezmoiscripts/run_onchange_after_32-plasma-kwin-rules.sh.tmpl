@@ -1,49 +1,107 @@
 {{- if and (eq .chezmoi.os "linux") (not (get (index .hosts .chezmoi.hostname) "remote")) -}}
 #!/usr/bin/env bash
-# Se repite al volver de remoto a estación de trabajo (24-10-2026): el modo
-# remoto deshizo lo que este script configura.
-# Regla de KWin que centra las ventanas de mpv. mpv.conf limita el tamaño al
-# 80 % del escritorio; fijar geometry allí anclaría la esquina superior
-# izquierda en Wayland en lugar de centrar la ventana. El uso remoto la borró;
-# al volver al escritorio se crea de nuevo.
-# Este texto cambia para que chezmoi lo vuelva a ejecutar en Deimos tras volver al escritorio.
+# Reglas de ventana de KWin compartidas por tycho y Deimos. Se aplican con
+# `chezmoi update`: para añadir o cambiar una, edita la tabla de abajo (el
+# script se vuelve a ejecutar solo cuando cambia este fichero).
+#
+# Cada regla tiene un identificador propio (dotfiles-*). Las reglas que crees
+# a mano en Ajustes del Sistema no se tocan, salvo las que tengan la misma
+# descripción que una de esta tabla: se sustituyen por la versión del repo.
+#
+# Claves de cada regla (las de kwinrulesrc): <clave>rule=2 significa «forzar».
 set -euo pipefail
 command -v kreadconfig6 >/dev/null || exit 0
 command -v kwriteconfig6 >/dev/null || exit 0
 
 rules_file=kwinrulesrc
-rule_id=dotfiles-mpv-centered
-rules=$(kreadconfig6 --file "$rules_file" --group General --key rules)
+rules_path="${XDG_CONFIG_HOME:-$HOME/.config}/$rules_file"
 
-case ",$rules," in
-  *,"$rule_id",*) ;;
-  *)
-    if [[ -n "$rules" ]]; then
-      rules+=",$rule_id"
-    else
-      rules=$rule_id
-    fi
-    ;;
-esac
+# KWin 6.8 guarda el orden en General/Order; las versiones anteriores, en
+# General/rules con un contador count. Se usa la clave que ya tenga el fichero.
+if [[ -n "$(kreadconfig6 --file "$rules_file" --group General --key rules)" ]] \
+  && [[ -z "$(kreadconfig6 --file "$rules_file" --group General --key Order)" ]]; then
+  order_key=rules
+else
+  order_key=Order
+fi
 
-IFS=, read -r -a rule_ids <<< "$rules"
-kwriteconfig6 --file "$rules_file" --group General --key rules "$rules"
-kwriteconfig6 --file "$rules_file" --group General --key count "${#rule_ids[@]}"
+declare -a managed=()            # identificadores gestionados por el repo
+declare -a descriptions=()       # sus descripciones, para limpiar duplicados
 
-kwriteconfig6 --file "$rules_file" --group "$rule_id" --key Description 'Center mpv windows'
-kwriteconfig6 --file "$rules_file" --group "$rule_id" --key wmclass mpv
-kwriteconfig6 --file "$rules_file" --group "$rule_id" --key wmclassmatch 1
-kwriteconfig6 --file "$rules_file" --group "$rule_id" --key wmclasscomplete false
-kwriteconfig6 --file "$rules_file" --group "$rule_id" --key types 1
+# rule ID DESCRIPCIÓN clave=valor...
+rule() {
+  local id=$1 description=$2; shift 2
+  managed+=("$id"); descriptions+=("$description")
+  RULE_BODY[$id]="Description=$description"$'\n'"$(printf '%s\n' "$@")"
+}
+declare -A RULE_BODY=()
 
-# PlacementCentered de KWin es 5. Force (2) hace que decida KWin, y no el
-# cliente Wayland, la posición inicial de cada ventana nueva de mpv.
-kwriteconfig6 --file "$rules_file" --group "$rule_id" --key ignoregeometry true
-kwriteconfig6 --file "$rules_file" --group "$rule_id" --key ignoregeometryrule 2
-kwriteconfig6 --file "$rules_file" --group "$rule_id" --key placement 5
-kwriteconfig6 --file "$rules_file" --group "$rule_id" --key placementrule 2
+# --- Tabla de reglas ---------------------------------------------------------
+# mpv: centra las ventanas. mpv.conf limita el tamaño al 80 % del escritorio;
+# fijar geometry allí anclaría la esquina superior izquierda en Wayland.
+# placement=5 es PlacementCentered; forzarlo hace que decida KWin, no mpv.
+rule dotfiles-mpv-centered 'Center mpv windows' \
+  wmclass=mpv wmclassmatch=1 wmclasscomplete=false types=1 \
+  ignoregeometry=true ignoregeometryrule=2 placement=5 placementrule=2
+
+# Spotify (ventana de Electron): barra de título oscura, igual que el tema.
+rule dotfiles-spotify-dark-titlebar 'Application settings for spotify' \
+  wmclass=spotify wmclassmatch=1 \
+  decocolor=BreezeDark decocolorrule=2
+
+# Aplicaciones de Artcraft (launcher y SolidCraft): marco con sombra.
+rule dotfiles-artcraft-launcher-shadow 'Settings for ai.storyteller.artcraft-launcher' \
+  wmclass=ai.storyteller.artcraft-launcher wmclassmatch=1 types=1 \
+  decorationpolicy=shadow decorationpolicyrule=2
+rule dotfiles-solidcraft-shadow 'Settings for io.tangencylabs.solidcraft' \
+  wmclass=io.tangencylabs.solidcraft wmclassmatch=1 types=1 \
+  decorationpolicy=shadow decorationpolicyrule=2
+# -----------------------------------------------------------------------------
+
+# 1. Quita del fichero las reglas con la misma descripción pero otro identificador
+#    (por ejemplo, las creadas con la interfaz gráfica) para no duplicarlas.
+if [[ -f "$rules_path" ]]; then
+  mapfile -t current < <(IFS=, read -r -a ids <<< "$(kreadconfig6 --file "$rules_file" --group General --key "$order_key")"; printf '%s\n' "${ids[@]}")
+  for old in "${current[@]}"; do
+    [[ -n "$old" ]] || continue
+    desc=$(kreadconfig6 --file "$rules_file" --group "$old" --key Description)
+    for i in "${!managed[@]}"; do
+      if [[ "$desc" == "${descriptions[$i]}" && "$old" != "${managed[$i]}" ]]; then
+        # Borra la sección entera [old]
+        awk -v sec="[$old]" '
+          /^\[/ { skip = ($0 == sec) }
+          !skip { print }
+        ' "$rules_path" > "$rules_path.tmp" && mv "$rules_path.tmp" "$rules_path"
+      fi
+    done
+  done
+fi
+
+# 2. Orden: se conservan las reglas ajenas (que sigan existiendo) y se añaden las nuestras.
+order=()
+if [[ -f "$rules_path" ]]; then
+  IFS=, read -r -a existing <<< "$(kreadconfig6 --file "$rules_file" --group General --key "$order_key")"
+  for id in "${existing[@]}"; do
+    [[ -n "$id" ]] || continue
+    grep -qxF "[$id]" "$rules_path" && order+=("$id")
+  done
+fi
+for id in "${managed[@]}"; do
+  case " ${order[*]} " in *" $id "*) ;; *) order+=("$id") ;; esac
+done
+joined=$(IFS=,; printf '%s' "${order[*]}")
+kwriteconfig6 --file "$rules_file" --group General --key "$order_key" "$joined"
+[[ "$order_key" == rules ]] && kwriteconfig6 --file "$rules_file" --group General --key count "${#order[@]}"
+
+# 3. Escribe cada regla.
+for id in "${managed[@]}"; do
+  while IFS='=' read -r key value; do
+    [[ -n "$key" ]] || continue
+    kwriteconfig6 --file "$rules_file" --group "$id" --key "$key" "$value"
+  done <<< "${RULE_BODY[$id]}"
+done
 
 if command -v qdbus6 >/dev/null; then
-  qdbus6 org.kde.KWin /KWin org.kde.KWin.reconfigure >/dev/null || true
+  qdbus6 org.kde.KWin /KWin org.kde.KWin.reconfigure >/dev/null 2>&1 || true
 fi
 {{- end -}}
