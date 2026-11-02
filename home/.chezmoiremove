@@ -9,6 +9,9 @@
 .vim/colors/github_primer.vim
 .vim/autoload/lightline/colorscheme/github_primer.vim
 
+# Ghostty ya no se usa en ningún equipo: Kitty es el terminal en Arch y macOS.
+.config/ghostty
+
 # Gradle vuelve a su home por defecto (~/.gradle), donde está gradle.properties;
 # ~/.cache/gradle era un segundo home con cachés y daemons duplicados.
 .cache/gradle

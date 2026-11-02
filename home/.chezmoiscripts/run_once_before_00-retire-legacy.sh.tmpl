@@ -16,7 +16,7 @@ retire() {
   printf 'Retirado: %s -> %s\n' "$target" "$backup_dir/$relative"
 }
 
-# El historial pasa a ~/.local/state/zsh/history en los cuatro equipos.
+# El historial pasa a ~/.local/state/zsh/history en los tres equipos.
 history_file="${XDG_STATE_HOME:-$HOME/.local/state}/zsh/history"
 if [[ -f "$HOME/.zsh_history" && ! -e "$history_file" ]]; then
   mkdir -p -- "$(dirname -- "$history_file")"

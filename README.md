@@ -1,15 +1,14 @@
 # Dotfiles
 
-Configuración de cuatro equipos gestionada con [chezmoi](https://chezmoi.io):
+Configuración de tres equipos gestionada con [chezmoi](https://chezmoi.io):
 
 | Equipo | Sistema | Papel |
 |---|---|---|
 | `tycho` | Arch Linux + Plasma | Estación de trabajo (Ryzen 7 9700X, RTX 5080) |
 | `deimos` | Arch Linux + Plasma | Estación de trabajo (i5-12600, RX 6600) |
 | `phobos` | macOS | Portátil (MacBook Pro, M4 Pro, 24 GB) |
-| `janus` | macOS | Sobremesa (Mac Studio, M2 Max, 32 GB) |
 
-Está orientada a Java, Python y C++ con Zsh, Vim y Gradle. Los cuatro equipos
+Está orientada a Java, Python y C++ con Zsh, Vim y Gradle. Los tres equipos
 comparten prompt, historial, aliases, funciones, Vim, Git, SSH, direnv y uv; las
 diferencias entre Arch y macOS y entre equipos se resuelven en plantilla.
 
@@ -20,7 +19,7 @@ aliases y comandos de mantenimiento.
 
 ```
 .chezmoiroot            -> "home": chezmoi sólo gestiona ese subárbol
-home/                   estado fuente de chezmoi ($HOME de los cuatro equipos)
+home/                   estado fuente de chezmoi ($HOME de los tres equipos)
   .chezmoi.toml.tmpl    configuración que genera `chezmoi init`
   .chezmoidata/         hardware de cada equipo: decodificación de mpv y codificador de OBS
   .chezmoiignore        reparto de destinos por sistema operativo y por equipo
@@ -47,7 +46,7 @@ chezmoi init --apply josesj/dotfiles
 ```
 
 `chezmoi init` selecciona el perfil por el hostname corto y falla de forma
-explícita si no es uno de los cuatro conocidos. El primer `apply`:
+explícita si no es uno de los tres conocidos. El primer `apply`:
 
 1. Retira la configuración que dejaron los instaladores anteriores y guarda
    copia en `~/.local/state/dotfiles-backup/FECHA-HORA`.
@@ -75,9 +74,9 @@ chezmoi update          # git pull + apply
 Añadir un equipo es añadir su entrada en esa tabla y en la lista de
 `home/.chezmoi.toml.tmpl` y, si hace falta, una regla en `.chezmoiignore`.
 
-Sólo en Arch: Kitty, Plasma, Konsole, Kate, Dolphin, PipeWire,
+Sólo en Arch: Plasma, Konsole, Kate, Dolphin, PipeWire,
 WirePlumber, fontconfig, Xresources, `environment.d` y las banderas de Chrome y
-VS Code. Sólo en macOS: Ghostty, `.zprofile` y el `Brewfile`.
+VS Code. Sólo en macOS: `.zprofile` y el `Brewfile`. Kitty es el terminal de los tres equipos, con la misma configuración.
 
 En Arch, el indexador de Baloo usa la plataforma Qt `offscreen` (drop-in de
 `kde-baloo.service`): arranca antes de que la sesión publique `WAYLAND_DISPLAY`
@@ -108,19 +107,19 @@ Tycho y Deimos se encienden y se usan a distancia por WoL y SSH.
   reiniciar no hay RDP hasta iniciar sesión en el equipo; con la pantalla
   bloqueada, se desbloquea antes por SSH con `desktop-unlock` (`rdpunlock`).
   firewalld abre RDP en la zona `private`.
-- **Docker.** Los Mac tienen un contexto `deimos` que habla con su Docker por
+- **Docker.** El Mac tiene un contexto `deimos` que habla con su Docker por
   SSH (`run_onchange_after_55-docker-contexts.sh`). No pasa a ser el activo: se
   usa con `docker --context deimos …` o `docker context use deimos`.
 
 ## Aspecto
 
-Catppuccin viste lo que muestra texto: Vim, Zsh, Kitty, Ghostty, Konsole, Kate y
+Catppuccin viste lo que muestra texto: Vim, Zsh, Kitty, Konsole, Kate y
 Visual Studio Code, con Latte en modo claro y Mocha en modo oscuro. El
 escritorio no: Plasma usa Breeze, su tema propio, y es quien dicta el modo. El
 sabor se detecta en el arranque del shell y al recuperar el foco en Vim: Plasma
 lo publica en `kdeglobals` y macOS sólo define `AppleInterfaceStyle` mientras el
 modo oscuro está activo. Por SSH manda el terminal local, no el escritorio
-remoto: el prompt pregunta a Kitty o Ghostty su color de fondo (OSC 11) y
+remoto: el prompt pregunta a Kitty su color de fondo (OSC 11) y
 exporta `WORKSTATION_FLAVOUR`, que Vim también sigue. El prompt asigna colores semánticos de la variante
 activa a ruta, estado de Git, errores, duración, trabajos y entornos virtuales.
 
@@ -128,7 +127,7 @@ En Arch, fontconfig y Plasma usan Noto Sans para la interfaz, Noto Serif para
 serif y JetBrainsMono Nerd Font Mono, en peso Medium, para monoespaciado; Noto CJK, Emoji y
 Symbols completan los glifos restantes. `~/.Xresources` añade los mismos ajustes
 de renderizado para las aplicaciones X11 y XWayland que leen la base de recursos
-mediante `xrdb`. En macOS, Ghostty usa JetBrains Mono Nerd Font Medium a 15 pt y sigue
+mediante `xrdb`. En macOS, Kitty usa la misma tipografía (JetBrainsMono Nerd Font Mono Medium) y sigue
 la apariencia del sistema.
 
 Firefox mantiene su interfaz oscura, pero informa a las páginas web de una
@@ -153,7 +152,7 @@ Vim; vim-polyglot se retiró porque era el plugin más lento de cargar. `:Files`
 y `:Rg` necesitan `fzf` y `ripgrep` instalados por el gestor de paquetes del
 sistema.
 
-El historial vive en `~/.local/state/zsh/history` en los cuatro equipos; el
+El historial vive en `~/.local/state/zsh/history` en los tres equipos; el
 primer `apply` migra el `~/.zsh_history` de macOS.
 
 ## Audio y vídeo en Arch
@@ -195,7 +194,7 @@ chezmoi pide la contraseña al añadirlas y al aplicarlas; gpg-agent la cachea,
 de modo que un único `apply` sólo pregunta una vez. Quedan en el repositorio
 como `home/private_dot_ssh/encrypted_private_id_rsa_*.asc`.
 
-En los Mac, `~/.gnupg/gpg-agent.conf` usa `pinentry-mac` (en el Brewfile): la
+En el Mac, `~/.gnupg/gpg-agent.conf` usa `pinentry-mac` (en el Brewfile): la
 contraseña se pide en un diálogo nativo, que funciona también fuera de un TTY y
 permite guardarla en el Llavero. La pinentry de terminal falla en terminales
 integradas y obliga a teclear la contraseña dos veces por archivo al cifrar.
@@ -207,7 +206,7 @@ aplicar, así que ya no hace falta un paso aparte.
 > age no sirve para esto: chezmoi aplica `age.args` tanto al cifrar como al
 > descifrar y el propio age rechaza `--decrypt --passphrase`, así que la
 > variante simétrica de age no completa el ciclo. La alternativa con age sería
-> un fichero de identidad que habría que llevar a mano a los cuatro equipos.
+> un fichero de identidad que habría que llevar a mano a los tres equipos.
 
 ## Configuración del sistema (sólo Arch)
 
@@ -296,15 +295,14 @@ yay    -S --needed - < hosts/deimos/packages/aur-explicit.txt
 
 ## Perfiles de macOS
 
-Los perfiles de configuración de `phobos`, `janus` y el iPhone llevan
+Los perfiles de configuración de `phobos` y el iPhone llevan
 credenciales en texto plano: las contraseñas de aplicación de Fastmail para
 correo, CalDAV y CardDAV, y la clave del Wi-Fi. Por eso se versionan cifrados,
-igual que las claves SSH, y sólo se despliegan en los dos Mac:
+igual que las claves SSH, y sólo se despliegan en el Mac:
 
 ```
 home/dot_local/share/dotfiles/private_profiles/
     encrypted_private_phobos.mobileconfig.asc
-    encrypted_private_janus.mobileconfig.asc
     encrypted_private_iphone.mobileconfig.asc
 ```
 
@@ -352,7 +350,7 @@ puede estar activa una a la vez.
 `chezmoi apply` los descifra en `~/.local/share/dotfiles/vpn/` (directorios en
 `700`, archivos en `600`). Cada equipo recibe una parte:
 
-- **Los Mac (phobos y janus):** todo, incluidos los perfiles `.mobileconfig`.
+- **El Mac (phobos):** todo, incluidos los perfiles `.mobileconfig`.
 - **Deimos:** los WireGuard de `phobos`, que `65-wireguard` importa a
   NetworkManager como `lodero-full` y `lodero-home`.
 - **Tycho:** sólo los OpenVPN de TNG, que `66-openvpn` importa a NetworkManager

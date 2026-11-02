@@ -18,4 +18,3 @@ hosts:
     # OBS: VA-API (H.264 para emitir, HEVC para grabar; Navi 23 no codifica AV1).
     obs_encoder: vaapi
   phobos: {}
-  janus: {}

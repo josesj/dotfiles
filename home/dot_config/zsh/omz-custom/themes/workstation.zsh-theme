@@ -3,8 +3,8 @@ zmodload zsh/datetime
 zmodload zsh/parameter
 
 # Over SSH the palette must match the local terminal, not the remote desktop:
-# ask the terminal for its background colour (OSC 11, answered by Kitty and
-# Ghostty) and pick the flavour by luminance. The result is exported so Vim
+# ask the terminal for its background colour (OSC 11, answered by Kitty)
+# and pick the flavour by luminance. The result is exported so Vim
 # can follow it too. Terminals that do not answer time out after 0.3 s.
 function workstation_ssh_flavour() {
   [[ -n $SSH_CONNECTION && -t 0 && -t 1 ]] || return 1

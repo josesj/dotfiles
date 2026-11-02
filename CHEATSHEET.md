@@ -56,24 +56,7 @@ cargados como paquetes nativos desde `~/.vim/pack/dotfiles/start`.
 La ventana abre a `100×29`, con margen de 4 px, y no recuerda su tamaño.
 Si un comando tarda más de 15 s y Kitty no tiene el foco, avisa por Plasma.
 Kitty usa Catppuccin Latte en modo claro y Mocha en modo oscuro.
-
-## Ghostty (macOS)
-
-| Teclas | Acción |
-|---|---|
-| `Cmd+T` / `Cmd+W` | Nueva pestaña / cerrar |
-| `Cmd+D` / `Cmd+Shift+D` | División vertical / horizontal |
-| `Cmd+Alt+←/→/↑/↓` | Moverse entre divisiones |
-| `Cmd+Alt+=` | Igualar el tamaño de las divisiones |
-| `Opt+←/→` | Saltar por palabras |
-| `Opt+Retroceso` | Borrar la palabra anterior |
-| `Cmd+←/→` | Inicio / fin de línea |
-| `Cmd+Retroceso` | Borrar hasta el inicio de línea |
-| `Cmd+Shift+,` | Recargar la configuración |
-| `Cmd+Shift+R` | Reiniciar el terminal |
-
-La ventana abre a `100×29`. Ghostty sigue la apariencia de macOS con Catppuccin
-Latte/Mocha e instala su propio terminfo en los servidores al conectar por SSH.
+En macOS es la misma configuración: además de estos atajos valen los de Kitty con `Cmd` (`Cmd+T`, `Cmd+W`, `Cmd+N`...).
 
 ## Zsh y aliases
 
