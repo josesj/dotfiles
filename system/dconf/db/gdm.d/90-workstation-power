@@ -1,0 +1,6 @@
+# Pantalla de inicio de sesión de GDM: la misma energía que la sesión del
+# usuario (39-gnome-power). Sin esto, el greeter usa los valores de serie y
+# suspende el equipo a los 15 minutos, también tras un reinicio, y corta SSH y
+# el inicio de sesión remoto por RDP. La pantalla se sigue apagando.
+[org/gnome/settings-daemon/plugins/power]
+sleep-inactive-ac-type='nothing'
