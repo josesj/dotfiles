@@ -1,0 +1,14 @@
+1password
+artcraft-launcher
+bruno-bin
+claude-code
+claude-desktop
+ds9
+google-chrome
+hotspot
+jbang
+jxplorer
+modbustools-git
+siril-git
+visual-studio-code-bin
+yay
