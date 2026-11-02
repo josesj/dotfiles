@@ -1,4 +1,5 @@
 7zip
+act
 aha
 alsa-utils
 amd-ucode
@@ -48,6 +49,7 @@ cpupower
 cuda
 cups
 darktable
+dbeaver
 dcraw
 digikam
 direnv
@@ -63,6 +65,7 @@ dosfstools
 drkonqi
 duf
 dust
+easyeffects
 efibootmgr
 entr
 ethtool
@@ -84,6 +87,7 @@ fwupd
 fzf
 gamemode
 ghostscript
+gimp
 gimp-plugin-gmic
 git
 git-delta
@@ -91,6 +95,7 @@ git-lfs
 github-cli
 gitui
 gnuplot
+go
 gocryptfs
 godot
 gphoto2
@@ -139,7 +144,6 @@ jq
 just
 kactivitymanagerd
 kamera
-kamoso
 kate
 kcachegrind
 kcalc
@@ -227,6 +231,7 @@ linux-firmware
 linux-headers
 linux-lts
 linux-lts-headers
+lldb
 lostfiles
 lshw
 lvm2
@@ -241,8 +246,10 @@ mediainfo
 mesa-utils
 meson
 milou
+mkvtoolnix-gui
 mold
 movit
+mpv
 mpv-mpris
 mpvqt
 msmtp
@@ -269,6 +276,7 @@ nvidia-open-dkms
 nvm
 nvme-cli
 nvtop
+obs-studio
 obsidian
 ocean-sound-theme
 okteta
@@ -359,6 +367,7 @@ ripgrep-all
 rsync
 rtaudio
 ruff
+rustup
 sbctl
 screen
 shellcheck
