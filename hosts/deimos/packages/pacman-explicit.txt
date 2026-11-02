@@ -433,6 +433,7 @@ wireless_tools
 wireplumber
 wl-clipboard
 wpa_supplicant
+xdg-terminal-exec
 xdg-utils
 xfsprogs
 yaml-language-server

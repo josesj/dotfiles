@@ -418,6 +418,7 @@ wireplumber
 wl-clipboard
 wpa_supplicant
 xdg-desktop-portal-gnome
+xdg-terminal-exec
 xdg-utils
 xdotool
 xfsprogs

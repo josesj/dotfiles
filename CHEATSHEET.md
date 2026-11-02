@@ -56,11 +56,26 @@ La ventana abre a `100×29`, con margen de 4 px, y no recuerda su tamaño.
 Si un comando tarda más de 15 s y Kitty no tiene el foco, avisa por el escritorio.
 Kitty usa Catppuccin Latte en modo claro y Mocha en modo oscuro.
 
-## Ghostty (macOS)
+## Ghostty
 
-En Linux Ghostty usa sus atajos predeterminados, que coinciden con los de
-Kitty: `Ctrl+Shift+T/W/N`, `Ctrl+Shift+O/E` para dividir, `Ctrl+Alt+flechas` y
-`Alt+1..9`.
+En Linux Ghostty usa sus atajos predeterminados: `Ctrl+Shift+T/W/N`,
+`Ctrl+Shift+O/E` para dividir, `Ctrl+Alt+flechas` y `Alt+1..9`. Además:
+
+| Teclas | Acción |
+|---|---|
+| `Ctrl+Shift+F` | Buscar en la pantalla y el historial (`Esc` termina) |
+| `Ctrl+Shift+↑/↓` | Saltar al prompt anterior / siguiente |
+| `Ctrl+Shift+P` | Paleta de comandos |
+| `Ctrl+Shift+Enter` | Ampliar o restaurar la división actual |
+| `Ctrl+Shift+J` | Pegar la ruta de un archivo con el contenido de la pantalla |
+| `Ctrl+Shift+R` | Reiniciar el terminal |
+| `Ctrl+Alt+=` | Igualar el tamaño de las divisiones |
+
+Los comandos de más de 10 s que terminan con la ventana sin foco avisan con una
+notificación. `ghostty +ssh-cache` lista los servidores con el terminfo de
+Ghostty instalado (`--clear` lo vacía).
+
+En macOS:
 
 | Teclas | Acción |
 |---|---|

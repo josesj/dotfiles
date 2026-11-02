@@ -1,4 +1,5 @@
-# Default terminal for GNOME and desktop-neutral XDG callers. Kitty is
-# the fallback while Ghostty is not installed.
+# Terminal por defecto para GNOME y demás llamadas XDG (aplicaciones con
+# Terminal=true, «Abrir en una terminal»). La lee xdg-terminal-exec: sin él,
+# GIO usa su propia lista y abre Ptyxis. Kitty queda como alternativa.
 com.mitchellh.ghostty.desktop
 kitty.desktop
