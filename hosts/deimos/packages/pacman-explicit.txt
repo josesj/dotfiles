@@ -46,6 +46,7 @@ ccache
 ccfits
 ccid
 chezmoi
+chromium
 clang
 clazy
 clinfo

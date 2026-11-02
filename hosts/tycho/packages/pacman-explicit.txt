@@ -40,6 +40,7 @@ calcmysky
 ccache
 ccid
 chezmoi
+chromium
 clinfo
 cmake
 coin-or-mp

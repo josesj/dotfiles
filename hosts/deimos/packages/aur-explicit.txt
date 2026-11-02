@@ -4,7 +4,6 @@ bruno-bin
 claude-code
 claude-desktop
 ds9
-google-chrome
 hotspot
 jbang
 jxplorer
