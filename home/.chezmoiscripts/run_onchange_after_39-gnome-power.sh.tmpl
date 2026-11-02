@@ -1,9 +1,11 @@
 {{- if eq .chezmoi.os "linux" -}}
+{{- $suspend := get (index .hosts .chezmoi.hostname) "idle_suspend" -}}
 #!/usr/bin/env bash
 # Energía de la estación de trabajo: GNOME atenúa y apaga la pantalla por
 # inactividad con sus valores de serie (se borran las claves, para seguir los que
-# traiga GNOME), pero en corriente no suspende solo: SSH y los trabajos largos
-# (Docker, compilaciones) no cuentan como actividad y la suspensión los cortaría.
+# traiga GNOME). Con idle_suspend en hosts.yaml también suspende como de serie;
+# sin él, en corriente no suspende solo: SSH y los trabajos largos (Docker,
+# compilaciones) no cuentan como actividad y la suspensión los cortaría.
 # gnome-shell: {{ lookPath "gnome-shell" }}
 set -euo pipefail
 command -v gnome-shell >/dev/null || exit 0
@@ -28,8 +30,16 @@ changed=false
 power=org.gnome.settings-daemon.plugins.power
 reset_key "$power" idle-dim
 reset_key "$power" sleep-inactive-ac-timeout
+{{- if $suspend }}
+reset_key "$power" sleep-inactive-ac-type
+{{- else }}
 set_key "$power" sleep-inactive-ac-type nothing
+{{- end }}
 reset_key org.gnome.desktop.session idle-delay
 
+{{- if $suspend }}
+$changed && printf 'Energía de GNOME: valores de serie, con suspensión por inactividad.\n'
+{{- else }}
 $changed && printf 'Energía de GNOME: pantalla de serie y sin suspensión en corriente.\n'
+{{- end }}
 {{- end -}}

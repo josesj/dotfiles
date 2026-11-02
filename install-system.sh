@@ -142,9 +142,7 @@ deploy_file "$repo_dir/system/systemd/system/paccache.service.d/10-workstation.c
   "/etc/systemd/system/paccache.service.d/10-workstation.conf"
 for relative in systemd/oomd.conf.d/10-workstation.conf \
                 systemd/system/user-1000.slice.d/10-oomd.conf \
-                NetworkManager/conf.d/wake-on-lan.conf \
-                dconf/profile/gdm \
-                dconf/db/gdm.d/90-workstation-power; do
+                NetworkManager/conf.d/wake-on-lan.conf; do
   cmp -s -- "$repo_dir/system/$relative" "/etc/$relative" ||
     mark_changed_subsystem "$relative"
   deploy_file "$repo_dir/system/$relative" "/etc/$relative"
@@ -356,8 +354,8 @@ if ! $dry_run; then
     firewall-cmd --check-config
     firewall-cmd --reload
   fi
-  # El perfil gdm añade la base de datos de sistema gdm.d al greeter; dconf
-  # update la compila. GDM la lee al mostrar de nuevo la pantalla de acceso.
+  # El perfil gdm de deimos añade la base de datos de sistema gdm.d al
+  # greeter; dconf update la compila (también al retirarla de otro equipo). GDM la lee al mostrar de nuevo la pantalla de acceso.
   if $dconf_changed; then
     dconf update
   fi

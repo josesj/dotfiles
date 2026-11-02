@@ -97,11 +97,13 @@ Tycho y Deimos se encienden y se usan a distancia por WoL y SSH.
   los dos equipos esperando el paquete mágico al suspender o apagar. En la UEFI
   hay que activar «Power On By PCI-E» y desactivar ErP. Se comprueba con
   `ethtool <interfaz> | grep Wake-on`, que debe decir `g`.
-- **Sin suspensión en corriente.** Ni la sesión (`39-gnome-power`) ni la
-  pantalla de acceso de GDM suspenden el equipo por inactividad: SSH y los
-  trabajos largos no cuentan como actividad. Para GDM, `system/dconf` añade
-  la base de datos `gdm.d` a su perfil y `install-system.sh` la compila con
-  `dconf update`. La pantalla sí se apaga.
+- **Suspensión.** Tycho suspende por inactividad con los valores de serie de
+  GNOME (`idle_suspend` en `hosts.yaml`) y se despierta por WoL. Deimos no:
+  ni la sesión (`39-gnome-power`) ni la pantalla de acceso de GDM lo
+  suspenden, porque SSH, Docker y los trabajos largos no cuentan como
+  actividad. Para GDM, `hosts/deimos/system/dconf` añade la base de datos
+  `gdm.d` a su perfil e `install-system.sh` la compila con `dconf update`. La
+  pantalla se apaga en los dos.
 - **Docker.** Los Mac tienen un contexto `deimos` que habla con su Docker por
   SSH (`run_onchange_after_55-docker-contexts.sh`). No pasa a ser el activo: se
   usa con `docker --context deimos …` o `docker context use deimos`.
