@@ -11,12 +11,13 @@
 #     ~/.local/share/networkmanagement/certificates/nm-openvpn/; si esa carpeta
 #     se borra, openvpn falla con «Cannot pre-load keyfile»);
 #   - el .ovpn descifrado cambió desde la última importación.
-# Reimportar sustituye la conexión y las credenciales que NetworkManager
+# Además fija vpn.user-name (hosts.yaml: openvpn_user). Reimportar sustituye la conexión y las credenciales que NetworkManager
 # hubiera guardado, así que si todo está bien no se toca nada.
 set -euo pipefail
 command -v nmcli >/dev/null || exit 0
 
 vpn_dir=$HOME/.local/share/dotfiles/vpn/tng
+vpn_user={{ (index .hosts .chezmoi.hostname).openvpn_user | quote }}
 state_dir=${XDG_STATE_HOME:-$HOME/.local/state}/dotfiles
 mkdir -p "$state_dir"
 
@@ -41,6 +42,11 @@ for name in FGG TNG; do
     nmcli connection modify "$name" connection.autoconnect no
     sha256sum "$source" | cut -d' ' -f1 > "$state_dir/openvpn-$name.sha256"
     printf 'Perfil OpenVPN importado: %s\n' "$name"
+  fi
+  # Sin usuario, openvpn envía uno vacío y el servidor responde AUTH_FAILED.
+  if [[ "$(nmcli -g vpn.user-name connection show "$name" 2>/dev/null)" != "$vpn_user" ]]; then
+    nmcli connection modify "$name" vpn.user-name "$vpn_user"
+    printf 'Usuario de %s: %s\n' "$name" "$vpn_user"
   fi
 done
 {{- end -}}

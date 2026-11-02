@@ -11,6 +11,9 @@ hosts:
     # por WoL. Sin la clave, el equipo no suspende solo en corriente (deimos:
     # Docker, borgmatic y acceso remoto). Lo aplica 37-plasma-power.
     idle_suspend: true
+    # Usuario de los OpenVPN de TNG (FGG y TNG); la contraseña la pide el agente de
+    # NetworkManager. Lo aplica 66-openvpn.
+    openvpn_user: sanjuan
   deimos:
     # Radeon RX 6600 (Navi 23) sobre Mesa/RADV: decodificación VA-API.
     mpv_hwdec: vaapi
