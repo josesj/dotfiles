@@ -7,7 +7,6 @@
 # --- Exclusivo de macOS (phobos, janus) ---
 .zprofile
 .config/dotfiles/Brewfile
-.gnupg/gpg-agent.conf
 {{- end }}
 
 {{- /* Perfiles de VPN: los de TNG y los .mobileconfig son de macOS; los de

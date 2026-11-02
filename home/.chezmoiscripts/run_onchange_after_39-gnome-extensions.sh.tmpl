@@ -1,8 +1,8 @@
 {{- if eq .chezmoi.os "linux" -}}
 #!/usr/bin/env bash
-# Extensiones de GNOME Shell que se activan solas: iconos de bandeja (AppIndicator)
-# y Dash to Dock. Caffeine y Vitals están instaladas pero se dejan inactivas a
-# propósito; se activan a mano desde Extension Manager.
+# Extensiones de GNOME Shell y sus ajustes, tal como están en tycho. Activas:
+# AppIndicator (iconos de bandeja) y Dash to Dock. Caffeine, Vitals y User Themes
+# se dejan inactivas a propósito y se activan a mano desde Extension Manager.
 # GNOME Shell no ve una extensión recién instalada hasta el siguiente inicio de
 # sesión; el texto de abajo cambia cuando aparece una, para que chezmoi vuelva a
 # ejecutar este script.
@@ -11,11 +11,57 @@ set -euo pipefail
 command -v gnome-extensions >/dev/null || exit 0
 command -v gnome-shell >/dev/null || exit 0
 
+enabled=(
+  appindicatorsupport@rgcjonas.gmail.com
+  dash-to-dock@micxgx.gmail.com
+)
+disabled=(
+  caffeine@patapon.info
+  Vitals@CoreCoding.com
+  user-theme@gnome-shell-extensions.gcampax.github.com
+)
+
 available=$(gnome-extensions list 2>/dev/null || true)
-for uuid in \
-  appindicatorsupport@rgcjonas.gmail.com \
-  dash-to-dock@micxgx.gmail.com; do
+for uuid in "${enabled[@]}"; do
   grep -Fqx -- "$uuid" <<< "$available" || continue
   gnome-extensions enable "$uuid" && printf 'Extensión activada: %s\n' "$uuid"
 done
+for uuid in "${disabled[@]}"; do
+  grep -Fqx -- "$uuid" <<< "$available" || continue
+  gnome-extensions disable "$uuid" || true
+done
+
+# Ajustes de las extensiones (dconf dump /org/gnome/shell/extensions/). Valen
+# aunque la extensión aún no esté cargada.
+if command -v dconf >/dev/null; then
+  dconf load /org/gnome/shell/extensions/ <<'DCONF'
+[appindicator]
+icon-brightness=0.0
+icon-contrast=0.0
+icon-opacity=240
+icon-saturation=0.0
+icon-size=0
+
+[caffeine]
+cli-toggle=false
+indicator-position-max=2
+
+[dash-to-dock]
+apply-custom-theme=false
+background-opacity=0.59999999999999998
+custom-theme-shrink=true
+dash-max-icon-size=48
+dock-fixed=false
+dock-position='BOTTOM'
+height-fraction=0.90000000000000002
+intellihide=false
+intellihide-mode='FOCUS_APPLICATION_WINDOWS'
+preferred-monitor=-2
+preferred-monitor-by-connector='DP-1'
+show-apps-always-in-the-edge=true
+show-trash=false
+transparency-mode='FIXED'
+DCONF
+  printf 'Ajustes de las extensiones aplicados.\n'
+fi
 {{- end -}}

@@ -1,0 +1,10 @@
+{{- if eq .chezmoi.os "darwin" -}}
+# Diálogo nativo de macOS para las contraseñas de GPG (con opción de guardarlas en el Llavero)
+pinentry-program /opt/homebrew/bin/pinentry-mac
+{{- else -}}
+# Diálogo de GNOME para las contraseñas de GPG. El script /usr/bin/pinentry elige
+# la interfaz según el entorno con que arrancó el agente, y si éste nace antes de
+# que la sesión gráfica exporte DISPLAY o XDG_SESSION_TYPE cae a curses y falla sin
+# preguntar; fijar el programa evita esa dependencia.
+pinentry-program /usr/bin/pinentry-gnome3
+{{- end }}

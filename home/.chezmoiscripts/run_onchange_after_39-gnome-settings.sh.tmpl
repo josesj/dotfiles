@@ -1,7 +1,8 @@
 {{- if eq .chezmoi.os "linux" -}}
 #!/usr/bin/env bash
 # Ajustes de GNOME que no son de ningún programa en concreto: búsqueda, papelera,
-# ratón, esquinas, reloj, Nautilus, luz nocturna y manejadores de Thunderbird.
+# ratón, esquinas, reloj, Nautilus, luz nocturna, escritorios virtuales y
+# manejadores de Thunderbird.
 # gnome-shell: {{ lookPath "gnome-shell" }}
 set -euo pipefail
 command -v gnome-shell >/dev/null || exit 0
@@ -38,6 +39,13 @@ set_key org.gnome.nautilus.preferences thumbnail-limit 200
 set_key org.gnome.settings-daemon.plugins.color night-light-enabled true
 set_key org.gnome.settings-daemon.plugins.color night-light-schedule-automatic true
 
+# Escritorios virtuales: cuatro fijos (no aparecen y desaparecen según se usen),
+# sólo en la pantalla principal, y Alt+Tab enseña las ventanas de todos.
+set_key org.gnome.mutter dynamic-workspaces false
+set_key org.gnome.desktop.wm.preferences num-workspaces 4
+set_key org.gnome.mutter workspaces-only-on-primary true
+set_key org.gnome.shell.app-switcher current-workspace-only false
+
 # Thunderbird abre mailto:, los mensajes y los calendarios con su lanzador del
 # paquete y no con los userapp-Thunderbird-* temporales que crea él mismo.
 if command -v xdg-mime >/dev/null &&
@@ -46,5 +54,5 @@ if command -v xdg-mime >/dev/null &&
     x-scheme-handler/mailto message/rfc822 text/calendar
 fi
 
-printf 'Ajustes de GNOME: búsqueda, papelera, ratón, reloj, Nautilus y luz nocturna.\n'
+printf 'Ajustes de GNOME: búsqueda, papelera, ratón, reloj, Nautilus, luz nocturna y escritorios.\n'
 {{- end -}}

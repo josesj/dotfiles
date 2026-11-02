@@ -1,0 +1,10 @@
+{{- if eq .chezmoi.os "linux" -}}
+#!/usr/bin/env bash
+# gpg-agent sólo lee su configuración al arrancar o al recibir un reload: sin esto,
+# un cambio de pinentry-program no surte efecto hasta el siguiente inicio de sesión.
+# gpg-agent.conf sha256: {{ include "private_dot_gnupg/private_gpg-agent.conf.tmpl" | sha256sum }}
+set -euo pipefail
+command -v gpgconf >/dev/null || exit 0
+gpgconf --reload gpg-agent
+printf 'gpg-agent recargado.\n'
+{{- end -}}
