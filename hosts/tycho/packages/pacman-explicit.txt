@@ -39,9 +39,11 @@ chezmoi
 clinfo
 cmake
 coin-or-mp
+commit
 cpupower
 cuda
 cups
+curtail
 d-spy
 darktable
 dconf-editor
@@ -62,6 +64,7 @@ entr
 ethtool
 exfat-utils
 extension-manager
+eyedropper
 eza
 f2fs-tools
 fatresize
@@ -71,6 +74,7 @@ file-roller
 firefox
 firefox-i18n-en-us
 firefox-i18n-es-es
+fragments
 freecad
 freerdp
 fwupd
@@ -162,6 +166,7 @@ hyphen-es
 hyphen-it
 i2c-tools
 imagemagick
+impression
 inetutils
 inkscape
 ipp-usb
@@ -225,6 +230,7 @@ mediainfo
 meld
 mesa-utils
 meson
+metadata-cleaner
 mold
 movit
 mpv-mpris
@@ -335,6 +341,7 @@ screen
 seahorse
 shellcheck
 shfmt
+shortwave
 showtime
 simple-scan
 smartmontools
@@ -353,6 +360,7 @@ sudo
 sushi
 svgpart
 swig
+switcheroo
 system-config-printer
 systemd-resolvconf
 taplo-cli
@@ -360,6 +368,7 @@ task
 tcpdump
 tealdeer
 terminus-font
+textpieces
 tmux
 traceroute
 trash-cli
@@ -387,6 +396,7 @@ uv
 v4l2loopback-utils
 valgrind
 vdpauinfo
+video-trimmer
 vim
 vim-spell-es
 vim-spell-it
@@ -399,6 +409,7 @@ vscode-html-languageserver
 vscode-json-languageserver
 vulkan-headers
 vulkan-tools
+warp
 wayland-utils
 wgcf
 wget
