@@ -232,6 +232,7 @@ kompare
 konsole
 kpipewire
 krdc
+krdp
 krecorder
 krfb
 krita
@@ -454,6 +455,7 @@ qt6-multimedia-gstreamer
 qt6-wayland
 rawtherapee
 rclone
+rdesktop
 realtime-privileges
 recordmydesktop
 reflector
