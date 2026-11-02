@@ -97,6 +97,7 @@ gdm
 geoipupdate
 ghex
 ghostty
+ghostty-nautilus
 gimp
 git
 git-delta
@@ -193,9 +194,6 @@ jq
 just
 k9s
 kicad-library
-kitty
-kitty-shell-integration
-kitty-terminfo
 kubeadm
 kubectl
 kubectx

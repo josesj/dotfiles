@@ -28,34 +28,6 @@ Vim usa números de línea absolutos, Catppuccin Latte/Mocha, Lightline,
 GitGutter, ALE, fzf.vim, Commentary, Surround, Repeat y Tagbar,
 cargados como paquetes nativos desde `~/.vim/pack/dotfiles/start`.
 
-## Kitty (Arch)
-
-| Teclas | Acción |
-|---|---|
-| `Ctrl+Shift+T` | Nueva pestaña |
-| `Ctrl+Shift+W` | Cerrar pestaña |
-| `Ctrl+Tab` / `Ctrl+Shift+Tab` | Pestaña siguiente/anterior |
-| `Alt+1…8` / `Alt+9` | Ir a pestaña / última pestaña |
-| `Ctrl+Shift+N` | Nueva ventana |
-| `Ctrl+Shift+O` | División vertical |
-| `Ctrl+Shift+E` | División horizontal |
-| `Ctrl+Alt+←/→/↑/↓` | Moverse entre divisiones |
-| `Ctrl+Shift+Enter` | Ampliar/restaurar división |
-| `Ctrl+Shift+X` | Cerrar división |
-| `Ctrl+Shift+C/V` | Copiar/pegar |
-| `Ctrl++` / `Ctrl+-` / `Ctrl+0` | Aumentar/reducir/restaurar fuente |
-| `Ctrl+Shift+F` | Buscar en el terminal |
-| `Ctrl+Shift+PageUp/PageDown` | Prompt anterior/siguiente |
-| `F11` | Pantalla completa |
-| `Ctrl+,` | Abrir configuración |
-| `Ctrl+Shift+,` | Recargar configuración |
-| `Ctrl+Shift+F1` | Paleta de comandos |
-| `Ctrl+Shift+P` + `F`/`L`/`H` | Copiar ruta/línea/hash visible con hints |
-
-La ventana abre a `100×29`, con margen de 4 px, y no recuerda su tamaño.
-Si un comando tarda más de 15 s y Kitty no tiene el foco, avisa por el escritorio.
-Kitty usa Catppuccin Latte en modo claro y Mocha en modo oscuro.
-
 ## Ghostty
 
 En Linux Ghostty usa sus atajos predeterminados: `Ctrl+Shift+T/W/N`,

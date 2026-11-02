@@ -30,7 +30,6 @@
 .config/code-flags.conf
 .config/environment.d
 .config/fontconfig
-.config/kitty
 .config/mpv
 .config/obs-studio
 .config/pipewire

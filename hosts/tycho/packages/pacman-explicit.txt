@@ -84,6 +84,7 @@ gdm
 ghex
 ghostscript
 ghostty
+ghostty-nautilus
 gimp-plugin-gmic
 git
 git-delta
@@ -180,9 +181,6 @@ jdk8-openjdk
 jfsutils
 jq
 just
-kitty
-kitty-shell-integration
-kitty-terminfo
 lact
 ladspa
 lazydocker

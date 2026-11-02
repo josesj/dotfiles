@@ -33,6 +33,9 @@
 .local/bin/lock-after-sunshine
 .local/bin/sunshine-display
 .local/share/applications/kitty.desktop
+.config/kitty
+.terminfo/kitty.terminfo
+.terminfo/x/xterm-kitty
 .local/share/applications/libreoffice-*.desktop
 .config/systemd/user/plasma-workspace.target.wants/app-org.kde.krdpserver.service
 .local/share/konsole

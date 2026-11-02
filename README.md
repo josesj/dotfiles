@@ -73,7 +73,7 @@ chezmoi update          # git pull + apply
 Añadir un equipo es añadir su entrada en esa tabla y en la lista de
 `home/.chezmoi.toml.tmpl` y, si hace falta, una regla en `.chezmoiignore`.
 
-Sólo en Arch: Kitty, PipeWire, WirePlumber,
+Sólo en Arch: PipeWire, WirePlumber,
 `environment.d`, las banderas de Chrome y VS Code y el script de Nautilus.
 Sólo en macOS: `.zprofile` y el `Brewfile`. Ghostty está en los cuatro, con
 plantilla para cada sistema.
@@ -103,13 +103,13 @@ Tycho y Deimos se encienden y se usan a distancia por WoL y SSH.
 
 ## Aspecto
 
-Catppuccin viste lo que muestra texto: Vim, Zsh, Kitty, Ghostty y
+Catppuccin viste lo que muestra texto: Vim, Zsh, Ghostty y
 Visual Studio Code, con Latte en modo claro y Mocha en modo oscuro. El
 escritorio no: GNOME usa Adwaita, su tema propio, y es quien dicta el modo. El
 sabor se detecta en el arranque del shell y al recuperar el foco en Vim: GNOME
 lo publica en la clave `color-scheme` de `gsettings` y macOS sólo define `AppleInterfaceStyle` mientras el
 modo oscuro está activo. Por SSH manda el terminal local, no el escritorio
-remoto: el prompt pregunta a Kitty o Ghostty su color de fondo (OSC 11) y
+remoto: el prompt pregunta a Ghostty su color de fondo (OSC 11) y
 exporta `WORKSTATION_FLAVOUR`, que Vim también sigue. El prompt asigna colores semánticos de la variante
 activa a ruta, estado de Git, errores, duración, trabajos y entornos virtuales.
 
@@ -262,7 +262,7 @@ es la lista mínima de la que dependen los archivos de este repositorio:
 
 ```bash
 sudo pacman -S --needed zsh vim git git-lfs gnupg chezmoi \
-  fzf ripgrep direnv python-uv nvm jbang kitty \
+  fzf ripgrep direnv python-uv nvm jbang ghostty \
   clang pyright typescript-language-server
 ```
 
