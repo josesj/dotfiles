@@ -24,6 +24,7 @@
 
 {{- if ne .chezmoi.os "linux" }}
 # --- Exclusivo de Arch Linux (tycho, deimos) ---
+.config/autostart
 .config/btop/themes
 .config/code-flags.conf
 .config/environment.d

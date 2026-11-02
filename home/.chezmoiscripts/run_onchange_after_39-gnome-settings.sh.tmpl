@@ -1,0 +1,50 @@
+{{- if eq .chezmoi.os "linux" -}}
+#!/usr/bin/env bash
+# Ajustes de GNOME que no son de ningún programa en concreto: búsqueda, papelera,
+# ratón, esquinas, reloj, Nautilus, luz nocturna y manejadores de Thunderbird.
+# gnome-shell: {{ lookPath "gnome-shell" }}
+set -euo pipefail
+command -v gnome-shell >/dev/null || exit 0
+command -v gsettings >/dev/null || exit 0
+
+set_key() {
+  gsettings writable "$1" "$2" >/dev/null 2>&1 || return 0
+  gsettings set "$1" "$2" "$3"
+}
+
+# localsearch indexa todo $HOME por defecto (con ~/tmp y cualquier carpeta que no
+# sea un repositorio de git): ~90 000 ficheros. Sólo se indexan las carpetas de
+# documentos, como se hacía con Baloo.
+set_key org.freedesktop.Tracker3.Miner.Files index-recursive-directories \
+  "['&DESKTOP', '&DOCUMENTS', '&DOWNLOAD', '&MUSIC', '&PICTURES', '&VIDEOS']"
+
+# La papelera se vacía sola de lo que lleve más de 30 días.
+set_key org.gnome.desktop.privacy remove-old-trash-files true
+set_key org.gnome.desktop.privacy old-files-age 30
+
+# Ratón lineal, sin aceleración.
+set_key org.gnome.desktop.peripherals.mouse accel-profile "'flat'"
+
+# Sin esquina activa; el reloj muestra también el día de la semana.
+set_key org.gnome.desktop.interface enable-hot-corners false
+set_key org.gnome.desktop.interface clock-show-weekday true
+
+# Nautilus en lista y miniaturas de imágenes de hasta 200 MB.
+set_key org.gnome.nautilus.preferences default-folder-viewer "'list-view'"
+set_key org.gnome.nautilus.preferences thumbnail-limit 200
+
+# Luz nocturna de atardecer a amanecer. Con la ubicación desactivada, GNOME se
+# apoya en la zona horaria.
+set_key org.gnome.settings-daemon.plugins.color night-light-enabled true
+set_key org.gnome.settings-daemon.plugins.color night-light-schedule-automatic true
+
+# Thunderbird abre mailto:, los mensajes y los calendarios con su lanzador del
+# paquete y no con los userapp-Thunderbird-* temporales que crea él mismo.
+if command -v xdg-mime >/dev/null &&
+   [[ -f /usr/share/applications/org.mozilla.Thunderbird.desktop ]]; then
+  xdg-mime default org.mozilla.Thunderbird.desktop \
+    x-scheme-handler/mailto message/rfc822 text/calendar
+fi
+
+printf 'Ajustes de GNOME: búsqueda, papelera, ratón, reloj, Nautilus y luz nocturna.\n'
+{{- end -}}
