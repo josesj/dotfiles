@@ -12,7 +12,7 @@ REPO_DIR=$(cd -- "$PR_DIR/.." && pwd)
 HOST=${DOTFILES_HOST:-$(hostname -s)}
 HOST=${HOST,,}
 HOST_DIR="$REPO_DIR/hosts/$HOST"
-SNAPSHOT_DIR="$HOST_DIR/packages/pre-gnome"
+SNAPSHOT_DIR="$HOST_DIR/packages"   # inventario objetivo del equipo (pacman, AUR y Flatpak)
 
 APPLY=false
 ASSUME_YES=false
@@ -33,7 +33,7 @@ warn() { printf '\033[33m!!\033[0m  %s\n' "$*" >&2; }
 die()  { printf '\033[31mError:\033[0m %s\n' "$*" >&2; exit 1; }
 
 [[ -d $HOST_DIR ]] || die "no hay perfil para el equipo «$HOST» en hosts/."
-[[ -d $SNAPSHOT_DIR ]] || die "falta $SNAPSHOT_DIR (inventario previo a GNOME)."
+[[ -d $SNAPSHOT_DIR ]] || die "falta $SNAPSHOT_DIR (inventario de paquetes del equipo)."
 
 # Los cambios de paquetes y del gestor de acceso deben hacerse fuera de la sesión
 # gráfica: al quitar GNOME, la sesión que ejecuta el script se caería a medias.

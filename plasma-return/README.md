@@ -9,13 +9,15 @@ limpiar el usuario e instalar de nuevo los paquetes que había antes de la migra
 | 0 | `00-backup.sh` | Guarda paquetes, servicios, dconf y estado del repo en `~/tmp/plasma-return-<equipo>/estado-<fecha>/`. Se puede ejecutar dentro de GNOME. |
 | 1 | `01-headless.sh` | Deja sólo los paquetes que no dependen de una interfaz gráfica y quita el resto con sus dependencias. |
 | 2 | `02-clean-home.sh` | Mueve a `~/.plasma-return-backup/<fecha>/` todo lo oculto de `$HOME` salvo SSH, GPG, Vim, Zsh, Git, chezmoi, Claude y los entornos de desarrollo. |
-| 3 | `03-install-plasma.sh` | Instala el inventario previo a GNOME (`hosts/<equipo>/packages/pre-gnome/`) y activa `plasmalogin`. |
+| 3 | `03-install-plasma.sh` | Instala el inventario del equipo (`hosts/<equipo>/packages/`) y activa `plasmalogin`. |
 | 4 | `04-restore-kde-config.sh` | Opcional, sin probar. Recupera de una copia de borgmatic los ajustes de Plasma que no están en el repositorio. |
 
 El equipo se detecta con `hostname` (`DOTFILES_HOST=deimos` lo fuerza para probar). Cada equipo
-usa su propio inventario de Plasma: el de tycho es la instantánea del 1 de noviembre
-(`hosts/tycho/packages/pre-gnome/`) y el de Deimos se recuperó del historial de git
-(`9105c06^`, antes de pasar a GNOME).
+usa su inventario en `hosts/<equipo>/packages/` (pacman, AUR y Flatpak). Los dos inventarios son
+casi iguales: lo que se instala en uno está en el otro, salvo el hardware (tycho: AMD + NVIDIA y
+CUDA; Deimos: Intel + AMD y ROCm), los juegos (Steam, Proton, MangoHud y Gamemode, sólo en tycho)
+y algunos servicios de cada equipo (KRDP y firewalld en Deimos; OpenVPN y nftables en tycho).
+Los inventarios previos a GNOME siguen en `packages/pre-gnome/` sólo como historial.
 
 ## Orden
 
@@ -64,9 +66,9 @@ paquetes quitaría 818 y dejaría 1245, sin tocar nada protegido.
 
 ## Antes de empezar
 
-- El inventario de Plasma incluye **todo** lo que había: también Krita, digiKam, Kdenlive y Google
-  Chrome, que se retiraron al pasar a GNOME. Quita de `pre-gnome/pacman-explicit.txt` o
-  `aur-explicit.txt` lo que no quieras recuperar.
+- El inventario incluye **todo** lo que hay en el equipo, también Krita, digiKam y Kdenlive, que se
+  retiraron al pasar a GNOME. Quita de `packages/pacman-explicit.txt` o `aur-explicit.txt` lo que
+  no quieras recuperar.
 - Tras el paso 1 sólo funciona la consola: NetworkManager y SSH quedan, el escritorio no.
 - Si algo se interrumpe, `pacman -Syu` y el paso 3 devuelven el sistema al inventario; la copia de
   `00-backup.sh` tiene la lista completa de lo que había justo antes.
@@ -78,7 +80,7 @@ paquetes quitaría 818 y dejaría 1245, sin tocar nada protegido.
 - **Fuentes y aspecto:** Noto Sans 10 y JetBrainsMono Nerd Font Mono, el tema de Plasma y los
   colores Catppuccin de Konsole, Kate y Kitty (`30-plasma-fonts`, `31-plasma-theme`,
   `fonts.conf`, `Xresources`).
-- **Terminal:** Kitty, con la configuración de antes de GNOME; Ghostty sólo en macOS.
+- **Terminal:** Kitty, con la configuración de antes de GNOME (también es el terminal de macOS).
 - **Energía** (`37-plasma-power`): pantalla con los valores de serie en los dos equipos.
   Tycho suspende por inactividad (`idle_suspend: true`); Deimos no, porque tiene Docker,
   borgmatic y acceso remoto.

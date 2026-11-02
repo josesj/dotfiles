@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
-# 03 - Instala los paquetes que tenía el equipo antes de pasar a GNOME (Plasma, KDE y el
-# resto de aplicaciones) a partir del inventario guardado en
-# hosts/<equipo>/packages/pre-gnome/, y deja Plasma Login Manager como gestor de acceso.
+# 03 - Instala los paquetes del equipo (Plasma, KDE y el
+# resto de aplicaciones) a partir de su inventario en
+# hosts/<equipo>/packages/, y deja Plasma Login Manager como gestor de acceso.
 # Es una simulación salvo con --apply, que debe ejecutarse desde una consola de texto.
 #
 # Opciones: --apply  --yes  --allow-session
@@ -12,7 +12,7 @@ mode_banner
 mapfile -t native < <(read_list "$SNAPSHOT_DIR/pacman-explicit.txt")
 mapfile -t aur    < <(read_list "$SNAPSHOT_DIR/aur-explicit.txt")
 flatpak_tsv="$SNAPSHOT_DIR/flatpak-apps.tsv"
-note "inventario previo a GNOME: ${#native[@]} paquetes de repositorio, ${#aur[@]} de AUR$([[ -s $flatpak_tsv ]] && echo ", $(wc -l < "$flatpak_tsv") de Flatpak")"
+note "inventario: ${#native[@]} paquetes de repositorio, ${#aur[@]} de AUR$([[ -s $flatpak_tsv ]] && echo ", $(wc -l < "$flatpak_tsv") de Flatpak")"
 
 if ! $APPLY; then
   say "Comprobando que los paquetes se pueden resolver con las bases de datos actuales"
@@ -61,7 +61,6 @@ sudo systemctl disable gdm.service 2>/dev/null || true
 sudo systemctl enable plasmalogin.service
 
 say "Listo."
-note "Siguiente paso: vuelve a la configuración de Plasma del repositorio y aplícala:"
-note "    git -C $REPO_DIR switch plasma-return   # cuando esté preparada"
+note "Siguiente paso: aplica la configuración de Plasma del repositorio (en Deimos, con git pull antes):"
 note "    chezmoi apply && sudo $REPO_DIR/install-system.sh"
 note "    sudo reboot"

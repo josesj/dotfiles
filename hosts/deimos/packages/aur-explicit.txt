@@ -1,13 +1,11 @@
 1password
 artcraft-launcher
-bruno-bin
+astrometry.net
+bambustudio-bin
 claude-code
 claude-desktop
-ds9
-hotspot
 jbang
-jxplorer
-modbustools-git
-siril-git
+jdtls
+siril
 visual-studio-code-bin
 yay

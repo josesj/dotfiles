@@ -1,13 +1,11 @@
 1password
-ai.storyteller.lightcraft
-ai.storyteller.photocraft
 artcraft-launcher
+astrometry.net
 bambustudio-bin
 claude-code
 claude-desktop
-coros-link-bin
-ds9
-io.tangencylabs.solidcraft
+jbang
 jdtls
+siril
 visual-studio-code-bin
 yay
