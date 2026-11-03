@@ -37,7 +37,8 @@ cargados como paquetes nativos desde `~/.vim/pack/dotfiles/start`.
 | `Ctrl+Shift+W` | Cerrar pestaña |
 | `Ctrl+Tab` / `Ctrl+Shift+Tab` | Pestaña siguiente/anterior |
 | `Alt+1…8` / `Alt+9` | Ir a pestaña / última pestaña |
-| `Ctrl+Shift+N` | Nueva ventana |
+| `Ctrl+Shift+N` | Nueva ventana en la carpeta actual |
+| `Ctrl+Shift+Alt+N` | Nueva ventana en la carpeta personal |
 | `Ctrl+Shift+O` | División vertical |
 | `Ctrl+Shift+E` | División horizontal |
 | `Ctrl+Alt+←/→/↑/↓` | Moverse entre divisiones |
