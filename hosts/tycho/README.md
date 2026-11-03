@@ -51,7 +51,7 @@ Docker arranca bajo demanda con `docker.socket` en lugar de `docker.service`:
 
 **Cortafuegos** (`system/nftables.conf`): tabla propia `inet workstation` con política
 de descarte en la entrada. Pasan loopback, conexiones ya iniciadas, ICMP, DHCP, el tráfico
-de los puentes de Docker y libvirt, y sólo desde la red local SSH (22), KDE Connect
+de los puentes de Docker y libvirt, y sólo desde la red local y el túnel WireGuard del router (192.168.9.0/24, fd00:9::/64) SSH (22), KDE Connect
 (1714-1764), mDNS (5353) y Steam Remote Play. No hay `flush ruleset`: las tablas de
 Docker no se tocan. `install-system.sh` valida el fichero con `nft -c`, activa
 `nftables.service` y lo recarga. SSH va sólo con clave (`sshd_config.d/50-keys-only.conf`).
