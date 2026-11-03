@@ -138,7 +138,6 @@ graphviz
 grpc
 gst-libav
 gst-plugin-msdk
-gst-plugin-onnx
 gst-plugin-opencv
 gst-plugin-pipewire
 gst-plugin-qsv
