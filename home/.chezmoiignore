@@ -144,6 +144,8 @@
 
 {{- if ne .chezmoi.hostname "tycho" }}
 # Sólo existen en tycho
+.config/audacity
+.local/share/kscreen
 .config/audacity/audacity.cfg
 .config/breezerc
 .config/gwenviewrc
