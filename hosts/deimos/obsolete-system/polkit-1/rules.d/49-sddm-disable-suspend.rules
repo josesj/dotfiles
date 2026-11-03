@@ -1,0 +1,12 @@
+// Prevent the SDDM greeter from suspending or hibernating the machine.
+polkit.addRule(function(action, subject) {
+    if (subject.user == "sddm" &&
+        (action.id == "org.freedesktop.login1.suspend" ||
+         action.id == "org.freedesktop.login1.suspend-multiple-sessions" ||
+         action.id == "org.freedesktop.login1.hibernate" ||
+         action.id == "org.freedesktop.login1.hibernate-multiple-sessions" ||
+         action.id == "org.freedesktop.login1.suspend-then-hibernate" ||
+         action.id == "org.freedesktop.login1.suspend-then-hibernate-multiple-sessions")) {
+        return polkit.Result.NO;
+    }
+});

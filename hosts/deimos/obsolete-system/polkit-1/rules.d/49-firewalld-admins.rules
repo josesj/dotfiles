@@ -1,0 +1,6 @@
+polkit.addRule(function(action, subject) {
+    if (action.id.indexOf("org.fedoraproject.FirewallD1.") === 0 &&
+        subject.isInGroup("firewall-admins")) {
+        return polkit.Result.YES;
+    }
+});

@@ -144,7 +144,12 @@ deploy_file "$repo_dir/system/systemd/timesyncd.conf.d/90-workstation.conf" \
   "/etc/systemd/timesyncd.conf.d/90-workstation.conf"
 deploy_file "$repo_dir/system/systemd/system/paccache.service.d/10-workstation.conf" \
   "/etc/systemd/system/paccache.service.d/10-workstation.conf"
-for relative in systemd/oomd.conf.d/10-workstation.conf \
+for relative in conf.d/snapper \
+                snapper/configs/root \
+                security/faillock.conf \
+                locale.conf \
+                systemd/logind.conf.d/90-local.conf \
+                systemd/oomd.conf.d/10-workstation.conf \
                 systemd/system.conf.d/90-local.conf \
                 systemd/resolved.conf.d/90-local.conf \
                 xdg/reflector/reflector.conf \
@@ -154,6 +159,10 @@ for relative in systemd/oomd.conf.d/10-workstation.conf \
     mark_changed_subsystem "$relative"
   deploy_file "$repo_dir/system/$relative" "/etc/$relative"
 done
+# sudoers exige permisos 0440 y se valida con visudo antes de instalarlo: un
+# error aquí dejaría el equipo sin sudo.
+visudo -cf "$repo_dir/system/sudoers.d/00_jose" >/dev/null
+deploy_file "$repo_dir/system/sudoers.d/00_jose" "/etc/sudoers.d/00_jose" 440
 deploy_file "$repo_dir/system/systemd/zram-generator.conf" \
   "/etc/systemd/zram-generator.conf"
 deploy_file "$repo_dir/system/udev/rules.d/60-ioschedulers.rules" \
@@ -220,6 +229,12 @@ if [[ -d "$host_dir/system" ]]; then
     [[ $relative == NetworkManager/dispatcher.d/* ]] && mode=755
     deploy_file "$source" "$target" "$mode"
   done < <(find "$host_dir/system" -type f -print0 | sort -z)
+fi
+
+# /etc/fstab no se despliega: lleva UUID de discos y un error impediría arrancar.
+# hosts/<equipo>/reference/fstab es sólo una referencia; se avisa si difiere.
+if [[ -f "$host_dir/reference/fstab" ]] && ! cmp -s -- "$host_dir/reference/fstab" /etc/fstab; then
+  printf 'Aviso: /etc/fstab difiere de %s (no se toca).\n' "$host_dir/reference/fstab"
 fi
 
 # Blobs de firmware por equipo (EDID de monitores) bajo hosts/<equipo>/firmware,
@@ -336,6 +351,17 @@ if ! $dry_run; then
   if $manager_changed; then
     systemctl daemon-reexec
   fi
+  # Unidades que el equipo tiene habilitadas a propósito (hosts/<equipo>/services.txt).
+  if [[ -f "$host_dir/services.txt" ]]; then
+    while read -r unit; do
+      [[ -z $unit || $unit == \#* ]] && continue
+      if ! systemctl cat "$unit" >/dev/null 2>&1; then
+        printf 'Aviso: la unidad %s no existe (¿falta el paquete?).\n' "$unit"
+      elif ! systemctl -q is-enabled "$unit" 2>/dev/null; then
+        systemctl enable "$unit"
+      fi
+    done < "$host_dir/services.txt"
+  fi
   # Los temporizadores del perfil del equipo (autoshutdown en tycho) quedan
   # activos; enable --now no hace nada si ya lo están.
   for timer in "${host_timers[@]}"; do
@@ -412,6 +438,12 @@ else
   fi
   if $dispatcher_changed; then
     printf 'Ejecutaría el dispatcher de DNS por enlace.\n'
+  fi
+  if [[ -f "$host_dir/services.txt" ]]; then
+    while read -r unit; do
+      [[ -z $unit || $unit == \#* ]] && continue
+      systemctl -q is-enabled "$unit" 2>/dev/null || printf 'Habilitaría %s.\n' "$unit"
+    done < "$host_dir/services.txt"
   fi
   if $nftables_changed; then
     systemctl -q is-enabled firewalld.service 2>/dev/null &&

@@ -1,0 +1,21 @@
+# Static information about the filesystems.
+# See fstab(5) for details.
+
+# <file system> <dir> <type> <options> <dump> <pass>
+UUID=ae91296e-4813-4efd-a732-55e3479aa1df	/		btrfs		rw,noatime,compress=zstd:3,ssd,discard=async,subvol=/@	0 0
+
+UUID=ae91296e-4813-4efd-a732-55e3479aa1df	/home		btrfs		rw,noatime,compress=zstd:3,ssd,discard=async,subvol=/@home	0 0
+
+UUID=ae91296e-4813-4efd-a732-55e3479aa1df	/var/cache/pacman/pkg	btrfs		rw,noatime,compress=zstd:3,ssd,discard=async,subvol=/@pkg	0 0
+
+UUID=ae91296e-4813-4efd-a732-55e3479aa1df	/var/log	btrfs		rw,noatime,compress=zstd:3,ssd,discard=async,subvol=/@log	0 0
+
+UUID=54A6-C4C6		/boot		vfat		rw,relatime,fmask=0077,dmask=0077,codepage=437,iocharset=ascii,shortname=mixed,utf8,errors=remount-ro	0 2
+
+UUID=34a0a8fe-ce3b-4a35-a522-2e6a507fce2f	/mnt/storage	btrfs		rw,noatime,compress=zstd:3,ssd,discard=async,subvol=/@storage	0 0
+
+UUID=34a0a8fe-ce3b-4a35-a522-2e6a507fce2f	/mnt/docker	btrfs		rw,noatime,compress=zstd:3,ssd,discard=async,subvol=/@docker	0 0
+
+192.168.0.10:/storage/shared	/mnt/shared	nfs4	vers=4.1,proto=tcp,rsize=1048576,wsize=1048576,hard,timeo=300,retrans=3,noatime,_netdev,nofail,x-systemd.automount,x-systemd.idle-timeout=600,x-systemd.mount-timeout=30,x-systemd.requires=network-online.target	0 0
+
+UUID=ae91296e-4813-4efd-a732-55e3479aa1df	/opt		btrfs		rw,noatime,compress=zstd:3,ssd,discard=async,subvol=/@opt	0 0

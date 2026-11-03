@@ -1,0 +1,21 @@
+# Static information about the filesystems.
+# See fstab(5) for details.
+
+# <file system> <dir> <type> <options> <dump> <pass>
+# /dev/nvme0n1p2
+UUID=c984017a-bb54-4f31-9f3c-eae14d05cbba	/		btrfs		rw,noatime,compress=zstd:3,subvol=/@	0 0
+
+# /dev/nvme0n1p2
+UUID=c984017a-bb54-4f31-9f3c-eae14d05cbba	/home		btrfs		rw,noatime,compress=zstd:3,subvol=/@home	0 0
+
+# /dev/nvme0n1p2
+UUID=c984017a-bb54-4f31-9f3c-eae14d05cbba	/var/cache/pacman/pkg	btrfs		rw,noatime,compress=zstd:3,subvol=/@pkg	0 0
+
+# /dev/nvme0n1p2
+UUID=c984017a-bb54-4f31-9f3c-eae14d05cbba	/var/log	btrfs		rw,noatime,compress=zstd:3,subvol=/@log	0 0
+
+# /dev/nvme0n1p1 — ESP privado para proteger UKI y semilla aleatoria.
+UUID=03FE-6EDC	/boot	vfat		rw,relatime,fmask=0077,dmask=0077,codepage=437,iocharset=ascii,shortname=mixed,utf8,errors=remount-ro	0 2
+
+UUID=713e90e3-0c6d-49c4-987d-400ef056a61e	/mnt/storage	btrfs		rw,noatime,compress=zstd:1,subvol=/@storage	0 0
+UUID=713e90e3-0c6d-49c4-987d-400ef056a61e	/mnt/docker	btrfs		rw,noatime,compress=zstd:1,subvol=/@docker	0 0

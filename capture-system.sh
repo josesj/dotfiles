@@ -47,7 +47,7 @@ grab() {   # grab /ruta/absoluta
 }
 
 say "Ficheros de /etc modificados respecto al paquete (pacman)"
-pacman -Qii 2>/dev/null | awk '/^MODIFIED/ {print $2}' | sort -u > "$out/estado/etc-modificados.txt"
+pacman -Qii 2>/dev/null | grep -oE '/etc/[^ ]+ \[modified\]' | awk '{print $1}' | sort -u > "$out/estado/etc-modificados.txt"
 while read -r f; do grab "$f"; done < "$out/estado/etc-modificados.txt"
 
 say "Ficheros de /etc que no pertenecen a ningún paquete"
