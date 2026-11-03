@@ -23,5 +23,13 @@ kwriteconfig6 --file kdeglobals --group General --key XftAntialias true
 kwriteconfig6 --file kdeglobals --group General --key XftHintStyle hintslight
 kwriteconfig6 --file kdeglobals --group General --key XftSubPixel none
 
+# Las aplicaciones GTK en Wayland leen las fuentes de gsettings. kde-gtk-config
+# sincroniza la general, pero no la monoespaciada.
+if command -v gsettings >/dev/null &&
+   gsettings writable org.gnome.desktop.interface monospace-font-name >/dev/null 2>&1; then
+  gsettings set org.gnome.desktop.interface monospace-font-name \
+    'JetBrainsMono Nerd Font Mono Medium 10'
+fi
+
 printf 'Fuentes de Plasma: Noto Sans; monoespaciada: JetBrainsMono Nerd Font Mono Medium.\n'
 {{- end -}}

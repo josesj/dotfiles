@@ -1,8 +1,16 @@
 {{- if eq .chezmoi.os "linux" -}}
 #!/usr/bin/env bash
+# Kitty es el terminal de Plasma: Ctrl+Alt+T y el terminal predeterminado de
+# KDE, que usan Dolphin («Abrir terminal») y las aplicaciones con Terminal=true;
+# sin TerminalApplication, KDE abre Konsole.
 # Konsole anuncia el mismo atajo por defecto. Persistir su retirada deja que la
 # entrada de escritorio de Kitty se quede con Ctrl+Alt+T sin ambigüedad.
 set -euo pipefail
+
+if command -v kwriteconfig6 >/dev/null && command -v kitty >/dev/null; then
+  kwriteconfig6 --file kdeglobals --group General --key TerminalApplication kitty
+  kwriteconfig6 --file kdeglobals --group General --key TerminalService kitty.desktop
+fi
 
 if command -v kwriteconfig6 >/dev/null; then
   kwriteconfig6 --file kglobalshortcutsrc --group services \

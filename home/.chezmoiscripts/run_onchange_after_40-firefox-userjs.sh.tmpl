@@ -1,8 +1,15 @@
 {{- if eq .chezmoi.os "linux" -}}
 #!/usr/bin/env bash
 # Despliega user.js en cada perfil real de Firefox, cubriendo tanto la
-# ubicación XDG como el diseño tradicional ~/.mozilla.
+# ubicación XDG como el diseño tradicional ~/.mozilla, y deja Firefox como
+# navegador predeterminado: enlaces y archivos HTML, y BrowserApplication de KDE.
 set -euo pipefail
+
+if command -v xdg-settings >/dev/null && [[ -f /usr/share/applications/firefox.desktop ]]; then
+  xdg-settings set default-web-browser firefox.desktop 2>/dev/null || true
+  # xdg-settings no cubre XHTML.
+  xdg-mime default firefox.desktop application/xhtml+xml 2>/dev/null || true
+fi
 
 user_js=$(mktemp)
 trap 'rm -f -- "$user_js"' EXIT
