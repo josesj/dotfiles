@@ -44,7 +44,6 @@ oomd_changed=false
 resolved_changed=false
 networkmanager_changed=false
 dispatcher_changed=false
-firewalld_changed=false
 nftables_changed=false
 manager_changed=false
 webcam_changed=false
@@ -129,7 +128,6 @@ mark_changed_subsystem() {
     systemd/resolved.conf.d/*) resolved_changed=true ;;
     NetworkManager/conf.d/*) networkmanager_changed=true ;;
     NetworkManager/dispatcher.d/*) dispatcher_changed=true ;;
-    firewalld/*) firewalld_changed=true ;;
     nftables.conf) nftables_changed=true ;;
     systemd/system.conf.d/*) manager_changed=true ;;
   esac
@@ -361,14 +359,14 @@ if ! $dry_run; then
   if $dispatcher_changed && [[ -x /etc/NetworkManager/dispatcher.d/90-dns-split ]]; then
     /etc/NetworkManager/dispatcher.d/90-dns-split eno1 reapply
   fi
-  # Se valida antes de recargar: con un error, firewalld sigue con las reglas
-  # que tiene en memoria.
-  if $firewalld_changed && systemctl -q is-active firewalld.service; then
-    firewall-cmd --check-config
-    firewall-cmd --reload
-  fi
   # La tabla inet workstation se sustituye entera; las de Docker no se tocan.
   if $nftables_changed; then
+    # firewalld (el cortafuegos anterior de Deimos) y nftables.service no deben
+    # convivir: se retira firewalld justo antes de cargar las reglas nuevas.
+    if systemctl -q is-enabled firewalld.service 2>/dev/null ||
+       systemctl -q is-active firewalld.service; then
+      systemctl disable --now firewalld.service
+    fi
     systemctl enable nftables.service
     systemctl reload-or-restart nftables.service
   fi
@@ -415,10 +413,9 @@ else
   if $dispatcher_changed; then
     printf 'Ejecutaría el dispatcher de DNS por enlace.\n'
   fi
-  if $firewalld_changed; then
-    printf 'Validaría y recargaría firewalld.\n'
-  fi
   if $nftables_changed; then
+    systemctl -q is-enabled firewalld.service 2>/dev/null &&
+      printf 'Desactivaría firewalld.service.\n'
     printf 'Activaría nftables.service y cargaría el cortafuegos (tabla inet workstation).\n'
   fi
   if $manager_changed; then

@@ -29,16 +29,18 @@ También versiona el resto de su `/etc` propio:
   (`/usr/local/libexec/borgmatic-failure-notify`) no se versionan: sólo root
   puede leerlos.
 - `lm_sensors`: etiquetas del chip NCT6798D de la ASUS PRIME B660M-A D4.
-- firewalld: `eno1` entera va a la zona `private`, que abre SSH, mDNS, LLMNR,
-  y RDP (el escritorio remoto de KDE, configurado desde chezmoi por
-  `run_after_39-krdp.sh.tmpl`). Deimos se usa desde varias redes, privadas
-  y públicas, y el filtro por origen lo hace el cortafuegos corporativo. La
-  zona de la interfaz la fija NetworkManager, no firewalld, y no se versiona
-  porque la conexión guarda la IP estática:
-  `nmcli connection modify "deimos static" connection.zone private`. Los
-  túneles WireGuard `lodero-full` y `lodero-home` también van a `private`
-  (lo fija `65-wireguard` al importarlos), para entrar por SSH y RDP desde la
-  VPN. Las demás zonas son las de serie de firewalld, sin RDP.
+- Cortafuegos: nftables (`system/nftables.conf`), que sustituyó a firewalld con las
+  mismas reglas. Tabla propia `inet workstation` con política de descarte en la
+  entrada (rechaza con ICMP «prohibido», como firewalld) que no toca las reglas de
+  Docker. Por cualquier interfaz entra SSH y dhcpv6-client; por `eno1` y los
+  túneles `lodero-*` además mDNS, LLMNR, ws-discovery y RDP (el escritorio remoto
+  de KDE, configurado por `run_after_39-krdp.sh.tmpl`). Deimos se usa desde varias
+  redes y el filtro por origen lo hace el cortafuegos corporativo, por eso `eno1`
+  entera es de confianza, sin limitar por IP. Los puentes de Docker y libvirt
+  pasan sin filtro. `install-system.sh` valida el fichero con `nft -c`, desactiva
+  firewalld y activa `nftables.service`. Las conexiones de NetworkManager ya no
+  usan `connection.zone`: `nmcli connection modify "deimos static" connection.zone ""`
+  limpia el valor antiguo.
 - Pantalla: `DP-3` va forzado (`video=DP-3:e` y `drm.edid_firmware` en
   `kernel/cmdline`) con el EDID del LG 27UP850 guardado en
   `firmware/edid/lg-27up850.bin`, que `install-system.sh` copia a

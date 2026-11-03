@@ -81,7 +81,7 @@ dup python           python-pipx pyenv uv python-pip conda
 dup java             jdk-openjdk jdk8-openjdk jdk11-openjdk jdk17-openjdk jdk21-openjdk jdk25-openjdk
 dup rust             rust rustup
 dup node             nodejs npm yarn pnpm nvm
-dup firewall         firewalld nftables iptables ufw
+dup firewall         nftables iptables firewalld ufw
 dup virtualizacion   qemu-full qemu-emulators-full virt-manager libvirt docker podman
 dup fuentes-mono     ttf-hack ttf-hack-nerd ttf-cascadia-code ttf-cascadia-code-nerd ttf-jetbrains-mono ttf-jetbrains-mono-nerd ttf-iosevka-nerd ttf-fira-code
 dup ia               ollama ollama-cuda ollama-rocm cuda python-pytorch-cuda python-pytorch-rocm python-openai-whisper onnxruntime-cuda

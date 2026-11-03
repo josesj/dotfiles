@@ -104,7 +104,6 @@ filelight
 firefox
 firefox-i18n-en-us
 firefox-i18n-es-es
-firewalld
 flatpak-builder
 flatpak-kcm
 francis
@@ -335,6 +334,7 @@ mythes-it
 namcap
 net-tools
 networkmanager
+nftables
 nilfs-utils
 ninja
 nlohmann-json
