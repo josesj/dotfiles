@@ -29,7 +29,6 @@ home/                   estado fuente de chezmoi ($HOME de los tres equipos)
   .chezmoitemplates/    fragmentos reutilizados (el user.js de Firefox)
 system/                 archivos de /etc comunes a los dos equipos Arch
 hosts/<equipo>/         /etc e inventario de paquetes por equipo Arch
-plasma-return/          scripts para dejar el sistema sin escritorio y volver a Plasma
 install-system.sh       instalador de /etc (Arch, como root)
 update-state.sh         actualiza el inventario de paquetes del equipo actual
 ```

@@ -5,7 +5,7 @@
 #
 #   ./audit-packages.sh            # informe completo
 #
-# Ejecútalo con el equipo ya en su estado final (en Deimos, después de plasma-return).
+# Ejecútalo con el equipo en su estado final.
 set -uo pipefail
 export LC_ALL=C
 
@@ -132,6 +132,5 @@ echo "Coredumps: $(du -sh /var/lib/systemd/coredump 2>/dev/null | cut -f1)"
 echo "~/.cache (10 mayores):"; du -sh ~/.cache/* 2>/dev/null | sort -rh | head -10 | sed 's/^/  /'
 echo "Paquetes AUR compilados en caché: $(du -sh ~/.cache/yay 2>/dev/null | cut -f1)"
 echo "/tmp/makepkg: $(du -sh /tmp/makepkg 2>/dev/null | cut -f1)"
-echo "Copias de plasma-return: $(du -sh ~/.plasma-return-backup 2>/dev/null | cut -f1)"
 
 printf '\nInforme guardado en %s\n' "$out"
