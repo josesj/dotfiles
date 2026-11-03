@@ -48,3 +48,16 @@ Un fichero de unidad vacío equivale a un enlace a `/dev/null`.
 
 Docker arranca bajo demanda con `docker.socket` en lugar de `docker.service`:
 `sudo systemctl disable --now docker.service && sudo systemctl enable --now docker.socket`.
+
+**Cortafuegos** (`system/nftables.conf`): tabla propia `inet workstation` con política
+de descarte en la entrada. Pasan loopback, conexiones ya iniciadas, ICMP, DHCP, el tráfico
+de los puentes de Docker y libvirt, y sólo desde la red local SSH (22), KDE Connect
+(1714-1764), mDNS (5353) y Steam Remote Play. No hay `flush ruleset`: las tablas de
+Docker no se tocan. `install-system.sh` valida el fichero con `nft -c`, activa
+`nftables.service` y lo recarga. SSH va sólo con clave (`sshd_config.d/50-keys-only.conf`).
+
+Otros ajustes de `install-system.sh` en tycho: `kernel.split_lock_mitigate=0` (juegos con
+Proton), `pcspkr` y `sp5100_tco` en lista negra, y los ficheros de `obsolete-system` que
+retiran restos duplicados de `/etc`. Comunes a los dos equipos: `DefaultTimeoutStopSec=15s`,
+DNS sobre TLS oportunista en resolved y la configuración de `reflector`
+(`sudo systemctl enable --now reflector.timer` lo activa).

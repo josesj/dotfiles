@@ -45,6 +45,8 @@ resolved_changed=false
 networkmanager_changed=false
 dispatcher_changed=false
 firewalld_changed=false
+nftables_changed=false
+manager_changed=false
 webcam_changed=false
 host_timers=()
 
@@ -109,6 +111,10 @@ validate_host_file() {
     docker/daemon.json)
       python3 -m json.tool -- "$source" >/dev/null
       ;;
+    nftables.conf)
+      # Sin root, nft -c necesita un espacio de nombres de red propio.
+      nft -c -f "$source" 2>/dev/null || unshare -rn nft -c -f "$source"
+      ;;
   esac
 }
 
@@ -124,6 +130,8 @@ mark_changed_subsystem() {
     NetworkManager/conf.d/*) networkmanager_changed=true ;;
     NetworkManager/dispatcher.d/*) dispatcher_changed=true ;;
     firewalld/*) firewalld_changed=true ;;
+    nftables.conf) nftables_changed=true ;;
+    systemd/system.conf.d/*) manager_changed=true ;;
   esac
 }
 
@@ -139,6 +147,9 @@ deploy_file "$repo_dir/system/systemd/timesyncd.conf.d/90-workstation.conf" \
 deploy_file "$repo_dir/system/systemd/system/paccache.service.d/10-workstation.conf" \
   "/etc/systemd/system/paccache.service.d/10-workstation.conf"
 for relative in systemd/oomd.conf.d/10-workstation.conf \
+                systemd/system.conf.d/90-local.conf \
+                systemd/resolved.conf.d/90-local.conf \
+                xdg/reflector/reflector.conf \
                 systemd/system/user-1000.slice.d/10-oomd.conf \
                 NetworkManager/conf.d/wake-on-lan.conf; do
   cmp -s -- "$repo_dir/system/$relative" "/etc/$relative" ||
@@ -323,6 +334,10 @@ if ! $dry_run; then
     fi
   fi
   systemctl daemon-reload
+  # DefaultTimeoutStopSec y demás valores de system.conf.d sólo se releen así.
+  if $manager_changed; then
+    systemctl daemon-reexec
+  fi
   # Los temporizadores del perfil del equipo (autoshutdown en tycho) quedan
   # activos; enable --now no hace nada si ya lo están.
   for timer in "${host_timers[@]}"; do
@@ -351,6 +366,11 @@ if ! $dry_run; then
   if $firewalld_changed && systemctl -q is-active firewalld.service; then
     firewall-cmd --check-config
     firewall-cmd --reload
+  fi
+  # La tabla inet workstation se sustituye entera; las de Docker no se tocan.
+  if $nftables_changed; then
+    systemctl enable nftables.service
+    systemctl reload-or-restart nftables.service
   fi
   # live-restore mantiene los contenedores en marcha durante el reinicio.
   if $docker_changed; then
@@ -397,6 +417,12 @@ else
   fi
   if $firewalld_changed; then
     printf 'Validaría y recargaría firewalld.\n'
+  fi
+  if $nftables_changed; then
+    printf 'Activaría nftables.service y cargaría el cortafuegos (tabla inet workstation).\n'
+  fi
+  if $manager_changed; then
+    printf 'Ejecutaría systemctl daemon-reexec para releer system.conf.d.\n'
   fi
   if $docker_changed; then
     printf 'Reiniciaría docker.service si está en marcha.\n'
