@@ -3,7 +3,9 @@
 # Importa a NetworkManager los perfiles de WireGuard de lodero (el peer es el de
 # phobos) como lodero-full y lodero-home. Quedan sin autoconexión: se activan
 # con `nmcli connection up lodero-full`. El DNS por enlace lo fija
-# /etc/NetworkManager/dispatcher.d/90-dns-split. Se vuelve a ejecutar cuando
+# /etc/NetworkManager/dispatcher.d/90-dns-split. Van a la zona private de
+# firewalld, como eno1, para que se pueda entrar por SSH y RDP a través del
+# túnel; sin zona caerían en public. Se vuelve a ejecutar cuando
 # cambia el contenido de los perfiles cifrados:
 # full: {{ include "dot_local/share/dotfiles/private_vpn/private_lodero/encrypted_private_phobos-full.conf.asc" | sha256sum }}
 # home: {{ include "dot_local/share/dotfiles/private_vpn/private_lodero/encrypted_private_phobos-home.conf.asc" | sha256sum }}
@@ -23,7 +25,8 @@ for variant in full home; do
   nmcli connection delete "$name" >/dev/null 2>&1 || true
   nmcli connection import type wireguard file "$work/$name.conf" >/dev/null
   nmcli connection modify "$name" connection.autoconnect no \
-    connection.dns-over-tls no ipv4.dns-search '~.' ipv4.dns-priority -50
+    connection.dns-over-tls no ipv4.dns-search '~.' ipv4.dns-priority -50 \
+    connection.zone private
   printf 'Perfil WireGuard importado: %s\n' "$name"
 done
 {{- end -}}

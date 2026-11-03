@@ -464,6 +464,7 @@ ripgrep-all
 rnnoise
 rsync
 rtaudio
+rtkit
 ruff
 rustup
 sbctl

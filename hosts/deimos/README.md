@@ -35,7 +35,10 @@ También versiona el resto de su `/etc` propio:
   y públicas, y el filtro por origen lo hace el cortafuegos corporativo. La
   zona de la interfaz la fija NetworkManager, no firewalld, y no se versiona
   porque la conexión guarda la IP estática:
-  `nmcli connection modify "deimos static" connection.zone private`.
+  `nmcli connection modify "deimos static" connection.zone private`. Los
+  túneles WireGuard `lodero-full` y `lodero-home` también van a `private`
+  (lo fija `65-wireguard` al importarlos), para entrar por SSH y RDP desde la
+  VPN. Las demás zonas son las de serie de firewalld, sin RDP.
 - Pantalla: `DP-3` va forzado (`video=DP-3:e` y `drm.edid_firmware` en
   `kernel/cmdline`) con el EDID del LG 27UP850 guardado en
   `firmware/edid/lg-27up850.bin`, que `install-system.sh` copia a

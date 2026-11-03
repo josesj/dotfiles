@@ -464,6 +464,7 @@ rocm-opencl-runtime
 rocm-smi-lib
 rsync
 rtaudio
+rtkit
 ruff
 rustup
 sbctl
