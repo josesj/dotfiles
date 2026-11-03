@@ -1,0 +1,9 @@
+[General]
+ocrLanguages=spa
+
+[ImageSave]
+lastImageSaveLocation=file:///home/jose/Pictures/Screenshots/Screenshot_20261027_213744.png
+translatedScreenshotsFolder=Screenshots
+
+[VideoSave]
+translatedScreencastsFolder=Screencasts

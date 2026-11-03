@@ -26,12 +26,29 @@ home/                   estado fuente de chezmoi ($HOME de los tres equipos)
   .chezmoiexternal.toml.tmpl  Oh My Zsh, plugins de Zsh y de Vim y temas Catppuccin de btop
   .chezmoiscripts/      aprovisionamiento (Homebrew, Plasma, Kate, VS Code...)
   .chezmoiremove        restos de configuraciones retiradas que hay que borrar
-  .chezmoitemplates/    fragmentos reutilizados (el user.js de Firefox)
+  .chezmoitemplates/    fragmentos reutilizados (el user.js de Firefox) y, en state/<equipo>/,
+                        los ajustes de Plasma y de aplicaciones tal como los dejó cada equipo
 system/                 archivos de /etc comunes a los dos equipos Arch
-hosts/<equipo>/         /etc e inventario de paquetes por equipo Arch
+hosts/<equipo>/         /etc, servicios (services.txt), fstab de referencia e inventario
 install-system.sh       instalador de /etc (Arch, como root)
 update-state.sh         actualiza el inventario de paquetes del equipo actual
+capture-system.sh       captura de sólo lectura de /etc, servicios y paquetes (reconstrucción)
+audit-packages.sh       auditoría de paquetes superfluos de sólo lectura
 ```
+
+**Ajustes de Plasma y de aplicaciones.** Los `*rc` de KDE (`kwinrc`, `kdeglobals`,
+atajos, paneles, energía...), la configuración de GTK, `mimeapps.list`, los
+lugares de Dolphin y la de pantalla de KScreen se versionan como ficheros `create_`:
+chezmoi los escribe sólo si no existen, así que Plasma sigue siendo dueño de ellos
+una vez creados y no hay conflicto con lo que reescribe a diario. Si el contenido
+es el mismo en los dos equipos, el fichero es único; si difiere, `create_X.tmpl` lo
+incluye desde `.chezmoitemplates/state/<equipo>/`. Para renovarlos tras cambiar algo en
+Plasma, copia el fichero a esa carpeta (o al fichero común) y haz commit.
+
+**`fstab` es sólo referencia** (`hosts/<equipo>/reference/fstab`): lleva UUID de
+discos y `install-system.sh` no lo despliega, sólo avisa si difiere. Los servicios que
+cada equipo tiene habilitados a propósito están en `hosts/<equipo>/services.txt` y
+`install-system.sh` los habilita si faltan (`enable`, sin `--now`).
 
 Lo que vive en `$HOME` lo gestiona chezmoi. Lo que vive fuera —`/etc` y el
 inventario de paquetes— se queda en la raíz del repositorio y se aplica aparte,

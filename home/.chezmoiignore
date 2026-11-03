@@ -48,6 +48,60 @@
 .local/share/kio
 .local/share/konsole
 .local/share/org.kde.syntax-highlighting
+# --- Ajustes de Plasma y aplicaciones (create_): sólo en Arch ---
+.config/QtProject.conf
+.config/audacity/audacity.cfg
+.config/baloofileinformationrc
+.config/baloofilerc
+.config/bluedevilglobalrc
+.config/breezerc
+.config/dolphinrc
+.config/filetypesrc
+.config/gtk-3.0/settings.ini
+.config/gtk-4.0/settings.ini
+.config/gwenviewrc
+.config/kaccessrc
+.config/kactivitymanagerdrc
+.config/kded5rc
+.config/kded6rc
+.config/kdedefaults/kcminputrc
+.config/kdedefaults/kdeglobals
+.config/kdedefaults/ksplashrc
+.config/kdedefaults/kwinrc
+.config/kdedefaults/package
+.config/kdedefaults/plasmarc
+.config/kdeglobals
+.config/kdiff3fileitemactionrc
+.config/kglobalshortcutsrc
+.config/kiorc
+.config/klipperrc
+.config/konsolesshconfig
+.config/krunnerrc
+.config/kscreenlockerrc
+.config/ksmserverrc
+.config/kstarsrc
+.config/ktimezonedrc
+.config/kwalletrc
+.config/kwinoutputconfig.json
+.config/kwinrc
+.config/kxkbrc
+.config/mimeapps.list
+.config/oktetarc
+.config/okularrc
+.config/plasma-localerc
+.config/plasma-org.kde.plasma.desktop-appletsrc
+.config/plasmanotifyrc
+.config/plasmarc
+.config/plasmashellrc
+.config/powerdevilrc
+.config/powermanagementprofilesrc
+.config/spectaclerc
+.config/user-dirs.dirs
+.config/user-dirs.locale
+.config/xsettingsd/xsettingsd.conf
+.local/share/kscreen/control/configs/6b784306bc2b23ae2164a6e5b8032b43
+.local/share/kscreen/control/outputs/e04414fa2f1cda218f706b532aae5a84
+.local/share/user-places.xbel
 {{- end }}
 
 {{- if get (index .hosts .chezmoi.hostname) "remote" }}
@@ -79,4 +133,27 @@
 .config/wireplumber/wireplumber.conf.d/10-alsa.conf
 .config/environment.d/50-rocm.conf
 .config/systemd/user/plasma-workspace.target.wants
+{{- end }}
+
+{{- if ne .chezmoi.hostname "deimos" }}
+# Sólo existen en deimos
+.config/QtProject.conf
+.config/kdiff3fileitemactionrc
+.config/konsolesshconfig
+{{- end }}
+
+{{- if ne .chezmoi.hostname "tycho" }}
+# Sólo existen en tycho
+.config/audacity/audacity.cfg
+.config/breezerc
+.config/gwenviewrc
+.config/kded6rc
+.config/klipperrc
+.config/krunnerrc
+.config/kstarsrc
+.config/oktetarc
+.config/okularrc
+.config/spectaclerc
+.local/share/kscreen/control/configs/6b784306bc2b23ae2164a6e5b8032b43
+.local/share/kscreen/control/outputs/e04414fa2f1cda218f706b532aae5a84
 {{- end }}

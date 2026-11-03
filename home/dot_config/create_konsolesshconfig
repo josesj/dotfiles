@@ -1,0 +1,42 @@
+[Global plugin config]
+manageProfile=false
+
+[SSH Config][%h.tirimoche.com]
+hostname=%h.tirimoche.com
+identifier=%h.tirimoche.com
+importedFromSshConfig=true
+port=
+profileName=Built-in
+sshkey=~/.ssh/id_rsa_home
+useSshConfig=true
+username=nas
+
+[SSH Config][adastralapalma.com]
+hostname=adastralapalma.com
+identifier=adastralapalma.com
+importedFromSshConfig=true
+port=4222
+profileName=Built-in
+sshkey=~/.ssh/id_rsa_home
+useSshConfig=true
+username=root
+
+[SSH Config][atreides.tng.iac.es]
+hostname=%h.tng.iac.es
+identifier=atreides.tng.iac.es
+importedFromSshConfig=true
+port=
+profileName=Built-in
+sshkey=~/.ssh/id_rsa_work
+useSshConfig=true
+username=tng
+
+[SSH Config][github.com]
+hostname=github.com
+identifier=github.com
+importedFromSshConfig=true
+port=
+profileName=Built-in
+sshkey=~/.ssh/id_rsa_home
+useSshConfig=true
+username=git

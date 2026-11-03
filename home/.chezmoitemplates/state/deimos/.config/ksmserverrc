@@ -1,0 +1,11 @@
+[General]
+loginMode=emptySession
+
+[Session: saved at previous logout]
+clientId1=10d3d8696d000179369567000000028760010
+count=1
+discardCommand1[$e]=
+program1=firefox
+restartCommand1=/usr/lib/firefox/firefox,--sm-client-id,10d3d8696d000179369567000000028760010
+restartStyleHint1=0
+userId1=jose

@@ -1,0 +1,22 @@
+[DetailsMode]
+IconSize=22
+PreviewSize=22
+
+[General]
+RememberOpenedTabs=false
+ShowSelectionToggle=false
+Version=202
+ViewPropsTimestamp=2026,9,4,15,22,36.071
+
+[IconsMode]
+MaximumTextLines=2
+
+[KFileDialog Settings]
+Places Icons Auto-resize=false
+Places Icons Static Size=22
+
+[MainWindow]
+MenuBar=Disabled
+
+[PreviewSettings]
+Plugins=ffmpegthumbnailer,appimagethumbnail,audiothumbnail,glycin-heif,blenderthumbnail,comicbookthumbnail,cursorthumbnail,djvuthumbnail,ebookthumbnail,exrthumbnail,directorythumbnail,fontthumbnail,FreeCAD,imagethumbnail,glycin-image-rs,jpegthumbnail,glycin-jxl,kraorathumbnail,windowsexethumbnail,windowsimagethumbnail,mobithumbnail,opendocumentthumbnail,gsthumbnail,rawthumbnail,ffmpegthumbnailer-audio,glycin-svg,svgthumbnail,ffmpegthumbs
