@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+# Enciende la pantalla del equipo cuando PowerDevil la ha apagado por inactividad.
+# Con el monitor en reposo KWin no genera imágenes y el RDP se ve en negro. Se
+# puede lanzar por SSH: no necesita el entorno de la sesión gráfica.
+set -euo pipefail
+
+uid=$(id -u)
+export XDG_RUNTIME_DIR=/run/user/$uid
+export DBUS_SESSION_BUS_ADDRESS=unix:path=$XDG_RUNTIME_DIR/bus
+command -v kscreen-doctor >/dev/null || { echo 'Error: falta kscreen-doctor.' >&2; exit 1; }
+
+# El socket de Wayland no siempre es wayland-0: se prueban los que haya.
+for socket in "$XDG_RUNTIME_DIR"/wayland-*; do
+  [[ -S $socket ]] || continue
+  if WAYLAND_DISPLAY=${socket##*/} timeout 10 kscreen-doctor --dpms on >/dev/null 2>&1; then
+    printf 'Pantalla encendida (%s).\n' "${socket##*/}"
+    exit 0
+  fi
+done
+echo 'Error: no se pudo encender la pantalla (¿hay una sesión de Plasma en Wayland?).' >&2
+exit 1

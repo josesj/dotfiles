@@ -40,6 +40,13 @@ alias hidefiles='defaults write com.apple.finder AppleShowAllFiles -bool false &
 alias localip='ip -4 -brief address show scope global'
 alias audio-status='wpctl status'
 alias rdpunlock='desktop-unlock'
+{{- if eq .chezmoi.hostname "deimos" }}
+alias rdpwake='desktop-wake'
+{{- else }}
+# Enciende la pantalla de Deimos antes de entrar por RDP (si no, se ve en negro).
+# Ruta completa: el PATH de ssh sin terminal no incluye ~/.local/bin.
+alias rdpwake="ssh deimos '\$HOME/.local/bin/desktop-wake'"
+{{- end }}
 alias borgmount='borgmatic-mount'
 alias borgumount='borgmatic-umount'
 

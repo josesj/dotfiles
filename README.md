@@ -121,7 +121,9 @@ Tycho y Deimos se encienden y se usan a distancia por WoL y SSH.
   un certificado autofirmado de diez años (el de Plasma sólo vale un día), que
   rehace si falta o caduca en menos de 30 días; la clave no se versiona. Tras
   reiniciar no hay RDP hasta iniciar sesión en el equipo; con la pantalla
-  bloqueada, se desbloquea antes por SSH con `desktop-unlock` (`rdpunlock`).
+  bloqueada, se desbloquea antes por SSH con `desktop-unlock` (`rdpunlock`); si PowerDevil
+  apagó el monitor, el RDP se ve en negro hasta ejecutar `desktop-wake` (`rdpwake`, que desde
+  otro equipo lo lanza por SSH).
   nftables abre RDP en `eno1` y en los túneles `lodero-*`.
 - **Docker.** El Mac tiene un contexto `deimos` que habla con su Docker por
   SSH (`run_onchange_after_55-docker-contexts.sh`). No pasa a ser el activo: se
