@@ -1,0 +1,89 @@
+#!/usr/bin/env bash
+# Inicia por SSH la sesión de Plasma de este usuario en el equipo, para entrar
+# después por RDP: KRDP vive dentro de la sesión, así que tras reiniciar o
+# cerrar sesión no hay RDP hasta que alguien la inicia delante del equipo.
+#
+# Plasma Login Manager no tiene una orden para iniciar sesión: se le da un
+# inicio automático de un solo uso (un archivo en plasmalogin.conf.d que se
+# borra en cuanto la sesión existe) y se reinicia. La sesión queda bloqueada al
+# momento, así que delante del equipo sólo se ve la pantalla de bloqueo.
+# Necesita sudo; desde otro equipo, rdplogin lo lanza con ssh -t.
+set -euo pipefail
+
+user=$(id -un)
+uid=$(id -u)
+conf=/etc/plasmalogin.conf.d/zz-desktop-login.conf
+service=app-org.kde.krdpserver.service
+
+# Id de la sesión gráfica del asiento físico de un usuario (o de cualquiera).
+graphical_session() {
+  local id session_uid _rest type seat
+  while read -r id session_uid _rest; do
+    [[ -z ${1:-} || $session_uid == "$1" ]] || continue
+    type=$(loginctl show-session "$id" -p Type --value)
+    seat=$(loginctl show-session "$id" -p Seat --value)
+    [[ $seat == seat0 && ( $type == wayland || $type == x11 ) ]] || continue
+    # La pantalla de acceso también es una sesión gráfica, de clase greeter.
+    [[ $(loginctl show-session "$id" -p Class --value) == user ]] || continue
+    printf '%s\n' "$id"
+    return 0
+  done < <(loginctl list-sessions --no-legend)
+  return 1
+}
+
+if id=$(graphical_session "$uid"); then
+  printf 'Ya hay una sesión gráfica de %s (%s): conéctate por RDP.\n' "$user" "$id"
+  exit 0
+fi
+if id=$(graphical_session); then
+  printf 'Error: la sesión %s de otro usuario ocupa el equipo; no se reinicia el gestor de inicio de sesión.\n' "$id" >&2
+  exit 1
+fi
+
+cleanup() { sudo rm -f -- "$conf"; }
+trap cleanup EXIT
+printf '[Autologin]\nUser=%s\nSession=plasma.desktop\n' "$user" |
+  sudo install -Dm644 /dev/stdin "$conf"
+sudo systemctl restart plasmalogin.service
+
+id=
+for _ in $(seq 60); do
+  id=$(graphical_session "$uid") && break
+  sleep 1
+done
+cleanup
+trap - EXIT
+if [[ -z $id ]]; then
+  echo 'Error: la sesión de Plasma no llegó a iniciarse en 60 s.' >&2
+  exit 1
+fi
+
+# El bloqueador de Plasma tarda unos segundos en estar listo: se reintenta
+# hasta que ScreenSaver confirme el bloqueo.
+export XDG_RUNTIME_DIR=/run/user/$uid
+export DBUS_SESSION_BUS_ADDRESS=unix:path=$XDG_RUNTIME_DIR/bus
+screensaver() {
+  dbus-send --session --print-reply --reply-timeout=5000 \
+    --dest=org.freedesktop.ScreenSaver /ScreenSaver "org.freedesktop.ScreenSaver.$1"
+}
+locked=false
+for _ in $(seq 30); do
+  if screensaver GetActive 2>/dev/null | grep -q 'boolean true'; then
+    locked=true
+    break
+  fi
+  screensaver Lock >/dev/null 2>&1 || loginctl lock-session "$id" 2>/dev/null || true
+  sleep 2
+done
+$locked || echo 'Aviso: no se pudo confirmar el bloqueo de la sesión.' >&2
+
+for _ in $(seq 30); do
+  if systemctl --user --quiet is-active "$service" &&
+     ss -Htln 'sport = :3389' | grep -q .; then
+    printf 'Sesión %s iniciada%s; KRDP escucha en el 3389.\n' "$id" "$($locked && echo ' y bloqueada')"
+    exit 0
+  fi
+  sleep 1
+done
+echo 'Aviso: la sesión está iniciada, pero KRDP no escucha en el 3389.' >&2
+exit 1

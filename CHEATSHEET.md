@@ -85,6 +85,7 @@ En macOS es la misma configuración: además de estos atajos valen los de Kitty 
 | `mkcd dir` | Crear un directorio y entrar en él |
 | `serve [puerto]` | Servidor HTTP estático en el directorio actual |
 | `rdpunlock` | Desbloquear la sesión gráfica antes de entrar por RDP (Arch) |
+| `rdplogin` | Iniciar por SSH la sesión de Plasma de Deimos (tras reiniciar o cerrar sesión) para poder entrar por RDP; la deja bloqueada (`desktop-login`, pide `sudo`) |
 | `rdpwake` | Encender la pantalla de Deimos si PowerDevil la apagó y el RDP sale en negro (Arch; desde otro equipo lanza `desktop-wake` por SSH) |
 | `pw-lowlatency [64\|128\|256\|512]` | Forzar temporalmente 48 kHz y otro quantum (Arch) |
 | `pw-normal` | Restaurar el perfil persistente de audio |

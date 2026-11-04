@@ -43,6 +43,7 @@
 .config/wireplumber
 .config/xdg-terminals.list
 .local/bin/desktop-unlock
+.local/bin/desktop-login
 .local/bin/desktop-wake
 .local/bin/libreoffice-kf6-x11
 .local/share/applications
