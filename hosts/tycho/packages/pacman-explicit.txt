@@ -134,6 +134,8 @@ godot
 gopls
 gperf
 gphoto2
+gpsprune
+gpxsee
 gradle
 graphviz
 grpc
