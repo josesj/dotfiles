@@ -32,4 +32,15 @@ kwriteconfig6 --file krdpserverrc --group General --key Autostart true
 kwriteconfig6 --file krdpserverrc --group General --key SystemUserEnabled true
 kwriteconfig6 --file krdpserverrc --group General --key Certificate "$cert"
 kwriteconfig6 --file krdpserverrc --group General --key CertificateKey "$key"
+
+# Modo exclusivo: al conectarse, KRDP crea una pantalla virtual para la sesión
+# remota y desactiva los monitores físicos, así que el escritorio remoto
+# funciona aunque el LG esté apagado (con el monitor apagado, KWin no dibuja
+# la salida física y el modo normal, que la transmite, daba imagen congelada).
+# El servidor lee la clave al arrancar: se reinicia sólo si cambia.
+if [[ $(kreadconfig6 --file krdpserverrc --group General --key ExclusiveMode) != true ]]; then
+  kwriteconfig6 --file krdpserverrc --group General --key ExclusiveMode true
+  systemctl --user try-restart app-org.kde.krdpserver.service 2>/dev/null || true
+  echo "KRDP: modo exclusivo activado (pantalla virtual)."
+fi
 {{- end -}}

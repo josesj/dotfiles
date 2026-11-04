@@ -120,10 +120,18 @@ Tycho y Deimos se encienden y se usan a distancia por WoL y SSH.
   usuario y la contraseña del sistema. `39-krdp` fija `krdpserverrc` y genera
   un certificado autofirmado de diez años (el de Plasma sólo vale un día), que
   rehace si falta o caduca en menos de 30 días; la clave no se versiona. Tras
-  reiniciar no hay RDP hasta iniciar sesión en el equipo; con la pantalla
-  bloqueada, se desbloquea antes por SSH con `desktop-unlock` (`rdpunlock`); si PowerDevil
-  apagó el monitor, el RDP se ve en negro hasta ejecutar `desktop-wake` (`rdpwake`, que desde
-  otro equipo lo lanza por SSH).
+  reiniciar, o tras cerrar la sesión, no hay RDP hasta iniciarla: para salir
+  de una sesión remota se cierra la ventana del cliente (desconectar), no se
+  cierra la sesión de Plasma. Si no hay sesión, `desktop-login` (`rdplogin`,
+  que desde otro equipo lo lanza con `ssh -t`) la inicia por SSH: da a Plasma
+  Login Manager un inicio automático de un solo uso, lo reinicia, borra el
+  archivo en cuanto la sesión existe y la deja bloqueada. Con la pantalla
+  bloqueada, se desbloquea antes por SSH con `desktop-unlock` (`rdpunlock`).
+  KRDP va en modo exclusivo (`ExclusiveMode`): al conectarse crea una
+  pantalla virtual para la sesión remota y desactiva los monitores físicos,
+  así que funciona aunque el LG esté apagado o en reposo. Si aun así el RDP se
+  viera en negro, `desktop-wake` (`rdpwake`, que desde otro equipo lo lanza
+  por SSH) enciende la pantalla.
   nftables abre RDP en `eno1` y en los túneles `lodero-*`.
 - **Docker.** El Mac tiene un contexto `deimos` que habla con su Docker por
   SSH (`run_onchange_after_55-docker-contexts.sh`). No pasa a ser el activo: se
