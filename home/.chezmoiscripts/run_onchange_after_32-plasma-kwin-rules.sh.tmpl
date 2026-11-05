@@ -1,6 +1,6 @@
 {{- if and (eq .chezmoi.os "linux") (not (get (index .hosts .chezmoi.hostname) "remote")) -}}
 #!/usr/bin/env bash
-# Reglas de ventana de KWin compartidas por tycho y Deimos. Se aplican con
+# Reglas de ventana de KWin de Deimos. Se aplican con
 # `chezmoi update`: para añadir o cambiar una, edita la tabla de abajo (el
 # script se vuelve a ejecutar solo cuando cambia este fichero).
 #

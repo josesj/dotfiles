@@ -4,9 +4,9 @@
 # de serie de Plasma (se borran las claves, para seguir los que traiga).
 #
 # La suspensión por inactividad sólo se deja como viene de serie con `idle_suspend: true`
-# en hosts.yaml (tycho, que se despierta por WoL). Sin la clave (deimos: Docker, copias
-# de borgmatic y acceso remoto), en corriente no suspende solo: SSH y los trabajos largos
-# no cuentan como actividad y la suspensión los cortaría.
+# en hosts.yaml. Sin la clave (deimos: Docker, copias de borgmatic y acceso remoto), en
+# corriente no suspende solo: SSH y los trabajos largos no cuentan como actividad y la
+# suspensión los cortaría.
 set -euo pipefail
 command -v kwriteconfig6 >/dev/null || exit 0
 

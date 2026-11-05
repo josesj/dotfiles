@@ -4,9 +4,9 @@ Configuración de tres equipos gestionada con [chezmoi](https://chezmoi.io):
 
 | Equipo | Sistema | Papel |
 |---|---|---|
-| `tycho` | Arch Linux + Plasma | Estación de trabajo (Ryzen 7 9700X, RTX 5080) |
 | `deimos` | Arch Linux + Plasma | Estación de trabajo (i5-12600, RX 6600) |
 | `phobos` | macOS | Portátil (MacBook Pro, M4 Pro, 24 GB) |
+| `tycho` | macOS | Sobremesa (Mac Studio, M2 Max, 32 GB) |
 
 Está orientada a Java, Python y C++ con Zsh, Vim y Gradle. Los tres equipos
 comparten prompt, historial, aliases, funciones, Vim, Git, SSH, direnv y uv; las
@@ -28,7 +28,7 @@ home/                   estado fuente de chezmoi ($HOME de los tres equipos)
   .chezmoiremove        restos de configuraciones retiradas que hay que borrar
   .chezmoitemplates/    fragmentos reutilizados (el user.js de Firefox) y, en state/<equipo>/,
                         los ajustes de Plasma y de aplicaciones tal como los dejó cada equipo
-system/                 archivos de /etc comunes a los dos equipos Arch
+system/                 archivos de /etc comunes a los equipos Arch
 hosts/<equipo>/         /etc, servicios (services.txt), fstab de referencia e inventario
 install-system.sh       instalador de /etc (Arch, como root)
 update-state.sh         actualiza el inventario de paquetes del equipo actual
@@ -40,9 +40,9 @@ audit-packages.sh       auditoría de paquetes superfluos de sólo lectura
 atajos, paneles, energía...), la configuración de GTK, `mimeapps.list`, los
 lugares de Dolphin y la de pantalla de KScreen se versionan como ficheros `create_`:
 chezmoi los escribe sólo si no existen, así que Plasma sigue siendo dueño de ellos
-una vez creados y no hay conflicto con lo que reescribe a diario. Si el contenido
-es el mismo en los dos equipos, el fichero es único; si difiere, `create_X.tmpl` lo
-incluye desde `.chezmoitemplates/state/<equipo>/`. Para renovarlos tras cambiar algo en
+una vez creados y no hay conflicto con lo que reescribe a diario. Los que dependen
+del equipo se escriben como `create_X.tmpl`, que los incluye desde
+`.chezmoitemplates/state/<equipo>/`. Para renovarlos tras cambiar algo en
 Plasma, copia el fichero a esa carpeta (o al fichero común) y haz commit.
 
 **`fstab` es sólo referencia** (`hosts/<equipo>/reference/fstab`): lleva UUID de
@@ -101,20 +101,17 @@ En Arch, el indexador de Baloo usa la plataforma Qt `offscreen` (drop-in de
 y, sin pantalla, `baloo_file_extractor` abortaba en cada lote.
 
 Por equipo: mpv y OBS usan `mpv_hwdec` y `obs_encoder` de
-`.chezmoidata/hosts.yaml`. Tycho añade el DAC FiiO K3, los altavoces Edifier, el
-micrófono de la C920 como entrada predeterminada, AAC de máxima calidad para los
-auriculares Bluetooth y el arranque de Steam Big Picture con el mando Xbox. Deimos
-añade la regla que evita la suspensión del nodo HDMI de AMD y
+`.chezmoidata/hosts.yaml`. Deimos añade la regla que evita la suspensión del nodo HDMI de AMD y
 `HSA_OVERRIDE_GFX_VERSION`, con la que ROCm trata la RX 6600 (gfx1030 en lugar de
-gfx1032). En los dos, los auriculares Bluetooth (Nothing Ear) usan AAC con el
+gfx1032). Los auriculares Bluetooth (Nothing Ear) usan AAC con el
 codificador en bitrate variable de máxima calidad (`54-bluetooth-aac.conf`).
 
 ## Acceso remoto en Arch
 
-Tycho y Deimos se encienden y se usan a distancia por WoL y SSH.
+Deimos se enciende y se usa a distancia por WoL y SSH.
 
-- **WoL.** `system/NetworkManager/conf.d/wake-on-lan.conf` deja la Ethernet de
-  los dos equipos esperando el paquete mágico al suspender o apagar. En la UEFI
+- **WoL.** `system/NetworkManager/conf.d/wake-on-lan.conf` deja la Ethernet
+  esperando el paquete mágico al suspender o apagar. En la UEFI
   hay que activar «Power On By PCI-E» y desactivar ErP. Se comprueba con
   `ethtool <interfaz> | grep Wake-on`, que debe decir `g`.
 - **RDP (Deimos).** El escritorio remoto de KDE (`krdp`) arranca con la sesión
@@ -135,7 +132,7 @@ Tycho y Deimos se encienden y se usan a distancia por WoL y SSH.
   viera en negro, `desktop-wake` (`rdpwake`, que desde otro equipo lo lanza
   por SSH) enciende la pantalla.
   nftables abre RDP en `eno1` y en los túneles `lodero-*`.
-- **Docker.** El Mac tiene un contexto `deimos` que habla con su Docker por
+- **Docker.** Los Mac tienen un contexto `deimos` que habla con su Docker por
   SSH (`run_onchange_after_55-docker-contexts.sh`). No pasa a ser el activo: se
   usa con `docker --context deimos …` o `docker context use deimos`.
 
@@ -222,7 +219,7 @@ chezmoi pide la contraseña al añadirlas y al aplicarlas; gpg-agent la cachea,
 de modo que un único `apply` sólo pregunta una vez. Quedan en el repositorio
 como `home/private_dot_ssh/encrypted_private_id_rsa_*.asc`.
 
-En el Mac, `~/.gnupg/gpg-agent.conf` usa `pinentry-mac` (en el Brewfile): la
+En los Mac, `~/.gnupg/gpg-agent.conf` usa `pinentry-mac` (en el Brewfile): la
 contraseña se pide en un diálogo nativo, que funciona también fuera de un TTY y
 permite guardarla en el Llavero. La pinentry de terminal falla en terminales
 integradas y obliga a teclear la contraseña dos veces por archivo al cifrar.
@@ -252,15 +249,6 @@ originales en `/var/lib/dotfiles-backup/`:
 sudo ./install-system.sh
 ```
 
-En Tycho también instala el perfil de LACT para la RTX 5080. El perfil `Gaming`
-se activa cuando GameMode está en uso y el escritorio vuelve a los valores de
-NVIDIA al terminar. Selecciona el modo de máximo rendimiento, mantiene el
-límite oficial de 360 W y aplica un undervolt: la curva sube 442 MHz hasta
-925 mV (2917 MHz) y se aplana por encima, con la memoria a +1000 MHz y los
-ventiladores de serie. La interfaz de LACT reescribe `/etc/lact/config.yaml` y
-pierde los comentarios: los cambios hechos desde ella hay que traerlos al
-repositorio a mano.
-
 systemd-oomd cierra la aplicación culpable cuando la presión de memoria de la
 sesión supera el 80 % durante 30 s, o cuando el swap pasa del 90 %, en lugar de
 dejar que el escritorio se congele.
@@ -276,10 +264,7 @@ con clave pública o contraseña, nunca root, tres intentos por conexión y sin
 reenvío de agente ni X11. sshd aplica el primer valor que lee de cada opción,
 así que ningún otro archivo de `sshd_config.d` debe contradecirla.
 
-En tycho, systemd-resolved usa los DNS que anuncia cada red; si
-`/etc/systemd/resolved.conf` aún fija servidores de NextDNS, `install-system.sh`
-lo devuelve a la versión del paquete systemd de la caché de pacman. Deimos usa
-NextDNS con excepciones por enlace (véase `hosts/deimos/README.md`).
+Deimos usa NextDNS con excepciones por enlace (véase `hosts/deimos/README.md`).
 
 `paccache.timer` guarda dos versiones de cada paquete instalado y borra las de
 los paquetes desinstalados; yay, configurado por chezmoi con `--cleanafter`,
@@ -290,7 +275,7 @@ se versionan. Los schedulers son `none` para NVMe, `mq-deadline` para SSD de
 bloques y `bfq` para discos rotacionales. Los cambios por equipo en mkinitcpio,
 modprobe, modules-load, la línea de órdenes del kernel o Plymouth regeneran las
 imágenes de arranque. El perfil se elige por hostname o con
-`DOTFILES_HOST=deimos|tycho`.
+`DOTFILES_HOST=deimos`.
 
 ### Paquetes que la configuración da por instalados
 
@@ -323,14 +308,15 @@ yay    -S --needed - < hosts/deimos/packages/aur-explicit.txt
 
 ## Perfiles de macOS
 
-Los perfiles de configuración de `phobos` y el iPhone llevan
+Los perfiles de configuración de `phobos`, `tycho` y el iPhone llevan
 credenciales en texto plano: las contraseñas de aplicación de Fastmail para
 correo, CalDAV y CardDAV, y la clave del Wi-Fi. Por eso se versionan cifrados,
-igual que las claves SSH, y sólo se despliegan en el Mac:
+igual que las claves SSH, y sólo se despliegan en los Mac:
 
 ```
 home/dot_local/share/dotfiles/private_profiles/
     encrypted_private_phobos.mobileconfig.asc
+    encrypted_private_tycho.mobileconfig.asc
     encrypted_private_iphone.mobileconfig.asc
 ```
 
@@ -338,7 +324,7 @@ home/dot_local/share/dotfiles/private_profiles/
 `600`. Se instalan a mano porque requieren confirmación en Ajustes del Sistema:
 
 ```bash
-open ~/.local/share/dotfiles/profiles/phobos.mobileconfig
+open ~/.local/share/dotfiles/profiles/$(hostname -s).mobileconfig
 ```
 
 Para añadir o actualizar uno:
@@ -350,9 +336,9 @@ chezmoi add --encrypt ~/.local/share/dotfiles/profiles/phobos.mobileconfig
 El nombre del equipo se fija aparte:
 
 ```bash
-sudo scutil --set ComputerName phobos
-sudo scutil --set LocalHostName phobos
-sudo scutil --set HostName phobos
+sudo scutil --set ComputerName tycho
+sudo scutil --set LocalHostName tycho
+sudo scutil --set HostName tycho
 ```
 
 ## VPN
@@ -378,11 +364,10 @@ puede estar activa una a la vez.
 `chezmoi apply` los descifra en `~/.local/share/dotfiles/vpn/` (directorios en
 `700`, archivos en `600`). Cada equipo recibe una parte:
 
-- **El Mac (phobos):** todo, incluidos los perfiles `.mobileconfig`.
+- **Los Mac (phobos y tycho):** todo, incluidos los perfiles `.mobileconfig`.
+  Los OpenVPN de TNG se importan a mano en Tunnelblick.
 - **Deimos:** los WireGuard de `phobos`, que `65-wireguard` importa a
   NetworkManager como `lodero-full` y `lodero-home`.
-- **Tycho:** sólo los OpenVPN de TNG, que `66-openvpn` importa a NetworkManager
-  como `FGG` y `TNG`, sin autoconexión (`nmcli connection up FGG`).
 
 Para añadir o actualizar uno:
 

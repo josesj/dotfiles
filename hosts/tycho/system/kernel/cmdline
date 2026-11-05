@@ -1,1 +1,0 @@
-root=PARTUUID=fe65c036-83bd-40a9-91f1-1990b3a30ea2 zswap.enabled=0 rootflags=subvol=@ rw rootfstype=btrfs loglevel=3 quiet splash amd_pstate=active

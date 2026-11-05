@@ -1,19 +1,6 @@
 # Hardware y papel de cada equipo de la flota. Se lee mediante
 # `index .hosts .chezmoi.hostname`; el sistema operativo sale de .chezmoi.os.
 hosts:
-  tycho:
-    # GeForce RTX 5080 (Blackwell): decodificación NVDEC para mpv.
-    mpv_hwdec: nvdec
-    mpv_comment: "Tycho: GeForce RTX 5080 (Blackwell), NVIDIA y Wayland."
-    # OBS: NVENC (H.264 para emitir, HEVC para grabar).
-    obs_encoder: nvenc
-    # Suspende por inactividad con los valores de serie de PowerDevil; se despierta
-    # por WoL. Sin la clave, el equipo no suspende solo en corriente (deimos:
-    # Docker, borgmatic y acceso remoto). Lo aplica 37-plasma-power.
-    idle_suspend: true
-    # Usuario de los OpenVPN de TNG (FGG y TNG); la contraseña la pide el agente de
-    # NetworkManager. Lo aplica 66-openvpn.
-    openvpn_user: sanjuan
   deimos:
     # Radeon RX 6600 (Navi 23) sobre Mesa/RADV: decodificación VA-API.
     mpv_hwdec: vaapi
@@ -21,3 +8,4 @@ hosts:
     # OBS: VA-API (H.264 para emitir, HEVC para grabar; Navi 23 no codifica AV1).
     obs_encoder: vaapi
   phobos: {}
+  tycho: {}

@@ -172,7 +172,7 @@ jbang nombre-o-script
 | `./install-system.sh --dry-run` | Simular la configuración de `/etc` (Arch) |
 | `sudo ./install-system.sh` | Aplicar la configuración de `/etc` (Arch) |
 | `./update-state.sh` | Actualizar el inventario de paquetes del equipo |
-| `open ~/.local/share/dotfiles/profiles/phobos.mobileconfig` | Instalar el perfil de macOS |
+| `open ~/.local/share/dotfiles/profiles/$(hostname -s).mobileconfig` | Instalar el perfil de macOS del equipo |
 
 Los archivos que chezmoi reemplaza o retira se guardan en
 `~/.local/state/dotfiles-backup/FECHA-HORA`.

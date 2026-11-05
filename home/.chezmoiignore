@@ -4,29 +4,25 @@
 */}}
 
 {{- if ne .chezmoi.os "darwin" }}
-# --- Exclusivo de macOS (phobos) ---
+# --- Exclusivo de macOS (phobos, tycho) ---
 .zprofile
 .config/ghostty
 .config/dotfiles/Brewfile
 {{- end }}
 
-{{- /* Perfiles de VPN: los .mobileconfig y los WireGuard de iPhone e iPad son de
-       macOS. Los WireGuard de phobos también se aplican en Deimos, que los importa
-       a NetworkManager (run_onchange_after_65-wireguard.sh.tmpl); los OpenVPN de
-       TNG, en el Mac y en Tycho, que los importa en 66-openvpn. */}}
+{{- /* Perfiles de VPN: los .mobileconfig, los WireGuard de iPhone e iPad y los
+       OpenVPN de TNG son de los Mac. Los WireGuard de phobos también se aplican en
+       Deimos, que los importa a NetworkManager
+       (run_onchange_after_65-wireguard.sh.tmpl). */}}
 {{- if ne .chezmoi.os "darwin" }}
 .local/share/dotfiles/profiles
 .local/share/dotfiles/vpn/lodero/iphone-*
 .local/share/dotfiles/vpn/lodero/ipad-*
-{{- if eq .chezmoi.hostname "tycho" }}
-.local/share/dotfiles/vpn/lodero
-{{- else }}
 .local/share/dotfiles/vpn/tng
-{{- end }}
 {{- end }}
 
 {{- if ne .chezmoi.os "linux" }}
-# --- Exclusivo de Arch Linux (tycho, deimos) ---
+# --- Exclusivo de Arch Linux (deimos) ---
 .Xresources
 .config/kitty
 .config/autostart
@@ -54,20 +50,16 @@
 .local/share/org.kde.syntax-highlighting
 # --- Ajustes de Plasma y aplicaciones (create_): sólo en Arch ---
 .config/QtProject.conf
-.config/audacity/audacity.cfg
 .config/baloofileinformationrc
 .config/baloofilerc
 .config/bluedevilglobalrc
-.config/breezerc
 .config/dolphinrc
 .config/filetypesrc
 .config/gtk-3.0/settings.ini
 .config/gtk-4.0/settings.ini
-.config/gwenviewrc
 .config/kaccessrc
 .config/kactivitymanagerdrc
 .config/kded5rc
-.config/kded6rc
 .config/kdedefaults/kcminputrc
 .config/kdedefaults/kdeglobals
 .config/kdedefaults/ksplashrc
@@ -78,20 +70,15 @@
 .config/kdiff3fileitemactionrc
 .config/kglobalshortcutsrc
 .config/kiorc
-.config/klipperrc
 .config/konsolesshconfig
-.config/krunnerrc
 .config/kscreenlockerrc
 .config/ksmserverrc
-.config/kstarsrc
 .config/ktimezonedrc
 .config/kwalletrc
 .config/kwinoutputconfig.json
 .config/kwinrc
 .config/kxkbrc
 .config/mimeapps.list
-.config/oktetarc
-.config/okularrc
 .config/plasma-localerc
 .config/plasma-org.kde.plasma.desktop-appletsrc
 .config/plasmanotifyrc
@@ -99,12 +86,9 @@
 .config/plasmashellrc
 .config/powerdevilrc
 .config/powermanagementprofilesrc
-.config/spectaclerc
 .config/user-dirs.dirs
 .config/user-dirs.locale
 .config/xsettingsd/xsettingsd.conf
-.local/share/kscreen/control/configs/6b784306bc2b23ae2164a6e5b8032b43
-.local/share/kscreen/control/outputs/e04414fa2f1cda218f706b532aae5a84
 .local/share/user-places.xbel
 {{- end }}
 
@@ -122,14 +106,6 @@
 .local/bin/sunshine-display
 {{- end }}
 
-{{- if or (ne .chezmoi.hostname "tycho") (get (index .hosts .chezmoi.hostname) "remote") }}
-# --- Exclusivo de Tycho como estación de trabajo: FiiO K3, Edifier, micro de
-#     la C920 y mando Xbox ---
-.config/wireplumber/wireplumber.conf.d/51-fiio-k3.conf
-.config/wireplumber/wireplumber.conf.d/52-edifier-r1280db.conf
-.config/wireplumber/wireplumber.conf.d/53-c920-default-source.conf
-.config/systemd/user/steam-big-picture-on-xbox.service
-{{- end }}
 
 {{- if ne .chezmoi.hostname "deimos" }}
 # --- Exclusivo de Deimos: nodo HDMI AMD que se duplicaba al reconectar, ROCm
@@ -146,20 +122,3 @@
 .config/konsolesshconfig
 {{- end }}
 
-{{- if ne .chezmoi.hostname "tycho" }}
-# Sólo existen en tycho
-.config/audacity
-.local/share/kscreen
-.config/audacity/audacity.cfg
-.config/breezerc
-.config/gwenviewrc
-.config/kded6rc
-.config/klipperrc
-.config/krunnerrc
-.config/kstarsrc
-.config/oktetarc
-.config/okularrc
-.config/spectaclerc
-.local/share/kscreen/control/configs/6b784306bc2b23ae2164a6e5b8032b43
-.local/share/kscreen/control/outputs/e04414fa2f1cda218f706b532aae5a84
-{{- end }}

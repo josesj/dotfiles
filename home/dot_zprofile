@@ -1,4 +1,4 @@
-# Sólo macOS (phobos). Zsh lo lee en cada shell de login, antes de .zshrc.
+# Sólo macOS (phobos, tycho). Zsh lo lee en cada shell de login, antes de .zshrc.
 
 if [[ -x /opt/homebrew/bin/brew ]]; then
   eval "$(/opt/homebrew/bin/brew shellenv)"

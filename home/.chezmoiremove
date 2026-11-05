@@ -45,12 +45,4 @@
 {{- /* En una estación de trabajo, los restos de Sunshine y del bloqueo al
        iniciar la sesión los borra 37-plasma-power: .chezmoiignore los excluye
        y chezmoi no borra lo que ignora. */}}
-
-{{- if and (eq .chezmoi.hostname "tycho") (get (index .hosts .chezmoi.hostname) "remote") }}
-# Tycho en remoto no tiene periféricos locales: el mando y el audio llegan por
-# Moonlight.
-.config/wireplumber/wireplumber.conf.d/51-fiio-k3.conf
-.config/wireplumber/wireplumber.conf.d/52-edifier-r1280db.conf
-.config/systemd/user/steam-big-picture-on-xbox.service
-{{- end }}
 {{- end }}

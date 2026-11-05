@@ -20,7 +20,7 @@ install -Dm644 "$stage_dir/pacman-explicit.txt" \
   "$host_dir/packages/pacman-explicit.txt"
 install -Dm644 "$stage_dir/aur-explicit.txt" \
   "$host_dir/packages/aur-explicit.txt"
-# Tycho ya no instala Flatpak: sin él, el inventario de Flatpak desaparece.
+# Sin Flatpak instalado, el inventario de Flatpak desaparece.
 if command -v flatpak >/dev/null; then
   flatpak list --app --columns=application,branch,origin,installation \
     | LC_ALL=C sort > "$stage_dir/flatpak-apps.tsv"

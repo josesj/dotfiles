@@ -1,7 +1,0 @@
-[AC][Display]
-DimDisplayIdleTimeoutSec=-1
-TurnOffDisplayIdleTimeoutSec=300
-TurnOffDisplayIdleTimeoutWhenLockedSec=-2
-
-[AC][Keyboard]
-KeyboardBrightness=10

@@ -362,7 +362,7 @@ if ! $dry_run; then
       fi
     done < "$host_dir/services.txt"
   fi
-  # Los temporizadores del perfil del equipo (autoshutdown en tycho) quedan
+  # Los temporizadores del perfil del equipo (como autoshutdown) quedan
   # activos; enable --now no hace nada si ya lo están.
   for timer in "${host_timers[@]}"; do
     systemctl enable --now "$timer"

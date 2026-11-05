@@ -1,6 +1,6 @@
 {{- if and (eq .chezmoi.os "linux") (not (get (index .hosts .chezmoi.hostname) "remote")) -}}
 #!/usr/bin/env bash
-# Linux (Tycho y Deimos): los lanzadores de LibreOffice usan el backend KF6 sobre
+# Linux (Deimos): los lanzadores de LibreOffice usan el backend KF6 sobre
 # XWayland para mantener proporciones coherentes con el escalado fraccional de
 # Plasma. Se ejecuta en cada chezmoi apply: si faltan o cambian los lanzadores
 # del paquete, se regeneran (run_onchange no veía que los hubieran borrado).
