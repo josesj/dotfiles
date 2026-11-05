@@ -1,8 +1,11 @@
 {{- if eq .chezmoi.os "darwin" -}}
 #!/usr/bin/env bash
 # Aprovisiona Homebrew y las herramientas que no son archivos de configuración.
-# Se vuelve a ejecutar cuando cambia el Brewfile.
-# Brewfile sha256: {{ include "dot_config/dotfiles/Brewfile" | sha256sum }}
+# Va antes de escribir los archivos (run_onchange_before_): gnupg y pinentry-mac
+# vienen del Brewfile y hacen falta para descifrar los archivos cifrados, y
+# gpg-agent.conf apunta a /opt/homebrew/bin/pinentry-mac. Por eso el Brewfile se
+# lee del repositorio (en un Mac nuevo ~/.config/dotfiles/Brewfile aún no
+# existe) y el script se vuelve a ejecutar cuando cambia.
 set -euo pipefail
 
 if ! xcode-select -p >/dev/null 2>&1; then
@@ -25,7 +28,9 @@ fi
 
 printf '==> Instalando fórmulas y aplicaciones\n'
 brew update
-brew bundle --file "$HOME/.config/dotfiles/Brewfile"
+brew bundle --file=- <<'BREWFILE'
+{{ include "dot_config/dotfiles/Brewfile" -}}
+BREWFILE
 
 git lfs install
 

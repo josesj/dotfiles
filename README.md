@@ -69,10 +69,12 @@ explícita si no es uno de los tres conocidos. El primer `apply`:
 
 1. Retira la configuración que dejaron los instaladores anteriores y guarda
    copia en `~/.local/state/dotfiles-backup/FECHA-HORA`.
-2. Clona Oh My Zsh, los tres plugins de Zsh y los nueve plugins de Vim.
-3. Escribe los archivos de configuración del equipo.
-4. En macOS instala Homebrew y el `Brewfile`, registra los JDK y aplica las
-   preferencias del sistema; en Arch configura Plasma, Konsole, Kate, KWin,
+2. En macOS instala Homebrew y el `Brewfile` y registra los JDK, antes de
+   escribir nada: gnupg y `pinentry-mac` hacen falta para descifrar los
+   archivos cifrados.
+3. Clona Oh My Zsh, los tres plugins de Zsh y los nueve plugins de Vim.
+4. Escribe los archivos de configuración del equipo.
+5. En macOS aplica las preferencias del sistema; en Arch configura Plasma, Konsole, Kate, KWin,
    Baloo y el atajo de Kitty; en los equipos remotos, la energía para el uso
    remoto, y en una estación de trabajo, los lanzadores KF6/X11 de LibreOffice.
 
