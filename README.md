@@ -92,7 +92,9 @@ Añadir un equipo es añadir su entrada en esa tabla y en la lista de
 
 Sólo en Arch: Plasma, Konsole, Kate, Dolphin, PipeWire,
 WirePlumber, fontconfig, Xresources, `environment.d` y las banderas de Chrome y
-VS Code. Sólo en macOS: `.zprofile` y el `Brewfile`. Kitty es el terminal de los tres equipos, con la misma configuración.
+VS Code. Sólo en macOS: `.zprofile`, el `Brewfile` y Ghostty. El terminal es
+Kitty en Arch y Ghostty en macOS, configurado para parecerse lo más posible:
+misma tipografía, tema, ventana, portapapeles, avisos y atajos `Ctrl+Shift`.
 
 En Arch, el indexador de Baloo usa la plataforma Qt `offscreen` (drop-in de
 `kde-baloo.service`): arranca antes de que la sesión publique `WAYLAND_DISPLAY`
@@ -145,7 +147,7 @@ escritorio no: Plasma usa Breeze, su tema propio, y es quien dicta el modo. El
 sabor se detecta en el arranque del shell y al recuperar el foco en Vim: Plasma
 lo publica en `kdeglobals` y macOS sólo define `AppleInterfaceStyle` mientras el
 modo oscuro está activo. Por SSH manda el terminal local, no el escritorio
-remoto: el prompt pregunta a Kitty su color de fondo (OSC 11) y
+remoto: el prompt pregunta a Kitty o Ghostty su color de fondo (OSC 11) y
 exporta `WORKSTATION_FLAVOUR`, que Vim también sigue. El prompt asigna colores semánticos de la variante
 activa a ruta, estado de Git, errores, duración, trabajos y entornos virtuales.
 
@@ -153,7 +155,7 @@ En Arch, fontconfig y Plasma usan Noto Sans para la interfaz, Noto Serif para
 serif y JetBrainsMono Nerd Font Mono, en peso Medium, para monoespaciado; Noto CJK, Emoji y
 Symbols completan los glifos restantes. `~/.Xresources` añade los mismos ajustes
 de renderizado para las aplicaciones X11 y XWayland que leen la base de recursos
-mediante `xrdb`. En macOS, Kitty usa la misma tipografía (JetBrainsMono Nerd Font Mono Medium) y sigue
+mediante `xrdb`. En macOS, Ghostty usa la misma tipografía (JetBrainsMono Nerd Font Mono Medium) y sigue
 la apariencia del sistema.
 
 Firefox mantiene su interfaz oscura, pero informa a las páginas web de una

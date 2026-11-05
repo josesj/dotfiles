@@ -57,7 +57,16 @@ cargados como paquetes nativos desde `~/.vim/pack/dotfiles/start`.
 La ventana abre a `100×29`, con margen de 4 px, y no recuerda su tamaño.
 Si un comando tarda más de 15 s y Kitty no tiene el foco, avisa por Plasma.
 Kitty usa Catppuccin Latte en modo claro y Mocha en modo oscuro.
-En macOS es la misma configuración: además de estos atajos valen los de Kitty con `Cmd` (`Cmd+T`, `Cmd+W`, `Cmd+N`...).
+
+## Ghostty (macOS)
+
+Ghostty reproduce la configuración de Kitty: los mismos atajos `Ctrl+Shift` de
+la tabla anterior (pestañas, ventanas, divisiones, portapapeles, búsqueda,
+saltos entre prompts, paleta de comandos), además de los `Cmd` propios de macOS
+(`Cmd+T`, `Cmd+W`, `Cmd+N`, `Cmd+D`...). No tiene equivalente de
+`Ctrl+Shift+Alt+N` (ventana en la carpeta personal) ni de los hints de
+`Ctrl+Shift+P`. `Cmd+º` (`global:cmd+grave_accent`) abre el terminal
+desplegable desde cualquier aplicación, con el permiso de Accesibilidad.
 
 ## Zsh y aliases
 
