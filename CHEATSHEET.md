@@ -65,8 +65,7 @@ la tabla anterior (pestañas, ventanas, divisiones, portapapeles, búsqueda,
 saltos entre prompts, paleta de comandos), además de los `Cmd` propios de macOS
 (`Cmd+T`, `Cmd+W`, `Cmd+N`, `Cmd+D`...). No tiene equivalente de
 `Ctrl+Shift+Alt+N` (ventana en la carpeta personal) ni de los hints de
-`Ctrl+Shift+P`. `Cmd+º` (`global:cmd+grave_accent`) abre el terminal
-desplegable desde cualquier aplicación, con el permiso de Accesibilidad.
+`Ctrl+Shift+P`.
 
 ## Zsh y aliases
 
