@@ -20,6 +20,10 @@
 .local/share/dotfiles/vpn/lodero/ipad-*
 .local/share/dotfiles/vpn/tng
 {{- end }}
+{{- if eq .chezmoi.hostname "tycho" }}
+# tycho no usa WireGuard: sólo los OpenVPN de TNG.
+.local/share/dotfiles/vpn/lodero
+{{- end }}
 
 {{- if ne .chezmoi.os "linux" }}
 # --- Exclusivo de Arch Linux (deimos) ---
@@ -55,17 +59,12 @@
 .config/bluedevilglobalrc
 .config/dolphinrc
 .config/filetypesrc
-.config/gtk-3.0/settings.ini
-.config/gtk-4.0/settings.ini
+.config/gtk-3.0
+.config/gtk-4.0
 .config/kaccessrc
 .config/kactivitymanagerdrc
 .config/kded5rc
-.config/kdedefaults/kcminputrc
-.config/kdedefaults/kdeglobals
-.config/kdedefaults/ksplashrc
-.config/kdedefaults/kwinrc
-.config/kdedefaults/package
-.config/kdedefaults/plasmarc
+.config/kdedefaults
 .config/kdeglobals
 .config/kdiff3fileitemactionrc
 .config/kglobalshortcutsrc
@@ -88,7 +87,7 @@
 .config/powermanagementprofilesrc
 .config/user-dirs.dirs
 .config/user-dirs.locale
-.config/xsettingsd/xsettingsd.conf
+.config/xsettingsd
 .local/share/user-places.xbel
 {{- end }}
 
@@ -122,3 +121,9 @@
 .config/konsolesshconfig
 {{- end }}
 
+
+{{- if and (eq .chezmoi.os "linux") (not (stat (joinPath .chezmoi.sourceDir (printf ".chezmoitemplates/state/%s/.local/share/user-places.xbel" .chezmoi.hostname)))) }}
+# Los lugares de Dolphin sólo se crean si el equipo tiene su copia en state/:
+# sin ella, la plantilla create_ fallaría al incluirla.
+.local/share/user-places.xbel
+{{- end }}

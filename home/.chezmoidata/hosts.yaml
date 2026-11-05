@@ -7,5 +7,8 @@ hosts:
     mpv_comment: "Deimos: Radeon RX 6600 (Navi 23), Mesa/RADV y Wayland."
     # OBS: VA-API (H.264 para emitir, HEVC para grabar; Navi 23 no codifica AV1).
     obs_encoder: vaapi
-  phobos: {}
+  phobos:
+    # Contextos de Docker por SSH (nombre: endpoint). Lo aplica 55-docker-contexts.
+    docker_contexts:
+      deimos: ssh://deimos
   tycho: {}

@@ -1,8 +1,10 @@
-{{- if eq .chezmoi.os "darwin" -}}
+{{- $contexts := get (index .hosts .chezmoi.hostname) "docker_contexts" -}}
+{{- if and (eq .chezmoi.os "darwin") $contexts -}}
 #!/usr/bin/env bash
-# Contextos de Docker para usar el motor de los equipos Arch desde los Mac por
-# SSH. No cambia el contexto activo: `docker --context deimos ...` o
-# `docker context use deimos`. Se vuelve a ejecutar cuando cambia este script.
+# Contextos de Docker para usar el motor de los equipos Arch desde un Mac por
+# SSH, según `docker_contexts` en hosts.yaml. No cambia el contexto activo:
+# `docker --context deimos ...` o `docker context use deimos`. Se vuelve a
+# ejecutar cuando cambia este script o esa lista.
 set -euo pipefail
 
 command -v docker >/dev/null || {
@@ -12,7 +14,9 @@ command -v docker >/dev/null || {
 
 # nombre=endpoint; el host SSH se resuelve con ~/.ssh/config.
 contexts=(
-  "deimos=ssh://deimos"
+{{- range $name, $host := $contexts }}
+  {{ printf "%s=%s" $name $host | quote }}
+{{- end }}
 )
 
 for entry in "${contexts[@]}"; do

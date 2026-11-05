@@ -43,7 +43,10 @@ chezmoi los escribe sólo si no existen, así que Plasma sigue siendo dueño de 
 una vez creados y no hay conflicto con lo que reescribe a diario. Los que dependen
 del equipo se escriben como `create_X.tmpl`, que los incluye desde
 `.chezmoitemplates/state/<equipo>/`. Para renovarlos tras cambiar algo en
-Plasma, copia el fichero a esa carpeta (o al fichero común) y haz commit.
+Plasma, copia el fichero a esa carpeta (o al fichero común) y haz commit. El ignore
+global de Git excluye `*.local`; `.gitignore` lo revierte para
+`state/<equipo>/.local/`, y si a un equipo le falta su `user-places.xbel`,
+`.chezmoiignore` lo omite en vez de dejar que falle la plantilla.
 
 **`fstab` es sólo referencia** (`hosts/<equipo>/reference/fstab`): lleva UUID de
 discos y `install-system.sh` no lo despliega, sólo avisa si difiere. Los servicios que
@@ -132,8 +135,9 @@ Deimos se enciende y se usa a distancia por WoL y SSH.
   viera en negro, `desktop-wake` (`rdpwake`, que desde otro equipo lo lanza
   por SSH) enciende la pantalla.
   nftables abre RDP en `eno1` y en los túneles `lodero-*`.
-- **Docker.** Los Mac tienen un contexto `deimos` que habla con su Docker por
-  SSH (`run_onchange_after_55-docker-contexts.sh`). No pasa a ser el activo: se
+- **Docker.** phobos tiene un contexto `deimos` que habla con su Docker por
+  SSH (`docker_contexts` en `hosts.yaml`, que aplica
+  `run_onchange_after_55-docker-contexts.sh`). No pasa a ser el activo: se
   usa con `docker --context deimos …` o `docker context use deimos`.
 
 ## Aspecto
@@ -364,8 +368,9 @@ puede estar activa una a la vez.
 `chezmoi apply` los descifra en `~/.local/share/dotfiles/vpn/` (directorios en
 `700`, archivos en `600`). Cada equipo recibe una parte:
 
-- **Los Mac (phobos y tycho):** todo, incluidos los perfiles `.mobileconfig`.
-  Los OpenVPN de TNG se importan a mano en Tunnelblick.
+- **phobos:** todo, incluidos los perfiles `.mobileconfig`.
+- **tycho:** lo mismo salvo los WireGuard de lodero, que no usa.
+- **En los Mac,** los OpenVPN de TNG se importan a mano en Tunnelblick.
 - **Deimos:** los WireGuard de `phobos`, que `65-wireguard` importa a
   NetworkManager como `lodero-full` y `lodero-home`.
 

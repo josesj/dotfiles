@@ -6,3 +6,7 @@ home/private_dot_ssh/id_*
 
 # Estado local del sistema operativo.
 .DS_Store
+
+# El ignore global de Git excluye `*.local`, que también atrapa las carpetas
+# .local de las copias de estado por equipo: se versionan.
+!home/.chezmoitemplates/state/*/.local/
