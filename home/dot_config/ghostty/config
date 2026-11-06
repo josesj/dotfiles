@@ -10,7 +10,7 @@ font-style = Medium
 font-style-bold = Bold
 font-style-italic = Medium Italic
 font-style-bold-italic = Bold Italic
-font-size = 11
+font-size = 14
 adjust-cell-height = 8%
 font-thicken = true
 
@@ -43,6 +43,8 @@ selection-clear-on-copy = false
 clipboard-paste-protection = true
 clipboard-trim-trailing-spaces = true
 mouse-hide-while-typing = true
+# Botón central: pega el portapapeles (en macOS no hay selección primaria).
+middle-click-action = clipboard-paste
 
 # Integración con Zsh: títulos, directorio actual y saltos entre prompts. El
 # cursor y sudo se dejan como están; por SSH instala su terminfo en el
