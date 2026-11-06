@@ -23,6 +23,13 @@ defaults write NSGlobalDomain InitialKeyRepeat -int 15
 defaults write NSGlobalDomain KeyRepeat -int 2
 defaults write NSGlobalDomain NSToolbarTitleViewRolloverDelay -float 0
 
+# Quita Ask Siri de los menús contextuales
+defaults write NSGlobalDomain NSAppleMenuAllowedItems -array \
+  -int 0 -int 1936680564 -int 1634760558 -int 1702390132 -int 1819239265 \
+  -int 1819239275 -int 1819240303 -int 1919706991 -int 1919118964 \
+  -int 1920103284 -int 1919251316 -int 1920164974 -int 1936225652 \
+  -int 1936483696 -int 1936749167 -int 1937339251
+
 # Dock
 defaults write com.apple.dock autohide -bool true
 defaults write com.apple.dock autohide-delay -float 0
