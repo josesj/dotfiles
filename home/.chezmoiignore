@@ -13,11 +13,13 @@
 {{- /* Perfiles de VPN: los .mobileconfig, los WireGuard de iPhone e iPad y los
        OpenVPN de TNG son de los Mac. Los WireGuard de phobos también se aplican en
        Deimos, que los importa a NetworkManager
-       (run_onchange_after_65-wireguard.sh.tmpl). */}}
+       (run_onchange_after_65-wireguard.sh.tmpl); phobos-home-nodns, la variante
+       sin DNS para la app de WireGuard de macOS, no. */}}
 {{- if ne .chezmoi.os "darwin" }}
 .local/share/dotfiles/profiles
 .local/share/dotfiles/vpn/lodero/iphone-*
 .local/share/dotfiles/vpn/lodero/ipad-*
+.local/share/dotfiles/vpn/lodero/phobos-home-nodns.conf
 .local/share/dotfiles/vpn/tng
 {{- end }}
 {{- if eq .chezmoi.hostname "tycho" }}

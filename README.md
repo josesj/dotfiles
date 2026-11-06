@@ -363,6 +363,10 @@ puede estar activa una a la vez.
 - **phobos:** todo, incluidos los perfiles `.mobileconfig`.
 - **tycho:** lo mismo salvo los WireGuard de lodero, que no usa.
 - **En los Mac,** los OpenVPN de TNG se importan a mano en Tunnelblick.
+- **phobos-home-nodns:** copia de `phobos-home` sin la línea `DNS`, sólo para
+  los Mac. La app de WireGuard de macOS no admite DNS por dominio y, con DNS en
+  el túnel, se llevaba también `tng.iac.es`; sin él, todo sale por el DNS del
+  sistema. Se importa a mano en la app. Deimos no la usa.
 - **Deimos:** los WireGuard de `phobos`, que `65-wireguard` importa a
   NetworkManager como `lodero-full` y `lodero-home`.
 
