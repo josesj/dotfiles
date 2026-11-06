@@ -1,0 +1,9 @@
+#!/bin/sh
+# Fuerza que Claude Code no firme commits ni PRs y deja el resto de ajustes
+# (que la propia aplicación reescribe) como estén. Sin jq no toca nada.
+current=$(cat)
+if ! command -v jq >/dev/null 2>&1; then
+    printf '%s\n' "$current"
+    exit 0
+fi
+printf '%s\n' "${current:-{\}}" | jq '.attribution = {commit: "", pr: ""}'
