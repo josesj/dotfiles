@@ -4,7 +4,7 @@ Configuración de tres equipos gestionada con [chezmoi](https://chezmoi.io):
 
 | Equipo | Sistema | Papel |
 |---|---|---|
-| `deimos` | Arch Linux + Plasma | Estación de trabajo (i5-12600, RX 6600) |
+| `deimos` | Arch Linux + Plasma | Desarrollo remoto por RDP y SSH (i5-12600, RX 6600) |
 | `phobos` | macOS | Portátil (MacBook Pro, M4 Pro, 24 GB) |
 | `tycho` | macOS | Sobremesa (Mac Studio, M2 Max, 32 GB) |
 
@@ -21,7 +21,7 @@ aliases y comandos de mantenimiento.
 .chezmoiroot            -> "home": chezmoi sólo gestiona ese subárbol
 home/                   estado fuente de chezmoi ($HOME de los tres equipos)
   .chezmoi.toml.tmpl    configuración que genera `chezmoi init`
-  .chezmoidata/         hardware de cada equipo: decodificación de mpv y codificador de OBS
+  .chezmoidata/         datos de cada equipo (contextos de Docker, suspensión por inactividad)
   .chezmoiignore        reparto de destinos por sistema operativo y por equipo
   .chezmoiexternal.toml.tmpl  Oh My Zsh, plugins de Zsh y de Vim y temas Catppuccin de btop
   .chezmoiscripts/      aprovisionamiento (Homebrew, Plasma, Kate, VS Code...)
@@ -74,9 +74,8 @@ explícita si no es uno de los tres conocidos. El primer `apply`:
    archivos cifrados.
 3. Clona Oh My Zsh, los tres plugins de Zsh y los nueve plugins de Vim.
 4. Escribe los archivos de configuración del equipo.
-5. En macOS aplica las preferencias del sistema; en Arch configura Plasma, Konsole, Kate, KWin,
-   Baloo y el atajo de Kitty; en los equipos remotos, la energía para el uso
-   remoto, y en una estación de trabajo, los lanzadores KF6/X11 de LibreOffice.
+5. En macOS aplica las preferencias del sistema; en Arch configura Plasma, Konsole, Kate,
+   Baloo, el atajo de Kitty, la energía para el uso remoto y KRDP.
 
 Uso diario:
 
@@ -105,11 +104,9 @@ En Arch, el indexador de Baloo usa la plataforma Qt `offscreen` (drop-in de
 `kde-baloo.service`): arranca antes de que la sesión publique `WAYLAND_DISPLAY`
 y, sin pantalla, `baloo_file_extractor` abortaba en cada lote.
 
-Por equipo: mpv y OBS usan `mpv_hwdec` y `obs_encoder` de
-`.chezmoidata/hosts.yaml`. Deimos añade la regla que evita la suspensión del nodo HDMI de AMD y
+Por equipo: Deimos añade la regla que evita la suspensión del nodo HDMI de AMD y
 `HSA_OVERRIDE_GFX_VERSION`, con la que ROCm trata la RX 6600 (gfx1030 en lugar de
-gfx1032). Los auriculares Bluetooth (Nothing Ear) usan AAC con el
-codificador en bitrate variable de máxima calidad (`54-bluetooth-aac.conf`).
+gfx1032).
 
 ## Acceso remoto en Arch
 
@@ -119,24 +116,28 @@ Deimos se enciende y se usa a distancia por WoL y SSH.
   esperando el paquete mágico al suspender o apagar. En la UEFI
   hay que activar «Power On By PCI-E» y desactivar ErP. Se comprueba con
   `ethtool <interfaz> | grep Wake-on`, que debe decir `g`.
-- **RDP (Deimos).** El escritorio remoto de KDE (`krdp`) arranca con la sesión
-  de Plasma (enlace en `plasma-workspace.target.wants`) y se entra con el
-  usuario y la contraseña del sistema. `39-krdp` fija `krdpserverrc` y genera
-  un certificado autofirmado de diez años (el de Plasma sólo vale un día), que
-  rehace si falta o caduca en menos de 30 días; la clave no se versiona. Tras
-  reiniciar, o tras cerrar la sesión, no hay RDP hasta iniciarla: para salir
-  de una sesión remota se cierra la ventana del cliente (desconectar), no se
-  cierra la sesión de Plasma. Si no hay sesión, `desktop-login` (`rdplogin`,
-  que desde otro equipo lo lanza con `ssh -t`) la inicia por SSH: da a Plasma
-  Login Manager un inicio automático de un solo uso, lo reinicia, borra el
-  archivo en cuanto la sesión existe y la deja bloqueada. Con la pantalla
-  bloqueada, se desbloquea antes por SSH con `desktop-unlock` (`rdpunlock`).
-  KRDP va en modo exclusivo (`ExclusiveMode`): al conectarse crea una
-  pantalla virtual para la sesión remota y desactiva los monitores físicos,
-  así que funciona aunque el LG esté apagado o en reposo. Si aun así el RDP se
-  viera en negro, `desktop-wake` (`rdpwake`, que desde otro equipo lo lanza
-  por SSH) enciende la pantalla.
-  nftables abre RDP en `eno1` y en los túneles `lodero-*`.
+- **RDP (Deimos).** Deimos es un equipo de desarrollo remoto: el monitor está
+  casi siempre apagado y se entra por RDP o SSH. Plasma Login Manager inicia
+  sola la sesión de `jose` al arrancar (`plasmalogin.conf.d/autologin.conf`)
+  y, con `Relogin`, la vuelve a iniciar si se cierra; kscreenlocker la bloquea
+  nada más empezar (`LockOnStart`), así que delante del equipo sólo se ve la
+  pantalla de bloqueo. El escritorio remoto de KDE (`krdp`) arranca con la
+  sesión (enlace en `plasma-workspace.target.wants`) y se entra con el
+  usuario y la contraseña del sistema; la sesión bloqueada se desbloquea desde
+  el propio cliente o antes por SSH con `desktop-unlock` (`rdpunlock`).
+  `39-krdp` fija `krdpserverrc` y `LockOnStart`, y genera un certificado
+  autofirmado de diez años (el de Plasma sólo vale un día), que rehace si
+  falta o caduca en menos de 30 días; la clave no se versiona. KRDP va en
+  modo exclusivo (`ExclusiveMode`): al conectarse crea una pantalla virtual
+  para la sesión remota y desactiva los monitores físicos, así que funciona
+  aunque el LG esté apagado; el conector `DP-3` va además forzado con su EDID
+  en la UKI (véase `hosts/deimos/README.md`). Si la sesión se cae,
+  `desktop-login` (`rdplogin`, que desde otro equipo lo lanza con `ssh -t`)
+  reinicia el gestor, espera a la sesión bloqueada y a KRDP. Si el RDP se
+  viera en negro, `desktop-wake` (`rdpwake`) enciende la pantalla. La cartera
+  de KWallet no se abre sola, porque no se teclea la contraseña al entrar: la
+  pide la primera aplicación que la necesite. nftables abre RDP en `eno1` y en
+  los túneles `lodero-*`.
 - **Docker.** phobos tiene un contexto `deimos` que habla con su Docker por
   SSH (`docker_contexts` en `hosts.yaml`, que aplica
   `run_onchange_after_55-docker-contexts.sh`). No pasa a ser el activo: se
@@ -192,19 +193,9 @@ PipeWire trabaja con quantum 256 (unos 5,3 ms a 48 kHz) y sigue la frecuencia
 del contenido: 44,1, 48, 88,2 o 96 kHz según lo que admita la salida, de modo
 que la música llega sin remuestrear. Cuando la conversión es inevitable usa la
 calidad máxima del remuestreador (14), tanto en los clientes como en los nodos
-de dispositivo: un auricular Bluetooth fija su frecuencia al negociar el códec
-y es su propio nodo quien convierte. `pw-lowlatency` fuerza temporalmente otro quantum y `pw-normal`
+de dispositivo: si la salida no puede cambiar de frecuencia, es su propio nodo
+quien convierte. `pw-lowlatency` fuerza temporalmente otro quantum y `pw-normal`
 restaura los valores configurados.
-
-En una estación de trabajo, mpv limita la ventana al 80 % del escritorio, prioriza audio y subtítulos en
-español, inglés e italiano y usa yt-dlp con los perfiles `stream-2k` y
-`stream-4k`. Una regla de KWin centra sus ventanas.
-
-OBS, también sólo en una estación de trabajo, parte de un lienzo 4K y sale a 1440p60. Graba en HEVC con calidad constante
-(CQP 20) en `~/Videos/OBS`, con tres pistas de audio: mezcla, micro y
-escritorio. Emite en H.264 CBR a 6000 kbps, reescalado a 1080p. OBS reescribe
-su perfil al salir, así que chezmoi usa scripts `modify_` que sólo fijan esas
-claves y dejan el resto (servicio, clave de emisión, escenas) en manos de OBS.
 
 
 ## SSH
@@ -244,8 +235,7 @@ aplicar, así que ya no hace falta un paso aparte.
 `install-system.sh` despliega mediante copias los archivos comunes de Pacman,
 paccache, journald, coredump, timesyncd, systemd-oomd, zram, sysctl, SSH, el WoL de
 NetworkManager y las reglas udev
-de schedulers, del receptor Logitech y de la C920 (sin bajar de 30 fps con poca
-luz, para que el vídeo no se retrase respecto al audio, y antiparpadeo a 50 Hz), más los específicos bajo
+de schedulers y del receptor Logitech, más los específicos bajo
 `hosts/<equipo>/system/`, conservando su ruta relativa dentro de `/etc`. Después valida y recarga únicamente los
 subsistemas afectados. Necesita privilegios administrativos y guarda los
 originales en `/var/lib/dotfiles-backup/`:

@@ -93,7 +93,7 @@ saltos entre prompts, paleta de comandos), además de los `Cmd` propios de macOS
 | `mkcd dir` | Crear un directorio y entrar en él |
 | `serve [puerto]` | Servidor HTTP estático en el directorio actual |
 | `rdpunlock` | Desbloquear la sesión gráfica antes de entrar por RDP (Arch) |
-| `rdplogin` | Iniciar por SSH la sesión de Plasma de Deimos (tras reiniciar o cerrar sesión) para poder entrar por RDP; la deja bloqueada (`desktop-login`, pide `sudo`) |
+| `rdplogin` | Recuperar por SSH la sesión de Plasma de Deimos si se ha caído (normalmente se inicia sola y bloqueada); reinicia el gestor y espera a KRDP (`desktop-login`, pide `sudo`) |
 | `rdpwake` | Encender la pantalla de Deimos si PowerDevil la apagó y el RDP sale en negro (Arch; desde otro equipo lanza `desktop-wake` por SSH) |
 | `pw-lowlatency [64\|128\|256\|512]` | Forzar temporalmente 48 kHz y otro quantum (Arch) |
 | `pw-normal` | Restaurar el perfil persistente de audio |
@@ -135,24 +135,6 @@ jbang nombre-o-script
 # Gradle: usar siempre el wrapper del proyecto
 ./gradlew build
 ```
-
-## MPV (Arch)
-
-| Teclas | Acción |
-|---|---|
-| `←/→` | Retroceder/avanzar 5 s |
-| `↑/↓` | Avanzar/retroceder 60 s |
-| `Shift+←/→` | Salto exacto de 30 s |
-| `Espacio` | Pausa |
-| `Enter` | Pantalla completa |
-| `m` | Silencio |
-| `a` | Cambiar pista de audio |
-| `j` / `J` | Subtítulo siguiente/anterior |
-| `v` | Mostrar/ocultar subtítulos |
-| `Ctrl+←/→` | Ajustar retraso de subtítulos ±0,1 s |
-| `Ctrl+↑/↓` | Ajustar retraso de audio ±0,1 s |
-| `i` / `I` | Estadísticas breves/completas |
-| `s` / `S` | Captura del vídeo/de la ventana |
 
 ## Aprovisionamiento y mantenimiento
 

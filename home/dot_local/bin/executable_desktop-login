@@ -1,18 +1,16 @@
 #!/usr/bin/env bash
-# Inicia por SSH la sesión de Plasma de este usuario en el equipo, para entrar
-# después por RDP: KRDP vive dentro de la sesión, así que tras reiniciar o
-# cerrar sesión no hay RDP hasta que alguien la inicia delante del equipo.
-#
-# Plasma Login Manager no tiene una orden para iniciar sesión: se le da un
-# inicio automático de un solo uso (un archivo en plasmalogin.conf.d que se
-# borra en cuanto la sesión existe) y se reinicia. La sesión queda bloqueada al
-# momento, así que delante del equipo sólo se ve la pantalla de bloqueo.
+# Recupera por SSH la sesión de Plasma de este usuario, para entrar después por
+# RDP: KRDP vive dentro de la sesión. Normalmente no hace falta, porque Plasma
+# Login Manager la inicia sola al arrancar y la reinicia al cerrarla
+# (plasmalogin.conf.d/autologin.conf, con Relogin); sirve si la sesión se ha
+# caído o el gestor se ha quedado en la pantalla de acceso. Reinicia el gestor,
+# que vuelve a hacer el inicio automático, y espera a que la sesión esté
+# bloqueada (LockOnStart) y KRDP escuchando.
 # Necesita sudo; desde otro equipo, rdplogin lo lanza con ssh -t.
 set -euo pipefail
 
 user=$(id -un)
 uid=$(id -u)
-conf=/etc/plasmalogin.conf.d/zz-desktop-login.conf
 service=app-org.kde.krdpserver.service
 
 # Id de la sesión gráfica del asiento físico de un usuario (o de cualquiera).
@@ -40,10 +38,6 @@ if id=$(graphical_session); then
   exit 1
 fi
 
-cleanup() { sudo rm -f -- "$conf"; }
-trap cleanup EXIT
-printf '[Autologin]\nUser=%s\nSession=plasma.desktop\n' "$user" |
-  sudo install -Dm644 /dev/stdin "$conf"
 sudo systemctl restart plasmalogin.service
 
 id=
@@ -51,15 +45,13 @@ for _ in $(seq 60); do
   id=$(graphical_session "$uid") && break
   sleep 1
 done
-cleanup
-trap - EXIT
 if [[ -z $id ]]; then
   echo 'Error: la sesión de Plasma no llegó a iniciarse en 60 s.' >&2
   exit 1
 fi
 
-# El bloqueador de Plasma tarda unos segundos en estar listo: se reintenta
-# hasta que ScreenSaver confirme el bloqueo.
+# LockOnStart bloquea la sesión al empezar; por si acaso, se pide el bloqueo
+# hasta que ScreenSaver lo confirme (el bloqueador tarda unos segundos).
 export XDG_RUNTIME_DIR=/run/user/$uid
 export DBUS_SESSION_BUS_ADDRESS=unix:path=$XDG_RUNTIME_DIR/bus
 screensaver() {

@@ -3,9 +3,10 @@
 # Escritorio remoto de KDE (KRDP) en Deimos: se entra con el usuario y la
 # contraseña del sistema (SystemUserEnabled), sin otra clave guardada. El
 # servicio arranca con la sesión de Plasma (enlace en
-# plasma-workspace.target.wants), así que tras reiniciar no hay RDP hasta que
-# se inicia sesión en el equipo; si la pantalla está bloqueada, se desbloquea
-# antes por SSH con desktop-unlock (rdpunlock).
+# plasma-workspace.target.wants), que Plasma Login Manager inicia sola al
+# arrancar (plasmalogin.conf.d/autologin.conf). La sesión se bloquea nada más
+# empezar (LockOnStart); se desbloquea desde el propio cliente RDP o antes por
+# SSH con desktop-unlock (rdpunlock).
 #
 # El certificado que genera Plasma sólo vale un día. Éste es autofirmado, de
 # diez años, y se rehace si falta o caduca en menos de 30 días; la clave no se
@@ -32,6 +33,10 @@ kwriteconfig6 --file krdpserverrc --group General --key Autostart true
 kwriteconfig6 --file krdpserverrc --group General --key SystemUserEnabled true
 kwriteconfig6 --file krdpserverrc --group General --key Certificate "$cert"
 kwriteconfig6 --file krdpserverrc --group General --key CertificateKey "$key"
+
+# La sesión se inicia sola: se bloquea al empezar para que delante del equipo
+# sólo se vea la pantalla de bloqueo.
+kwriteconfig6 --file kscreenlockerrc --group Daemon --key LockOnStart true
 
 # Modo exclusivo: al conectarse, KRDP crea una pantalla virtual para la sesión
 # remota y desactiva los monitores físicos, así que el escritorio remoto

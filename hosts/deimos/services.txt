@@ -4,10 +4,7 @@ NetworkManager-dispatcher.service
 NetworkManager.service
 avahi-daemon.service
 avahi-daemon.socket
-bluetooth.service
 borgmatic.timer
-cups.path
-cups.socket
 docker.socket
 fstrim.timer
 fwupd-refresh.timer

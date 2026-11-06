@@ -34,15 +34,13 @@
 .local/share/easyeffects/input/Micro.json
 .local/share/easyeffects/autoload/input/alsa_input.usb-Sonix_Technology_Co.__Ltd._HD_Pro_Webcam_C920_SN0001-03.analog-stereo:analog-input-mic.json
 
-{{- if get (index .hosts .chezmoi.hostname) "remote" }}
-# Equipo remoto (remote en hosts.yaml), con Sunshine: sin mpv ni LibreOffice.
-# La configuración de OBS se deja porque guarda escenas y perfiles propios.
-# ~/.config/mpv y libreoffice-kf6-x11 no van aquí: chezmoi no borra lo que
-# .chezmoiignore excluye, y en los remotos se excluyen para no volver a
-# crearlos; se borran a mano una vez.
+# Deimos pasó a ser un equipo de desarrollo remoto: sin reproductores, OBS,
+# LibreOffice, Spotify ni Bluetooth.
+.config/mpv
+.config/obs-studio
+.config/spotify-launcher.conf
+.config/bluedevilglobalrc
+.config/wireplumber/wireplumber.conf.d/54-bluetooth-aac.conf
+.local/bin/libreoffice-kf6-x11
 .local/share/applications/libreoffice-*.desktop
-{{- end }}
-{{- /* En una estación de trabajo, los restos de Sunshine y del bloqueo al
-       iniciar la sesión los borra 37-plasma-power: .chezmoiignore los excluye
-       y chezmoi no borra lo que ignora. */}}
 {{- end }}

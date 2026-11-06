@@ -1,11 +1,6 @@
-1password
-artcraft-launcher
-astrometry.net
-bambustudio-bin
 claude-code
 claude-desktop
 jbang
 jdtls
-siril
 visual-studio-code-bin
 yay

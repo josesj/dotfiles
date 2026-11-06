@@ -50,25 +50,23 @@ También versiona el resto de su `/etc` propio:
   salida y la sesión se quedaba en negro. También cubre arrancar con el monitor
   apagado. Si el arranque se queda sin vídeo, se quitan esos dos parámetros de
   `/etc/kernel/cmdline` por SSH y se ejecuta `mkinitcpio -P`.
-- Bluetooth: ASUS USB-BT500 (Realtek RTL8761BU). `modprobe.d` le quita el
-  autosuspend. En llamadas (HFP) el kernel descarta paquetes de voz
-  (`corrupted SCO packet`) mientras el adaptador cuelga del hub ASM1074: los
-  paquetes de voz van en transferencias USB isócronas, que se corrompen
-  detrás de ese hub. Debe ir en un puerto que `lsusb -t` muestre directamente
-  bajo el `root_hub`. A2DP no se ve afectado.
 
 `obsolete-system/` retira la copia duplicada de la regla ASI que quedó como
 `/etc/udev/rules.d/99-`, el antiguo `sshd_config.d/10-hardening.conf`, que
 sólo admitía clave pública y, al leerse antes, anulaba la política SSH común,
-y los restos del antiguo modo remoto: el inicio automático de la sesión y el
-servicio de Sunshine en firewalld. `modprobe.d/99-amdgpu-overdrive.conf` desbloquea
+el servicio de Sunshine en firewalld, y lo que dejó de usarse al convertir
+Deimos en equipo remoto: la regla de la webcam C920 y el ajuste de autosuspensión
+del Bluetooth USB-BT500. `modprobe.d/99-amdgpu-overdrive.conf` desbloquea
 OverDrive en `amdgpu` para LACT.
 
-Deimos es una estación de trabajo con el monitor LG 27UP850 y sus periféricos
-(Bluetooth, webcam e impresora), y se enciende por WoL por su Intel I219
-(`eno1`, `e1000e`). También conserva la
-electrónica/IoT; de la astronomía sólo quedan las bibliotecas (INDI, CCfits,
-Astropy) y la regla udev de las cámaras ASI. WirePlumber evita la suspensión
-del nodo HDMI AMD que provocaba duplicados al reconectar el monitor.
+Deimos es un equipo de desarrollo remoto: se enciende por WoL por su Intel
+I219 (`eno1`, `e1000e`) y se usa por RDP y SSH con el monitor LG 27UP850 casi
+siempre apagado. La sesión de Plasma se inicia sola y bloqueada (véase el
+README general). Sin multimedia, ofimática, impresión, webcam ni Bluetooth;
+conserva el desarrollo (Java, Python, C++, Go, Rust, web, Docker, Kubernetes,
+libvirt, ROCm), la electrónica/IoT (Arduino, MQTT) y, de la astronomía, las
+bibliotecas (INDI, CCfits, Astropy) y la regla udev de las cámaras ASI.
+WirePlumber evita la suspensión del nodo HDMI AMD que provocaba duplicados al
+reconectar el monitor.
 
 El directorio también contiene el inventario de paquetes de Deimos.

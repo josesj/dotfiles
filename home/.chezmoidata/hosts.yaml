@@ -1,12 +1,7 @@
 # Hardware y papel de cada equipo de la flota. Se lee mediante
 # `index .hosts .chezmoi.hostname`; el sistema operativo sale de .chezmoi.os.
 hosts:
-  deimos:
-    # Radeon RX 6600 (Navi 23) sobre Mesa/RADV: decodificación VA-API.
-    mpv_hwdec: vaapi
-    mpv_comment: "Deimos: Radeon RX 6600 (Navi 23), Mesa/RADV y Wayland."
-    # OBS: VA-API (H.264 para emitir, HEVC para grabar; Navi 23 no codifica AV1).
-    obs_encoder: vaapi
+  deimos: {}
   phobos:
     # Contextos de Docker por SSH (nombre: endpoint). Lo aplica 55-docker-contexts.
     docker_contexts:
